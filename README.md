@@ -41,28 +41,26 @@ Le moteur (`packages/core`) est une fonction pure du graphe corporatif : il ne c
 
 ## Démarrage
 
-Prérequis : Node 22+, PostgreSQL 16+.
+Prérequis : Node 22+, PostgreSQL 16+ (ou Docker). Guide détaillé, par système : **[DEMARRAGE.md](./DEMARRAGE.md)**.
 
 ```bash
 npm install
+npm test                 # 85 tests, sans base de données
 
-# Base de données
 createdb auditreq
 export DATABASE_URL="postgres://$USER@localhost/auditreq"
-psql "$DATABASE_URL" -f db/schema.sql
-npm run seed --workspace=@auditreq/api   # charge le jeu de démonstration et lance l'analyse
+npm run db:init          # crée le schéma, sans exiger l'outil psql
+npm run seed             # jeu de démonstration + analyse
 
-# API (port 3001)
-npm run api
-
-# Interface (port 5173, proxifie /api vers 3001)
-npm run web
+npm run api              # port 3001
+npm run web              # port 5173, puis http://localhost:5173
 ```
 
-Tests du moteur d'analyse :
+Avec Docker plutôt qu'une installation de PostgreSQL :
 
 ```bash
-npm test
+docker compose up -d
+export DATABASE_URL="postgres://auditreq:auditreq@localhost:5433/auditreq"
 ```
 
 ## Ingérer les données ouvertes du REQ

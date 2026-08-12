@@ -9,11 +9,12 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=@auditreq/core && npm run build --workspace=@auditreq/ingestion && npm run build --workspace=@auditreq/api && npm run build --workspace=@auditreq/web",
-    "test": "npm run test --workspace=@auditreq/core && npm run test --workspace=@auditreq/ingestion",
+    "db:init": "npm run db:init --workspace=@auditreq/api",
     "seed": "npm run seed --workspace=@auditreq/api",
     "api": "npm run dev --workspace=@auditreq/api",
     "web": "npm run dev --workspace=@auditreq/web",
+    "build": "npm run build --workspace=@auditreq/core && npm run build --workspace=@auditreq/ingestion && npm run build --workspace=@auditreq/api && npm run build --workspace=@auditreq/web",
+    "test": "npm run test --workspace=@auditreq/core && npm run test --workspace=@auditreq/ingestion",
     "ingerer": "npm run ingerer --workspace=@auditreq/ingestion --"
   },
   "devDependencies": {

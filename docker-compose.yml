@@ -1,0 +1,28 @@
+# PostgreSQL pour AudiTREQ, pour qui préfère ne rien installer sur sa machine.
+#
+#   docker compose up -d
+#   export DATABASE_URL="postgres://auditreq:auditreq@localhost:5433/auditreq"
+#   npm run db:init && npm run seed
+#
+# Le port 5433 évite d'entrer en conflit avec un PostgreSQL déjà installé.
+
+services:
+  base:
+    image: postgres:16
+    container_name: auditreq-postgres
+    environment:
+      POSTGRES_USER: auditreq
+      POSTGRES_PASSWORD: auditreq
+      POSTGRES_DB: auditreq
+    ports:
+      - '5433:5432'
+    volumes:
+      - donnees:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U auditreq']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  donnees:
