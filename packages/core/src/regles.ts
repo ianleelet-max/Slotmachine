@@ -14,7 +14,8 @@ export type TypeRegle =
   | 'transfert_avant_evenement_critique'
   | 'dissolution_reconstitution'
   | 'adresse_partagee_massive'
-  | 'changement_avant_evenement_critique';
+  | 'changement_avant_evenement_critique'
+  | 'controle_hors_conseil';
 
 export interface RedFlag {
   typeRegle: TypeRegle;
@@ -597,6 +598,55 @@ export const LIBELLES_REGLES: Record<TypeRegle, string> = {
   dissolution_reconstitution: 'Dissolution puis reconstitution apparentée',
   adresse_partagee_massive: 'Grappe d’entités à une même adresse',
   changement_avant_evenement_critique: 'Changement d’identité avant événement critique',
+  controle_hors_conseil: 'Contrôle exercé hors du conseil d’administration',
+};
+
+// ---------------------------------------------------------------------------
+// Contrôle exercé hors du conseil d'administration
+// ---------------------------------------------------------------------------
+
+/**
+ * Détecte les sociétés où une convention unanime des actionnaires retire les
+ * pouvoirs du conseil d'administration.
+ *
+ * L'intérêt est particulier : c'est le seul signal de contrôle réel que les
+ * données ouvertes du REQ publient, puisqu'elles excluent toute personne
+ * physique. Quand les pouvoirs du conseil ont été retirés, la liste des
+ * administrateurs — la seule chose qu'un professionnel consulte d'ordinaire —
+ * cesse de renseigner sur qui dirige effectivement la société. La règle ne
+ * prétend pas identifier le détenteur du contrôle : elle signale que le
+ * registre ne peut pas y répondre et qu'il faut aller chercher la convention.
+ */
+export const regleControleHorsConseil: Regle = ({ index, date }) => {
+  const flags: RedFlag[] = [];
+
+  for (const entite of index.entites) {
+    // Sans retrait de pouvoirs, une convention unanime est une pratique
+    // courante et parfaitement légitime : on ne la signale pas seule.
+    if (!entite.conventionUnanimeActionnaires || !entite.retraitPouvoirsConseil) continue;
+
+    const administrateurs = index.administrateursDe(entite.id, date);
+
+    flags.push({
+      typeRegle: 'controle_hors_conseil',
+      entiteId: entite.id,
+      severite: administrateurs.length <= 1 ? 'eleve' : 'moyen',
+      explication:
+        `Une convention unanime des actionnaires retire les pouvoirs du conseil d'administration de ${entite.nomLegal}. ` +
+        `${
+          administrateurs.length === 0
+            ? 'Aucun administrateur n’est par ailleurs déclaré.'
+            : `Les ${administrateurs.length} administrateur(s) déclaré(s) n’exercent donc pas nécessairement le contrôle.`
+        } ` +
+        `Le pouvoir décisionnel réel est défini par la convention, qui n'est pas publiée au registre : son obtention auprès de la société est nécessaire pour établir qui contrôle.`,
+      elementsDeclencheurs: {
+        entites: [entite.id],
+        personnes: administrateurs.map((a) => a.personneId),
+      },
+    });
+  }
+
+  return flags;
 };
 
 export const REGLES: Regle[] = [
@@ -608,6 +658,7 @@ export const REGLES: Regle[] = [
   regleDissolutionReconstitution,
   regleAdressePartageeMassive,
   regleChangementAvantEvenementCritique,
+  regleControleHorsConseil,
 ];
 
 /** Exécute toutes les règles sur le graphe. */

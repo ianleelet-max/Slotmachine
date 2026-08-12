@@ -397,9 +397,32 @@ export const apiDossiers = {
       `/api/comparaison?avant=${encodeURIComponent(avant)}&apres=${encodeURIComponent(apres)}`,
     ),
   journal: (limite = 40) => obtenirPublic<{ entrees: EntreeJournal[] }>(`/api/journal?limite=${limite}`),
+  provenance: () => obtenirPublic<Provenance>('/api/provenance'),
 };
 
 const obtenirPublic = obtenir;
+
+export interface Provenance {
+  provenance: {
+    source: 'donnees_ouvertes_req' | 'registre_consultation' | 'demonstration';
+    dateExtraction: string;
+    cadence?: string;
+    licence?: string;
+  } | null;
+  couverture: {
+    entites: number;
+    personnes: number;
+    detentions: number;
+    reglesInactives: string[];
+    motifInactivite: string | null;
+  };
+}
+
+export const LIBELLES_SOURCES: Record<string, string> = {
+  donnees_ouvertes_req: 'Données ouvertes du Registraire des entreprises',
+  registre_consultation: 'Consultation du registre',
+  demonstration: 'Jeu de démonstration — données fictives',
+};
 
 export const LIBELLES_ACTIONS: Record<string, string> = {
   recherche: 'Recherche',

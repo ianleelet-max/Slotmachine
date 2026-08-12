@@ -11,7 +11,13 @@ import {
   type TableauDeBord,
   type Ubo,
 } from './api';
-import { EcranComparaison, EcranDossier, EcranDossiers, EcranJournal } from './dossiers';
+import {
+  BandeauProvenance,
+  EcranComparaison,
+  EcranDossier,
+  EcranDossiers,
+  EcranJournal,
+} from './dossiers';
 import {
   Etiquette,
   EtiquetteRisque,
@@ -116,6 +122,7 @@ export default function App() {
       </header>
 
       <main className="contenu">
+        <BandeauProvenance />
         {vue.nom === 'tableau' && (
           <EcranTableau
             onOuvrirEntite={ouvrirEntite}

@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react';
 import {
   apiDossiers,
   LIBELLES_ACTIONS,
+  LIBELLES_REGLES,
+  LIBELLES_SOURCES,
+  type Provenance,
   LIBELLES_STATUTS,
   type Comparaison,
   type DetailDossier,
@@ -9,6 +12,50 @@ import {
   type EntreeJournal,
 } from './api';
 import { Etiquette } from './composants';
+
+/**
+ * Bandeau de provenance.
+ *
+ * Il n'est pas décoratif : le jeu de données ouvertes du REQ accuse jusqu'à
+ * quinze jours de retard sur le registre et ne publie aucune personne physique.
+ * Sans cette mention, une absence de signal se lirait comme un résultat
+ * d'analyse alors qu'elle n'est qu'une limite de la source.
+ */
+export function BandeauProvenance() {
+  const [etat, setEtat] = useState<Provenance | null>(null);
+
+  useEffect(() => {
+    apiDossiers.provenance().then(setEtat).catch(() => setEtat(null));
+  }, []);
+
+  if (!etat?.provenance) return null;
+
+  const { provenance, couverture } = etat;
+  const inactives = couverture.reglesInactives;
+
+  return (
+    <div className="provenance">
+      <div>
+        <span className="surtitre">Source des données</span>
+        <div>
+          {LIBELLES_SOURCES[provenance.source] ?? provenance.source} — état observé au{' '}
+          <b>{provenance.dateExtraction}</b>
+          {provenance.cadence && <span className="sourdine"> · {provenance.cadence}</span>}
+        </div>
+        {provenance.licence && <div className="sourdine">{provenance.licence}</div>}
+      </div>
+
+      {inactives.length > 0 && (
+        <div className="provenance-limite">
+          <b>{inactives.length} règles inactives sur cette source.</b> {couverture.motifInactivite}
+          <div className="sourdine" style={{ marginTop: 4 }}>
+            {inactives.map((r) => LIBELLES_REGLES[r] ?? r).join(' · ')}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 /* ---------------------------------------------------------- Liste et création */
 

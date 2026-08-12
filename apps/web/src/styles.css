@@ -676,3 +676,30 @@ button[disabled] {
   opacity: 0.6;
   cursor: default;
 }
+
+/* --------------------------------------------------------------- Provenance */
+
+.provenance {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+}
+
+.provenance-limite {
+  max-width: 620px;
+  border-left: 3px solid var(--risque-moyen);
+  padding-left: 10px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.provenance-limite b {
+  color: var(--risque-moyen);
+}

@@ -13,6 +13,13 @@ import type { GrapheCorporatif } from './domaine.js';
  */
 export function grapheDemonstration(): GrapheCorporatif {
   return {
+    provenance: {
+      source: 'demonstration',
+      dateExtraction: '2026-08-12',
+      cadence: 'Jeu figé — aucune synchronisation',
+      licence: 'Données fictives, libres d’usage',
+    },
+
     entites: [
       {
         id: 'E1',
@@ -300,6 +307,8 @@ export function grapheDemonstration(): GrapheCorporatif {
         avisReqId: 'REQ-22-093311',
       },
     ],
+
+    successions: [],
 
     liensAdresse: [
       { id: 'L1', adresseId: 'A1', entiteId: 'E1', typeLien: 'siege_social', depuis: '2022-05-01' },

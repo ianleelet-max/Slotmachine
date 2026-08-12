@@ -16,6 +16,7 @@ export const POIDS_REGLES: Record<TypeRegle, number> = {
   prete_nom_probable: 16,
   administrateur_recurrent: 14,
   changement_avant_evenement_critique: 12,
+  controle_hors_conseil: 12,
   adresse_partagee_massive: 10,
 };
 

@@ -6,6 +6,7 @@ import type {
   RelationDetention,
   RelationAdministration,
   LienAdresse,
+  RelationSuccession,
   Evenement,
   IdentifiantEntite,
   IdentifiantPersonne,
@@ -33,6 +34,8 @@ export class IndexGraphe {
   private readonly liensParAdresse = new Map<string, LienAdresse[]>();
   private readonly liensParEntite = new Map<IdentifiantEntite, LienAdresse[]>();
   private readonly evenementsParEntite = new Map<IdentifiantEntite, Evenement[]>();
+  private readonly successionsEntrantes = new Map<IdentifiantEntite, RelationSuccession[]>();
+  private readonly successionsSortantes = new Map<IdentifiantEntite, RelationSuccession[]>();
 
   constructor(graphe: GrapheCorporatif) {
     this.graphe = graphe;
@@ -55,6 +58,10 @@ export class IndexGraphe {
     for (const l of graphe.liensAdresse) {
       pousser(this.liensParAdresse, l.adresseId, l);
       if (l.entiteId) pousser(this.liensParEntite, l.entiteId, l);
+    }
+    for (const succession of graphe.successions ?? []) {
+      pousser(this.successionsEntrantes, succession.entiteSuccesseurId, succession);
+      pousser(this.successionsSortantes, succession.entitePredecesseurId, succession);
     }
     for (const ev of graphe.evenements) pousser(this.evenementsParEntite, ev.entiteId, ev);
     for (const liste of this.evenementsParEntite.values()) {
@@ -108,6 +115,16 @@ export class IndexGraphe {
    */
   historiqueAdministrateursDe(entiteId: IdentifiantEntite): RelationAdministration[] {
     return this.administrationsParEntite.get(entiteId) ?? [];
+  }
+
+  /** Entités dont celle-ci est issue (composantes d'une fusion, entité continuée). */
+  predecesseursDe(entiteId: IdentifiantEntite): RelationSuccession[] {
+    return this.successionsEntrantes.get(entiteId) ?? [];
+  }
+
+  /** Entités issues de celle-ci (résultat d'une fusion, entités nées d'une scission). */
+  successeursDe(entiteId: IdentifiantEntite): RelationSuccession[] {
+    return this.successionsSortantes.get(entiteId) ?? [];
   }
 
   liensDeAdresse(adresseId: string): LienAdresse[] {

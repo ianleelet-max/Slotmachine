@@ -36,6 +36,25 @@ export interface Entite {
   codeNaics?: string;
   dateConstitution: string;
   dateDissolution?: string;
+  /** Régime juridique déclaré (code du Registraire), utile pour distinguer une
+   *  société québécoise d'une entité constituée ailleurs et immatriculée ici. */
+  regimeJuridique?: string;
+  /** Activités économiques déclarées (classification CAE du Registraire). */
+  activites?: { code?: string; description?: string }[];
+  /** Indicateur de faillite porté au registre. */
+  indicateurFaillite?: boolean;
+  /**
+   * Une convention unanime des actionnaires est en vigueur.
+   *
+   * Ces deux indicateurs sont les seuls signaux de contrôle réel que les
+   * données ouvertes du REQ exposent : elles n'y publient aucune personne
+   * physique. Quand les pouvoirs du conseil ont été retirés, la liste des
+   * administrateurs cesse de renseigner sur qui dirige (voir la règle
+   * `controle_hors_conseil`).
+   */
+  conventionUnanimeActionnaires?: boolean;
+  /** Les pouvoirs du conseil d'administration ont été retirés par cette convention. */
+  retraitPouvoirsConseil?: boolean;
   /** Vrai pour les formes où une cascade profonde est une pratique normale
    *  (fonds, sociétés de gestion de portefeuille structurées). Atténue la
    *  règle de cascade excessive pour éviter les faux positifs. */
@@ -95,6 +114,25 @@ export interface LienAdresse {
   jusquA?: string;
 }
 
+export type TypeSuccession = 'fusion' | 'scission' | 'continuation' | 'transformation';
+
+/**
+ * Filiation entre entités : fusion, scission, continuation ou transformation.
+ * Contrairement aux détentions, ces relations sont publiées dans les données
+ * ouvertes du REQ, avec le NEQ des deux côtés.
+ */
+export interface RelationSuccession {
+  id: string;
+  entitePredecesseurId: IdentifiantEntite;
+  entiteSuccesseurId: IdentifiantEntite;
+  typeOperation: TypeSuccession;
+  dateOperation: string;
+  /** Dénomination de l'entité prédécesseure telle que déclarée, conservée même
+   *  lorsque celle-ci n'a pas de fiche propre dans le jeu de données. */
+  libellePredecesseur?: string;
+  avisReqId: string;
+}
+
 export type TypeEvenement =
   | 'constitution'
   | 'changement_nom'
@@ -128,8 +166,21 @@ export interface GrapheCorporatif {
   adresses: Adresse[];
   detentions: RelationDetention[];
   administrations: RelationAdministration[];
+  successions: RelationSuccession[];
   liensAdresse: LienAdresse[];
   evenements: Evenement[];
+  /** D'où viennent ces données et de quand elles datent. Un outil d'audit doit
+   *  pouvoir répondre « à quelle date cet état a-t-il été observé ? ». */
+  provenance?: Provenance;
+}
+
+export interface Provenance {
+  source: 'donnees_ouvertes_req' | 'registre_consultation' | 'demonstration';
+  /** Date de l'extrait exploité (aaaa-mm-jj). */
+  dateExtraction: string;
+  /** Cadence de rafraîchissement de la source, à afficher à l'utilisateur. */
+  cadence?: string;
+  licence?: string;
 }
 
 export const grapheVide = (): GrapheCorporatif => ({
@@ -138,6 +189,7 @@ export const grapheVide = (): GrapheCorporatif => ({
   adresses: [],
   detentions: [],
   administrations: [],
+  successions: [],
   liensAdresse: [],
   evenements: [],
 });
@@ -177,6 +229,13 @@ export const LIBELLES_FORMES: Record<FormeJuridique, string> = {
   cooperative: 'Coopérative',
   association: 'Association',
   autre: 'Autre',
+};
+
+export const LIBELLES_SUCCESSIONS: Record<TypeSuccession, string> = {
+  fusion: 'Fusion',
+  scission: 'Scission',
+  continuation: 'Continuation',
+  transformation: 'Transformation',
 };
 
 export const LIBELLES_EVENEMENTS: Record<TypeEvenement, string> = {

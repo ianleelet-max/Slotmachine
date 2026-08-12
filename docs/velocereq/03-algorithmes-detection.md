@@ -66,6 +66,13 @@ Chaque règle produit : un **flag typé**, une **sévérité** (info/faible/moye
 ### 2.7 Changements de siège social ou de nom juste avant un événement critique
 - **Règle** : changement de nom légal ou de siège social dans une fenêtre courte précédant une dissolution, une faillite ou un litige connu — pattern classique de brouillage de traçabilité.
 
+### 2.7 bis — Contrôle exercé hors du conseil d'administration
+
+- **Règle** : la société déclare une convention unanime des actionnaires **et** le retrait des pouvoirs du conseil d'administration (indicateurs `IND_CONVEN_UNMN_ACTNR` et `IND_RET_TOUT_POUVR` des données ouvertes).
+- **Pourquoi elle compte** : c'est le seul signal de contrôle réel que les données ouvertes du REQ publient, puisqu'elles excluent toute personne physique. Quand les pouvoirs du conseil ont été retirés, la liste des administrateurs — la première chose que consulte un professionnel — cesse de renseigner sur qui dirige.
+- **Sévérité** : élevée lorsqu'un seul administrateur ou aucun n'est déclaré, moyenne sinon. Une convention unanime **sans** retrait de pouvoirs est une pratique courante et n'est pas signalée.
+- **Ce que la règle ne prétend pas faire** : identifier le détenteur du contrôle. Elle signale que le registre ne peut pas y répondre et qu'il faut obtenir la convention auprès de la société.
+
 ### 2.8 Score de risque composite
 
 ```

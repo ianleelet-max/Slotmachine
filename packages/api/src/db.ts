@@ -39,7 +39,27 @@ export async function chargerGraphe(): Promise<GrapheCorporatif> {
                   FROM evenement ORDER BY date_effective, id`),
     ]);
 
+  const extraction = await pool.query(
+    `SELECT max(date_publication) AS derniere FROM avis_req`,
+  );
+
   return {
+    // La provenance suit les données jusqu'à l'écran : un professionnel doit
+    // pouvoir dire à quelle date l'état qu'il consulte a été observé.
+    provenance: {
+      source: (process.env.SOURCE_DONNEES ?? 'demonstration') as
+        | 'donnees_ouvertes_req'
+        | 'registre_consultation'
+        | 'demonstration',
+      dateExtraction:
+        process.env.DATE_EXTRACTION ??
+        (extraction.rows[0]?.derniere
+          ? jour(extraction.rows[0].derniere)
+          : new Date().toISOString().slice(0, 10)),
+      cadence: process.env.CADENCE_DONNEES ?? 'Jeu de démonstration — aucune synchronisation',
+      licence: process.env.LICENCE_DONNEES,
+    },
+    successions: [],
     entites: entites.rows.map((r) => ({
       id: r.id,
       neq: r.neq,

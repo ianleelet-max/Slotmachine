@@ -10,7 +10,7 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadm
 
 | Livrable | État |
 |---|---|
-| Moteur d'analyse (UBO, cycles, 8 règles de détection, scoring) | Implémenté et testé (61 tests) |
+| Moteur d'analyse (UBO, cycles, 9 règles de détection, scoring) | Implémenté et testé |
 | Recherche multi-critères avec similarité orthographique | Implémentée |
 | Schéma PostgreSQL et jeu de données de démonstration | Implémentés |
 | API (recherche, fiche, graphe, UBO, chronologie, signaux, dossiers, rapport) | Implémentée |
@@ -18,6 +18,7 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadm
 | Dossiers d'audit, annotations horodatées, journal d'accès | Implémentés |
 | Comparaison de structures entre deux dates | Implémentée |
 | Rapport d'audit structuré et sourcé, imprimable en PDF | Implémenté |
+| Ingestion des données ouvertes du REQ (5 fichiers, provenance, filiations) | Implémentée, validée contre la spécification |
 | Partage de dossier intra-cabinet, SSO, authentification réelle | À faire |
 | Sources complémentaires (RDPRM, foncier, BSF), alertes | Prévu en V2 |
 
@@ -28,11 +29,12 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadm
 ## Structure
 
 ```
-packages/core/   Moteur d'analyse — TypeScript pur, sans dépendance, testé
-packages/api/    API Fastify + PostgreSQL
-apps/web/        Interface React + Vite
-db/              Schéma SQL
-docs/velocereq/  Conception produit
+packages/core/       Moteur d'analyse — TypeScript pur, sans dépendance, testé
+packages/ingestion/  Lecture des données ouvertes du Registraire
+packages/api/        API Fastify + PostgreSQL
+apps/web/            Interface React + Vite
+db/                  Schéma SQL
+docs/velocereq/      Conception produit
 ```
 
 Le moteur (`packages/core`) est une fonction pure du graphe corporatif : il ne connaît ni la base de données, ni le réseau. C'est ce qui permet de le tester exhaustivement et de rejouer une analyse sur un état historique.
@@ -62,6 +64,18 @@ Tests du moteur d'analyse :
 ```bash
 npm test
 ```
+
+## Ingérer les données ouvertes du REQ
+
+Le jeu de données se télécharge manuellement depuis [Données Québec](https://www.donneesquebec.ca/recherche/dataset/registre-des-entreprises) — le service du Registraire filtre les requêtes automatisées, et la licence CC BY-NC-SA engage l'exploitant. Une fois l'archive décompressée :
+
+```bash
+npm run ingerer -- /chemin/vers/archive 2026-08-02
+```
+
+La commande charge, analyse et rend compte : entités, adresses, filiations, événements reconstitués, lignes écartées avec leur motif, et signaux détectés. Elle n'écrit rien en base.
+
+**Ce que cette source permet et ne permet pas.** Le jeu ouvert ne contient aucune personne physique. Cinq règles y fonctionnent — reconstitution après radiation, changement d'identité avant un événement critique, grappes d'adresses, transferts avant événement critique, et le contrôle exercé hors du conseil d'administration. Quatre restent inactives faute de personnes : bénéficiaire ultime, cycles de détention, cascades, prête-noms. L'interface affiche cette limite en permanence plutôt que de laisser lire une absence de signal comme un résultat d'analyse.
 
 ## Le rapport d'audit
 

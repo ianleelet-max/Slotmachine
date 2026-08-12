@@ -50,7 +50,40 @@ export async function creerServeur(): Promise<FastifyInstance> {
     personnes: etat.graphe.personnes.length,
     redFlags: etat.flags.length,
     analyseCalculeeLe: etat.calculeLe,
+    provenance: etat.graphe.provenance,
   }));
+
+  /**
+   * Provenance des données et couverture des règles.
+   *
+   * Le jeu de données ouvertes du REQ ne publie aucune personne physique :
+   * quatre règles sur neuf restent alors inactives. L'interface doit le dire,
+   * sans quoi un professionnel lirait une absence de signal comme un résultat
+   * d'analyse plutôt que comme une limite de la source.
+   */
+  app.get('/api/provenance', async () => {
+    const sansPersonnes = etat.graphe.personnes.length === 0;
+    return {
+      provenance: etat.graphe.provenance ?? null,
+      analyseCalculeeLe: etat.calculeLe,
+      couverture: {
+        entites: etat.graphe.entites.length,
+        personnes: etat.graphe.personnes.length,
+        detentions: etat.graphe.detentions.length,
+        reglesInactives: sansPersonnes
+          ? [
+              'cycle_detention',
+              'cascade_excessive',
+              'administrateur_recurrent',
+              'prete_nom_probable',
+            ]
+          : [],
+        motifInactivite: sansPersonnes
+          ? 'La source chargée ne contient aucune personne physique : le bénéficiaire ultime et les règles qui dépendent des détentions ou des mandats ne peuvent pas être évalués.'
+          : null,
+      },
+    };
+  });
 
   app.post('/api/analyse/recalculer', async () => {
     etat = await construireEtat();

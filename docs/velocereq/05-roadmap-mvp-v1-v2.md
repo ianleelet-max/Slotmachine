@@ -2,6 +2,8 @@
 
 Principe de priorisation : le MVP doit déjà livrer la promesse centrale — *de la fiche à l'arbre* — sur des données REQ pures, sans dépendre des sources complémentaires ni du machine learning. Chaque phase suivante ajoute une couche de valeur sans remettre en cause l'architecture (voir doc 01, pensée API-first et graphe dès le MVP).
 
+> **Mise à jour (août 2026).** La vérification des accès aux données ([doc 07](./07-acces-donnees-req.md)) a montré que le jeu de données ouvertes du REQ ne publie aucune personne physique. La priorisation ci-dessous reste valable, mais le MVP se scinde de fait en deux : ce qui tourne sur les données ouvertes (implémenté, y compris une règle nouvelle sur le contrôle exercé hors du conseil d'administration) et ce qui attend une entente avec le Registraire (bénéficiaire ultime, cycles, cascades, prête-noms).
+
 ## MVP — « Prouver l'arbre » (cible : 3-4 mois)
 
 Objectif : un professionnel peut chercher une entité et obtenir sa structure de propriété réelle, plus vite et plus complètement qu'à la main — c'est la valeur minimale qui justifie déjà l'outil.

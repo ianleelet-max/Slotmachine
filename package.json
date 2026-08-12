@@ -9,11 +9,12 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=@velocereq/core && npm run build --workspace=@velocereq/api && npm run build --workspace=@velocereq/web",
-    "test": "npm run test --workspace=@velocereq/core",
+    "build": "npm run build --workspace=@velocereq/core && npm run build --workspace=@velocereq/ingestion && npm run build --workspace=@velocereq/api && npm run build --workspace=@velocereq/web",
+    "test": "npm run test --workspace=@velocereq/core && npm run test --workspace=@velocereq/ingestion",
     "seed": "npm run seed --workspace=@velocereq/api",
     "api": "npm run dev --workspace=@velocereq/api",
-    "web": "npm run dev --workspace=@velocereq/web"
+    "web": "npm run dev --workspace=@velocereq/web",
+    "ingerer": "npm run ingerer --workspace=@velocereq/ingestion --"
   },
   "devDependencies": {
     "typescript": "^5.7.2"
