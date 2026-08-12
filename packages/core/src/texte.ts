@@ -155,9 +155,21 @@ export function similariteNomLegal(a: string, b: string): number {
   return Math.max(similariteEdition(na, nb), recouvrementJetons(na, nb));
 }
 
-/** Similarité de noms de personnes, tolérante aux variantes de prénom. */
+/**
+ * Similarité de noms de personnes.
+ *
+ * Combine Jaro-Winkler, tolérant aux variantes de prénom (« Marc A. » /
+ * « Marc-André »), et le recouvrement de jetons, qui absorbe l'inversion
+ * « Nom, Prénom » / « Prénom Nom ». Cette inversion n'est pas un cas d'école :
+ * une même fiche du registre présente les deux formes selon la section, si
+ * bien qu'une personne apparaîtrait deux fois dans le graphe sans que le
+ * rapprochement soit seulement proposé.
+ */
 export function similariteNomPersonne(a: string, b: string): number {
-  return jaroWinkler(normaliser(a), normaliser(b));
+  const na = normaliser(a);
+  const nb = normaliser(b);
+  if (na === nb) return 1;
+  return Math.max(jaroWinkler(na, nb), recouvrementJetons(na, nb));
 }
 
 /**

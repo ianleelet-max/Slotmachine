@@ -9,7 +9,12 @@ import { calculerUbo, SEUIL_UBO } from './ubo.js';
 import { creerContexte, executerRegles, type RedFlag, type TypeRegle } from './regles.js';
 import { analyser, calculerScore, SEUIL_NIVEAU_ELEVE } from './scoring.js';
 import { rechercher } from './recherche.js';
-import { normaliserNomLegal, similariteNomLegal, jaroWinkler } from './texte.js';
+import {
+  normaliserNomLegal,
+  similariteNomLegal,
+  similariteNomPersonne,
+  jaroWinkler,
+} from './texte.js';
 
 const index = new IndexGraphe(grapheDemonstration());
 const contexte = creerContexte(index);
@@ -50,6 +55,13 @@ describe('normalisation et similarité de noms', () => {
 
   test('jaroWinkler tolère les variantes de prénom', () => {
     assert.ok(jaroWinkler('marc andre fortin', 'marc a fortin') > 0.85);
+  });
+
+  test('l’inversion « Nom, Prénom » est reconnue comme la même personne', () => {
+    // Le registre présente les deux formes selon la section consultée.
+    assert.equal(similariteNomPersonne('Josée Lemieux', 'Lemieux, Josée'), 1);
+    assert.equal(similariteNomPersonne('Marc-André Fortin', 'Fortin, Marc-André'), 1);
+    assert.ok(similariteNomPersonne('Jean Tremblay', 'Denis Bouchard') < 0.7);
   });
 });
 

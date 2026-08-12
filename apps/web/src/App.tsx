@@ -18,6 +18,7 @@ import {
   EcranDossiers,
   EcranJournal,
 } from './dossiers';
+import { EcranCaptures } from './captures';
 import {
   Etiquette,
   EtiquetteRisque,
@@ -35,6 +36,7 @@ type Vue =
   | { nom: 'dossiers' }
   | { nom: 'dossier'; id: string }
   | { nom: 'comparaison' }
+  | { nom: 'captures' }
   | { nom: 'journal' };
 
 type Onglet = 'fiche' | 'graphe' | 'chronologie' | 'ubo' | 'signaux';
@@ -106,6 +108,9 @@ export default function App() {
           >
             Comparer
           </button>
+          <button aria-current={vue.nom === 'captures'} onClick={() => setVue({ nom: 'captures' })}>
+            Captures
+          </button>
           <button aria-current={vue.nom === 'journal'} onClick={() => setVue({ nom: 'journal' })}>
             Journal
           </button>
@@ -140,6 +145,7 @@ export default function App() {
         )}
         {vue.nom === 'dossier' && <EcranDossier id={vue.id} onOuvrirEntite={ouvrirEntite} />}
         {vue.nom === 'comparaison' && <EcranComparaison />}
+        {vue.nom === 'captures' && <EcranCaptures />}
         {vue.nom === 'journal' && <EcranJournal />}
       </main>
     </>

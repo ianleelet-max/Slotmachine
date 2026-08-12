@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "AudiTREQ — capture assistée",
+  "version": "0.1.0",
+  "description": "Structure la fiche du registre que vous consultez et l'envoie à votre instance locale d'AudiTREQ. N'effectue aucune recherche à votre place.",
+  "default_locale": "fr",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": [
+    "https://www.registreentreprises.gouv.qc.ca/*",
+    "http://localhost:3001/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Capturer cette fiche"
+  }
+}

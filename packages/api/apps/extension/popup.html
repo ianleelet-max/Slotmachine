@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <span class="pastille"></span>
+      <h1>AudiTREQ</h1>
+    </header>
+
+    <p class="explication">
+      Capture la fiche <strong>actuellement affichée</strong>. L’extension n’effectue aucune
+      recherche à votre place et n’ouvre aucune page.
+    </p>
+
+    <label class="champ">
+      <span>Instance locale</span>
+      <input id="instance" type="url" value="http://localhost:3001" />
+    </label>
+
+    <label class="champ">
+      <span>Dossier</span>
+      <select id="dossier"><option value="">Sans dossier</option></select>
+    </label>
+
+    <button id="capturer" class="primaire">Capturer cette fiche</button>
+
+    <div id="resultat" hidden></div>
+  </body>
+  <script src="popup.js"></script>
+</html>

@@ -224,6 +224,35 @@ CREATE TABLE annotation (
 
 CREATE INDEX annotation_dossier_idx ON annotation (dossier_id);
 
+-- --------------------------------------------------------------------------
+-- Captures assistées : ce que le professionnel a consulté au registre
+-- --------------------------------------------------------------------------
+
+-- Une capture n'entre jamais directement dans le graphe. Elle attend une
+-- validation humaine explicite, et conserve l'extrait brut de la page comme
+-- pièce justificative — c'est ce qui permet, des mois plus tard, de remonter
+-- au texte que le professionnel avait sous les yeux.
+CREATE TABLE capture (
+    id            bigserial PRIMARY KEY,
+    dossier_id    text REFERENCES dossier (id) ON DELETE SET NULL,
+    url_source    text NOT NULL,
+    capture_le    timestamptz NOT NULL,
+    neq           text,
+    -- Résultat de l'interprétation : champs, confiances, avertissements.
+    contenu       jsonb NOT NULL,
+    -- Représentation neutre de la page telle qu'extraite du navigateur.
+    extrait_brut  jsonb,
+    statut        text NOT NULL DEFAULT 'en_attente'
+        CHECK (statut IN ('en_attente', 'validee', 'rejetee')),
+    motif_rejet   text,
+    traitee_par   text REFERENCES utilisateur (id),
+    traitee_le    timestamptz,
+    cree_le       timestamptz NOT NULL DEFAULT now()
+);
+
+CREATE INDEX capture_statut_idx ON capture (statut, cree_le DESC);
+CREATE INDEX capture_neq_idx ON capture (neq);
+
 -- Journal en ajout seul : sa valeur probante tient à ce qu'on ne puisse pas
 -- le réécrire après coup.
 CREATE TABLE journal_acces (

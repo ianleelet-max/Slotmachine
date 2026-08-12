@@ -14,6 +14,7 @@
 | [05 — Roadmap MVP → V1 → V2](./05-roadmap-mvp-v1-v2.md) | Priorisation par phase avec justification |
 | [06 — Recommandations UX/UI](./06-recommandations-ux-ui.md) | Principes directeurs, système visuel (dark mode), composants clés, anti-patterns |
 | [07 — Accès aux données du REQ](./07-acces-donnees-req.md) | Voies d'accès réelles, contenu exact du jeu ouvert, contraintes de licence, et ce que cela impose au produit |
+| [08 — Capture assistée du registre](./08-capture-assistee.md) | Extension navigateur : ce qu'elle fait et ne fera pas, garanties de valeur probante, place de l'IA |
 
 Une maquette visuelle interactive des écrans clés (tableau de bord, recherche, fiche entité, graphe relationnel, timeline, générateur de rapport) est fournie dans [`maquettes.html`](./maquettes.html) — ouvrir le fichier dans un navigateur pour naviguer entre les écrans.
 

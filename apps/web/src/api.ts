@@ -418,6 +418,71 @@ export interface Provenance {
   };
 }
 
+/* ------------------------------------------------- Captures assistées */
+
+export type NiveauConfiance = 'certain' | 'probable' | 'incertain';
+
+export interface ChampCapture<T = string> {
+  valeur: T;
+  libelleSource: string;
+  confiance: NiveauConfiance;
+  extraitBrut: string;
+}
+
+export interface PersonneCapturee {
+  nomComplet: ChampCapture;
+  role: string;
+  fonction?: ChampCapture;
+  adresse?: ChampCapture;
+  pourcentage?: ChampCapture<number>;
+  dateDebut?: ChampCapture;
+  dateFin?: ChampCapture;
+  estPersonneMorale: boolean;
+}
+
+export interface CaptureFiche {
+  neq?: ChampCapture;
+  nomLegal?: ChampCapture;
+  statut?: ChampCapture;
+  formeJuridique?: ChampCapture;
+  adresseSiege?: ChampCapture;
+  personnes: PersonneCapturee[];
+  urlSource: string;
+  captureLe: string;
+  sectionsNonReconnues: string[];
+  avertissements: string[];
+}
+
+export interface Capture {
+  id: string;
+  dossier_id: string | null;
+  dossier_nom: string | null;
+  url_source: string;
+  capture_le: string;
+  neq: string | null;
+  contenu: CaptureFiche;
+  statut: 'en_attente' | 'validee' | 'rejetee';
+  motif_rejet: string | null;
+  champsARelire: string[];
+}
+
+export interface BilanIntegration {
+  entiteId: string;
+  personnesCreees: number;
+  administrations: number;
+  detentions: number;
+  rapprochementsProposes: number;
+}
+
+export const apiCaptures = {
+  liste: (statut: string) =>
+    obtenirPublic<{ captures: Capture[] }>(`/api/captures?statut=${encodeURIComponent(statut)}`),
+  valider: (id: string) =>
+    envoyer<BilanIntegration>(`/api/captures/${encodeURIComponent(id)}/valider`, {}),
+  rejeter: (id: string, motif?: string) =>
+    envoyer<{ statut: string }>(`/api/captures/${encodeURIComponent(id)}/rejeter`, { motif }),
+};
+
 export const LIBELLES_SOURCES: Record<string, string> = {
   donnees_ouvertes_req: 'Données ouvertes du Registraire des entreprises',
   registre_consultation: 'Consultation du registre',
@@ -433,4 +498,7 @@ export const LIBELLES_ACTIONS: Record<string, string> = {
   'dossier.retrait_entite': 'Retrait d’une entité du dossier',
   'annotation.creation': 'Note ajoutée',
   'rapport.generation': 'Génération de rapport',
+  'capture.reception': 'Capture reçue du navigateur',
+  'capture.validation': 'Capture validée et intégrée',
+  'capture.rejet': 'Capture rejetée',
 };

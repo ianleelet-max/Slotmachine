@@ -16,6 +16,7 @@ import {
 
 import { chargerGraphe, pool } from './db.js';
 import { enregistrerRoutesDossiers, journaliser } from './dossiers.js';
+import { enregistrerRoutesCaptures } from './captures.js';
 
 /**
  * État analytique du service : le graphe et son analyse sont calculés une fois
@@ -351,6 +352,10 @@ export async function creerServeur(): Promise<FastifyInstance> {
   // rapport et journal. Elles reçoivent l'état analytique par accesseur pour
   // rester valides après un recalcul.
   enregistrerRoutesDossiers(app, { index: () => etat.index, flags: () => etat.flags });
+
+  // Captures assistées : réception de ce que le professionnel a consulté, et
+  // validation humaine avant toute entrée au graphe.
+  enregistrerRoutesCaptures(app);
 
   return app;
 }

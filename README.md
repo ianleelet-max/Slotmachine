@@ -19,6 +19,7 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/auditreq/05-roadma
 | Comparaison de structures entre deux dates | Implémentée |
 | Rapport d'audit structuré et sourcé, imprimable en PDF | Implémenté |
 | Ingestion des données ouvertes du REQ (5 fichiers, provenance, filiations) | Implémentée, validée contre la spécification |
+| Capture assistée du registre (extension + validation humaine) | Implémentée, à confronter à la vraie page |
 | Partage de dossier intra-cabinet, SSO, authentification réelle | À faire |
 | Sources complémentaires (RDPRM, foncier, BSF), alertes | Prévu en V2 |
 
@@ -74,6 +75,12 @@ npm run ingerer -- /chemin/vers/archive 2026-08-02
 La commande charge, analyse et rend compte : entités, adresses, filiations, événements reconstitués, lignes écartées avec leur motif, et signaux détectés. Elle n'écrit rien en base.
 
 **Ce que cette source permet et ne permet pas.** Le jeu ouvert ne contient aucune personne physique. Cinq règles y fonctionnent — reconstitution après radiation, changement d'identité avant un événement critique, grappes d'adresses, transferts avant événement critique, et le contrôle exercé hors du conseil d'administration. Quatre restent inactives faute de personnes : bénéficiaire ultime, cycles de détention, cascades, prête-noms. L'interface affiche cette limite en permanence plutôt que de laisser lire une absence de signal comme un résultat d'analyse.
+
+## Compléter le graphe par capture assistée
+
+Les données ouvertes ne contiennent aucune personne physique. L'[extension](./apps/extension/README.md) comble ce manque **sans jamais consulter le registre à votre place** : vous ouvrez la fiche, elle structure ce qui est affiché, et rien n'entre dans le graphe avant votre validation dans l'écran **Captures**.
+
+Chaque champ capturé porte le libellé de la page dont il provient, un niveau de confiance et l'extrait brut correspondant. Les participations exprimées par tranche (« 50 % ou plus ») sont marquées comme approximatives plutôt que présentées comme des chiffres exacts. Conception : [`docs/auditreq/08-capture-assistee.md`](./docs/auditreq/08-capture-assistee.md).
 
 ## Le rapport d'audit
 
