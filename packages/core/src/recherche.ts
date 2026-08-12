@@ -1,10 +1,5 @@
 import type { Entite, Personne } from './domaine.js';
-import {
-  normaliser,
-  normaliserNomLegal,
-  similariteNomLegal,
-  similariteNomPersonne,
-} from './texte.js';
+import { normaliser, normaliserNomLegal, similariteRequete } from './texte.js';
 
 export type TypeResultat = 'entite' | 'personne';
 
@@ -22,7 +17,12 @@ export interface ResultatRecherche {
 export interface OptionsRecherche {
   /** Active le rapprochement par similarité orthographique. */
   similarite?: boolean;
-  /** Pertinence minimale retenue en mode similarité. */
+  /**
+   * Pertinence minimale retenue en mode similarité. Le défaut est volontairement
+   * exigeant : sous 0,85, le bonus de préfixe de Jaro-Winkler fait remonter des
+   * faux amis (« Boulangerie » contre « Bouchard ») qui polluent une liste que
+   * l'utilisateur parcourt à vue.
+   */
   seuilSimilarite?: number;
   limite?: number;
 }
@@ -40,7 +40,7 @@ export function rechercher(
   options: OptionsRecherche = {},
 ): ResultatRecherche[] {
   const similariteActive = options.similarite ?? true;
-  const seuil = options.seuilSimilarite ?? 0.78;
+  const seuil = options.seuilSimilarite ?? 0.86;
   const limite = options.limite ?? 50;
 
   const brut = requete.trim();
@@ -89,7 +89,7 @@ export function rechercher(
     }
 
     if (similariteActive) {
-      const similarite = similariteNomLegal(brut, entite.nomLegal);
+      const similarite = similariteRequete(brut, entite.nomLegal);
       if (similarite >= seuil) {
         resultats.push(resultatEntite(entite, similarite * 0.78, 'nom_similaire'));
       }
@@ -124,7 +124,7 @@ export function rechercher(
     }
 
     if (similariteActive) {
-      const similarite = similariteNomPersonne(brut, personne.nomComplet);
+      const similarite = similariteRequete(brut, personne.nomComplet);
       if (similarite >= seuil) {
         resultats.push({
           type: 'personne',

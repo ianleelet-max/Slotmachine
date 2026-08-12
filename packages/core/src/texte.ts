@@ -159,3 +159,34 @@ export function similariteNomLegal(a: string, b: string): number {
 export function similariteNomPersonne(a: string, b: string): number {
   return jaroWinkler(normaliser(a), normaliser(b));
 }
+
+/**
+ * Similarité d'une requête de recherche avec un nom, appariée mot à mot.
+ *
+ * Comparer « Lavalée » à « Gestion Lavallée-Bouchard Inc. » comme deux chaînes
+ * entières donne un score effondré par la seule différence de longueur ; ce
+ * que l'utilisateur veut, c'est que chaque mot tapé retrouve son meilleur
+ * équivalent dans le nom. On exige aussi que chaque mot de la requête trouve
+ * un correspondant crédible, pour qu'un seul mot juste sur cinq ne suffise
+ * pas à faire remonter un résultat.
+ */
+export function similariteRequete(requete: string, nom: string): number {
+  const jetonsRequete = normaliser(requete).split(' ').filter(Boolean);
+  const jetonsNom = normaliser(nom).split(' ').filter(Boolean);
+  if (jetonsRequete.length === 0 || jetonsNom.length === 0) return 0;
+
+  let total = 0;
+  let minimum = 1;
+  for (const jeton of jetonsRequete) {
+    let meilleur = 0;
+    for (const candidat of jetonsNom) {
+      const score = candidat === jeton ? 1 : jaroWinkler(jeton, candidat);
+      if (score > meilleur) meilleur = score;
+    }
+    total += meilleur;
+    if (meilleur < minimum) minimum = meilleur;
+  }
+
+  const moyenne = total / jetonsRequete.length;
+  return Math.min(moyenne, minimum + 0.15);
+}

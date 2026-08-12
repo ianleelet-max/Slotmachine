@@ -392,6 +392,20 @@ describe('recherche', () => {
   test('la similarité rattrape une variation orthographique', () => {
     const resultats = rechercher('Gestion Lavalée-Bouchard', entites, personnes);
     assert.ok(resultats.some((r) => r.id === 'E2'));
+    // Un seul mot suffit, à condition qu'il soit discriminant.
+    assert.ok(rechercher('Lavalée', entites, personnes).some((r) => r.id === 'E2'));
+  });
+
+  test('un faux ami partageant un préfixe ne remonte pas', () => {
+    // « Boulangerie » et « Bouchard » partagent trois lettres initiales, ce qui
+    // suffit à tromper Jaro-Winkler mais ne doit pas produire de résultat.
+    const resultats = rechercher('Boulangerie', entites, personnes);
+    assert.deepEqual(resultats, []);
+  });
+
+  test('la similarité peut être désactivée pour une recherche stricte', () => {
+    const resultats = rechercher('Lavalée', entites, personnes, { similarite: false });
+    assert.deepEqual(resultats, []);
   });
 
   test('un nom antérieur reste trouvable et est signalé comme tel', () => {
