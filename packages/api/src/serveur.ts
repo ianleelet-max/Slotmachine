@@ -1,5 +1,6 @@
 import Fastify, { type FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import {
   IndexGraphe,
   analyser,
@@ -17,6 +18,7 @@ import {
 import { chargerGraphe, pool } from './db.js';
 import { enregistrerRoutesDossiers, journaliser } from './dossiers.js';
 import { enregistrerRoutesCaptures } from './captures.js';
+import { enregistrerAuthentification, purgerSessionsExpirees } from './authentification.js';
 
 /**
  * État analytique du service : le graphe et son analyse sont calculés une fois
@@ -41,7 +43,17 @@ async function construireEtat(): Promise<EtatAnalytique> {
 
 export async function creerServeur(): Promise<FastifyInstance> {
   const app = Fastify({ logger: { level: process.env.LOG_LEVEL ?? 'info' } });
-  await app.register(cors, { origin: true });
+
+  // L'origine est reflétée plutôt qu'ouverte à tous : le témoin de session ne
+  // peut être transmis qu'avec `credentials`, ce qui exige une origine précise.
+  await app.register(cors, { origin: true, credentials: true });
+  await app.register(cookie, { secret: process.env.SECRET_TEMOIN ?? undefined });
+
+  enregistrerAuthentification(app);
+  await purgerSessionsExpirees();
+  // Les sessions expirées ne s'accumulent pas : la purge tourne chaque heure.
+  const purge = setInterval(() => void purgerSessionsExpirees(), 3_600_000);
+  purge.unref();
 
   let etat = await construireEtat();
 
@@ -106,7 +118,10 @@ export async function creerServeur(): Promise<FastifyInstance> {
 
       // Toute recherche est journalisée : c'est l'exigence de traçabilité qui
       // rend un rapport défendable, et elle ne souffre pas d'exception.
-      await journaliser('recherche', { requete: q, resultats: resultats.length });
+      await journaliser(requete.utilisateur?.id ?? null, 'recherche', {
+        requete: q,
+        resultats: resultats.length,
+      });
 
       return {
         requete: q,
@@ -135,7 +150,10 @@ export async function creerServeur(): Promise<FastifyInstance> {
     if (!entite) return reponse.code(404).send({ erreur: 'Entité introuvable' });
 
     const score = etat.scores.get(entite.id);
-    await journaliser('entite.consultation', { entiteId: entite.id, neq: entite.neq });
+    await journaliser(requete.utilisateur?.id ?? null, 'entite.consultation', {
+      entiteId: entite.id,
+      neq: entite.neq,
+    });
 
     return {
       entite,

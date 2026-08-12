@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   api,
+  apiAuth,
+  ErreurSession,
+  type UtilisateurConnecte,
   LIBELLES_REGLES,
   LIBELLES_STATUTS,
   type Evenement,
@@ -19,6 +22,7 @@ import {
   EcranJournal,
 } from './dossiers';
 import { EcranCaptures } from './captures';
+import { EcranConnexion } from './connexion';
 import {
   Etiquette,
   EtiquetteRisque,
@@ -53,7 +57,31 @@ export default function App() {
   const [vue, setVue] = useState<Vue>({ nom: 'tableau' });
   const [mode, setMode] = useState<'rapide' | 'approfondi'>('approfondi');
   const [saisie, setSaisie] = useState('');
+  const [utilisateur, setUtilisateur] = useState<UtilisateurConnecte | null | undefined>(undefined);
   const champRecherche = useRef<HTMLInputElement>(null);
+
+  // Session en cours ? Tant qu'on ne le sait pas, rien n'est affiché : montrer
+  // l'interface avant la réponse laisserait entrevoir la structure des écrans à
+  // quelqu'un qui n'a pas de session.
+  useEffect(() => {
+    apiAuth
+      .moi()
+      .then((r) => setUtilisateur(r.utilisateur))
+      .catch(() => setUtilisateur(null));
+  }, []);
+
+  // Une session expirée en cours de travail ramène à l'écran de connexion
+  // plutôt que d'afficher des erreurs éparses sur chaque panneau.
+  useEffect(() => {
+    const surRejet = (e: PromiseRejectionEvent) => {
+      if (e.reason instanceof ErreurSession) {
+        setUtilisateur(null);
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('unhandledrejection', surRejet);
+    return () => window.removeEventListener('unhandledrejection', surRejet);
+  }, []);
 
   // La barre de recherche est le point d'entrée de tous les parcours : elle
   // reste atteignable au clavier depuis n'importe quel écran.
@@ -69,6 +97,15 @@ export default function App() {
   }, []);
 
   const ouvrirEntite = useCallback((id: string) => setVue({ nom: 'entite', id }), []);
+
+  const seDeconnecter = async () => {
+    await apiAuth.deconnexion().catch(() => undefined);
+    setUtilisateur(null);
+    setVue({ nom: 'tableau' });
+  };
+
+  if (utilisateur === undefined) return <p className="message">Vérification de la session…</p>;
+  if (utilisateur === null) return <EcranConnexion onConnecte={setUtilisateur} />;
 
   return (
     <>
@@ -115,6 +152,13 @@ export default function App() {
             Journal
           </button>
         </nav>
+
+        <div className="utilisateur-session">
+          <span className="sourdine">{utilisateur.nomComplet}</span>
+          <button className="lien" onClick={seDeconnecter}>
+            Déconnexion
+          </button>
+        </div>
 
         <div className="bascule-mode">
           <button aria-pressed={mode === 'rapide'} onClick={() => setMode('rapide')}>

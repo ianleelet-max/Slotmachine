@@ -178,14 +178,32 @@ CREATE TABLE cabinet (
 );
 
 CREATE TABLE utilisateur (
-    id             text PRIMARY KEY,
-    cabinet_id     text NOT NULL REFERENCES cabinet (id) ON DELETE CASCADE,
-    courriel       text NOT NULL UNIQUE,
-    nom_complet    text NOT NULL,
-    role           text NOT NULL CHECK (role IN ('admin', 'senior', 'professionnel', 'lecteur')),
-    persona_defaut text NOT NULL DEFAULT 'professionnel',
-    mfa_actif      boolean NOT NULL DEFAULT true
+    id                 text PRIMARY KEY,
+    cabinet_id         text NOT NULL REFERENCES cabinet (id) ON DELETE CASCADE,
+    courriel           text NOT NULL UNIQUE,
+    nom_complet        text NOT NULL,
+    role               text NOT NULL CHECK (role IN ('admin', 'senior', 'professionnel', 'lecteur')),
+    persona_defaut     text NOT NULL DEFAULT 'professionnel',
+    mfa_actif          boolean NOT NULL DEFAULT false,
+    -- Format « scrypt$N$r$p$sel$clé ». Nul tant qu'aucun mot de passe n'a été
+    -- défini : un compte sans mot de passe ne peut pas se connecter.
+    mot_de_passe_hash  text
 );
+
+-- Sessions. Seule l'empreinte du jeton est conservée : le jeton en clair
+-- n'existe que dans le témoin du navigateur, de sorte qu'un vol de cette table
+-- ne permet pas d'usurper une session ouverte.
+CREATE TABLE session (
+    empreinte          text PRIMARY KEY,
+    utilisateur_id     text NOT NULL REFERENCES utilisateur (id) ON DELETE CASCADE,
+    cree_le            timestamptz NOT NULL DEFAULT now(),
+    derniere_activite  timestamptz NOT NULL DEFAULT now(),
+    expire_le          timestamptz NOT NULL,
+    agent              text
+);
+
+CREATE INDEX session_utilisateur_idx ON session (utilisateur_id);
+CREATE INDEX session_expiration_idx ON session (expire_le);
 
 CREATE TABLE dossier (
     id                text PRIMARY KEY,

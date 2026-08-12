@@ -703,3 +703,41 @@ button[disabled] {
 .provenance-limite b {
   color: var(--risque-moyen);
 }
+
+/* --------------------------------------------------------------- Connexion */
+
+.connexion {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 12vh 20px 20px;
+  background: var(--bg);
+}
+
+.connexion-carte {
+  width: 100%;
+  max-width: 380px;
+}
+
+.utilisateur-session {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+button.lien {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+}
+
+button.lien:hover {
+  background: var(--surface-2);
+}

@@ -20,9 +20,12 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/auditreq/05-roadma
 | Rapport d'audit structuré et sourcé, imprimable en PDF | Implémenté |
 | Ingestion des données ouvertes du REQ (5 fichiers, provenance, filiations) | Implémentée, validée contre la spécification |
 | Capture assistée du registre (extension + validation humaine) | Implémentée, à confronter à la vraie page |
-| Partage de dossier intra-cabinet, SSO, authentification réelle | À faire |
+| Authentification, sessions, protection des routes | Implémentée |
+| Partage de dossier intra-cabinet, SSO, double facteur | À faire |
 | Sources complémentaires (RDPRM, foncier, BSF), alertes | Prévu en V2 |
 
+> **Avant d'exposer quoi que ce soit** : l'API n'écoute que sur `127.0.0.1` par défaut, et une instance ne cloisonne pas encore les dossiers par cabinet — donc une instance par cabinet. Guide de déploiement restreint et protocole d'essai : **[DEPLOIEMENT.md](./DEPLOIEMENT.md)**.
+>
 > Les données présentes sont **entièrement fictives**. Aucune connexion au REQ réel n'est établie.
 >
 > Le raccordement aux données officielles est contraint : le jeu de données ouvertes du REQ **ne contient aucune personne physique** (ni administrateur, ni actionnaire, ni bénéficiaire ultime) et sa licence interdit l'usage commercial. Les personnes ne sont accessibles que par le service de consultation du registre, dont l'extraction automatisée suppose une entente avec le Registraire. Analyse complète : [07 — Accès aux données du REQ](./docs/auditreq/07-acces-donnees-req.md).
@@ -51,7 +54,7 @@ npm test                 # 85 tests, sans base de données
 createdb auditreq
 export DATABASE_URL="postgres://$USER@localhost/auditreq"
 npm run db:init          # crée le schéma, sans exiger l'outil psql
-npm run seed             # jeu de démonstration + analyse
+npm run seed             # jeu de démonstration + analyse (affiche le mot de passe du compte)
 
 npm run api              # port 3001
 npm run web              # port 5173, puis http://localhost:5173

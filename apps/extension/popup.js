@@ -28,7 +28,17 @@ async function initialiser() {
   if (instance) champInstance.value = instance;
 
   try {
-    const reponse = await fetch(`${champInstance.value}/api/dossiers`);
+    // `credentials: 'include'` transmet le témoin de session posé lors de la
+    // connexion à l'interface : l'extension n'a pas d'identifiants propres.
+    const reponse = await fetch(`${champInstance.value}/api/dossiers`, {
+      credentials: 'include',
+    });
+    if (reponse.status === 401) {
+      afficher(
+        '<span class="avertissement">Aucune session ouverte. Connectez-vous à AudiTREQ dans un onglet, puis rouvrez cette fenêtre.</span>',
+      );
+      return;
+    }
     if (!reponse.ok) throw new Error(String(reponse.status));
     const { dossiers } = await reponse.json();
 
@@ -76,10 +86,14 @@ bouton.addEventListener('click', async () => {
 
     const envoi = await fetch(`${champInstance.value}/api/captures`, {
       method: 'POST',
+      credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ extrait, dossierId: champDossier.value || undefined }),
     });
 
+    if (envoi.status === 401) {
+      throw new Error('Session expirée. Reconnectez-vous à AudiTREQ, puis réessayez.');
+    }
     if (!envoi.ok) {
       const detail = await envoi.json().catch(() => ({}));
       throw new Error(detail.erreur ?? `Envoi refusé (${envoi.status})`);

@@ -11,20 +11,29 @@ import { pool } from './db.js';
 import { rendreRapportHtml } from './rapport-html.js';
 
 /**
- * Utilisateur courant. L'authentification (SSO, MFA) est un chantier V1 à part
- * entière ; d'ici là, toutes les écritures sont attribuées à l'utilisateur de
- * démonstration, et c'est cette valeur qui alimente le journal d'accès. La
- * traçabilité est structurellement en place, seule l'identité reste à brancher.
+ * Identité de l'auteur d'une écriture.
+ *
+ * Le journal d'accès n'a de valeur que s'il nomme quelqu'un : chaque route
+ * passe donc l'utilisateur authentifié plutôt qu'une constante.
  */
-const UTILISATEUR_COURANT = 'U1';
+function auteur(requete: { utilisateur?: { id: string } }): string {
+  const id = requete.utilisateur?.id;
+  if (!id) throw new Error('Écriture tentée sans session authentifiée.');
+  return id;
+}
 
 export interface DependancesDossiers {
   index: () => IndexGraphe;
   flags: () => RedFlag[];
 }
 
-/** Écrit une entrée du journal d'accès. Toute consultation ou export y passe. */
+/**
+ * Écrit une entrée du journal d'accès. Toute consultation ou export y passe.
+ * L'utilisateur est celui de la session : une entrée anonyme n'aurait aucune
+ * valeur probante.
+ */
 export async function journaliser(
+  utilisateurId: string | null,
   action: string,
   contexte: Record<string, unknown>,
   dossierId?: string,
@@ -33,7 +42,7 @@ export async function journaliser(
   await pool.query(
     `INSERT INTO journal_acces (utilisateur_id, dossier_id, action, finalite, contexte)
      VALUES ($1, $2, $3, $4, $5)`,
-    [UTILISATEUR_COURANT, dossierId ?? null, action, finalite ?? null, JSON.stringify(contexte)],
+    [utilisateurId, dossierId ?? null, action, finalite ?? null, JSON.stringify(contexte)],
   );
 }
 
@@ -74,7 +83,7 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
        VALUES ($1, (SELECT cabinet_id FROM utilisateur WHERE id = $2), $3, $4, $5, $6, $7)`,
       [
         id,
-        UTILISATEUR_COURANT,
+        auteur(requete),
         nom.trim(),
         client?.trim() || null,
         finaliteDeclaree.trim(),
@@ -83,7 +92,7 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
       ],
     );
 
-    await journaliser('dossier.creation', { nom }, id, finaliteDeclaree);
+    await journaliser(auteur(requete), 'dossier.creation', { nom }, id, finaliteDeclaree);
     return reponse.code(201).send({ id });
   });
 
@@ -126,8 +135,7 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
       };
     });
 
-    await journaliser(
-      'dossier.consultation',
+    await journaliser(auteur(requete), 'dossier.consultation',
       { entites: entites.length },
       requete.params.id,
       dossier.rows[0]!.finalite_declaree,
@@ -160,7 +168,7 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
         [requete.params.id, entite.id],
       );
 
-      await journaliser('dossier.ajout_entite', { entiteId: entite.id }, requete.params.id);
+      await journaliser(auteur(requete), 'dossier.ajout_entite', { entiteId: entite.id }, requete.params.id);
       return { ajoute: (resultat.rowCount ?? 0) > 0, entiteId: entite.id };
     },
   );
@@ -172,7 +180,7 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
         requete.params.id,
         requete.params.entiteId,
       ]);
-      await journaliser('dossier.retrait_entite', { entiteId: requete.params.entiteId }, requete.params.id);
+      await journaliser(auteur(requete), 'dossier.retrait_entite', { entiteId: requete.params.entiteId }, requete.params.id);
       return { retire: true };
     },
   );
@@ -190,10 +198,10 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
       const resultat = await pool.query(
         `INSERT INTO annotation (dossier_id, auteur_id, entite_cible_id, contenu)
          VALUES ($1, $2, $3, $4) RETURNING id, cree_le`,
-        [requete.params.id, UTILISATEUR_COURANT, requete.body?.entiteCibleId ?? null, contenu],
+        [requete.params.id, auteur(requete), requete.body?.entiteCibleId ?? null, contenu],
       );
 
-      await journaliser('annotation.creation', { annotationId: resultat.rows[0]!.id }, requete.params.id);
+      await journaliser(auteur(requete), 'annotation.creation', { annotationId: resultat.rows[0]!.id }, requete.params.id);
       return reponse.code(201).send(resultat.rows[0]);
     },
   );
@@ -225,11 +233,10 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
   app.get<{ Params: { id: string }; Querystring: { format?: string } }>(
     '/api/dossiers/:id/rapport',
     async (requete, reponse) => {
-      const rapport = await construireRapport(requete.params.id, deps);
+      const rapport = await construireRapport(requete.params.id, deps, auteur(requete));
       if (!rapport) return reponse.code(404).send({ erreur: 'Dossier introuvable' });
 
-      await journaliser(
-        'rapport.generation',
+      await journaliser(auteur(requete), 'rapport.generation',
         { format: requete.query.format ?? 'json', entites: rapport.sections.length },
         requete.params.id,
         rapport.entete.finaliteDeclaree,
@@ -265,7 +272,11 @@ export function enregistrerRoutesDossiers(app: FastifyInstance, deps: Dependance
   );
 }
 
-async function construireRapport(dossierId: string, deps: DependancesDossiers) {
+async function construireRapport(
+  dossierId: string,
+  deps: DependancesDossiers,
+  utilisateurId: string,
+) {
   const dossier = await pool.query(`SELECT * FROM dossier WHERE id = $1`, [dossierId]);
   if (dossier.rowCount === 0) return null;
   const d = dossier.rows[0]!;
@@ -282,8 +293,8 @@ async function construireRapport(dossierId: string, deps: DependancesDossiers) {
   );
 
   const index = deps.index();
-  const auteur = await pool.query(`SELECT nom_complet FROM utilisateur WHERE id = $1`, [
-    UTILISATEUR_COURANT,
+  const signataire = await pool.query(`SELECT nom_complet FROM utilisateur WHERE id = $1`, [
+    utilisateurId,
   ]);
 
   return composerRapport(index, {
@@ -292,7 +303,7 @@ async function construireRapport(dossierId: string, deps: DependancesDossiers) {
       dossierNom: d.nom,
       client: d.client ?? undefined,
       finaliteDeclaree: d.finalite_declaree,
-      auteur: auteur.rows[0]?.nom_complet ?? 'Utilisateur',
+      auteur: signataire.rows[0]?.nom_complet ?? 'Utilisateur',
       genereLe: new Date().toISOString().slice(0, 10),
     },
     entites: liens.rows.map((l) => l.entite_id as IdentifiantEntite),

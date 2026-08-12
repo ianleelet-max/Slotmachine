@@ -212,7 +212,11 @@ async function obtenir<T>(chemin: string): Promise<T> {
   if (enCours) return enCours as Promise<T>;
 
   const promesse = (async () => {
-    const reponse = await fetch(chemin);
+    // Le témoin de session est un témoin propriétaire : sans `credentials`, le
+    // navigateur ne le transmettrait pas à l'API en développement, où
+    // l'interface et l'API n'ont pas le même port.
+    const reponse = await fetch(chemin, { credentials: 'include' });
+    if (reponse.status === 401) throw new ErreurSession();
     if (!reponse.ok) {
       const corps = await reponse.json().catch(() => ({ erreur: reponse.statusText }));
       throw new Error(corps.erreur ?? `Requête échouée (${reponse.status})`);
@@ -363,12 +367,22 @@ export interface EntreeJournal {
   utilisateur: string | null;
 }
 
+/** Levée quand la session a expiré : l'interface repasse à l'écran de connexion. */
+export class ErreurSession extends Error {
+  constructor() {
+    super('Session expirée. Reconnectez-vous.');
+    this.name = 'ErreurSession';
+  }
+}
+
 async function envoyer<T>(chemin: string, corps: unknown, methode = 'POST'): Promise<T> {
   const reponse = await fetch(chemin, {
     method: methode,
+    credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: corps === undefined ? undefined : JSON.stringify(corps),
   });
+  if (reponse.status === 401 && !chemin.includes('/auth/connexion')) throw new ErreurSession();
   if (!reponse.ok) {
     const detail = await reponse.json().catch(() => ({ erreur: reponse.statusText }));
     throw new Error(detail.erreur ?? `Requête échouée (${reponse.status})`);
@@ -483,6 +497,21 @@ export const apiCaptures = {
     envoyer<{ statut: string }>(`/api/captures/${encodeURIComponent(id)}/rejeter`, { motif }),
 };
 
+export interface UtilisateurConnecte {
+  id: string;
+  courriel: string;
+  nomComplet: string;
+  role: string;
+  cabinetId: string;
+}
+
+export const apiAuth = {
+  moi: () => obtenirPublic<{ utilisateur: UtilisateurConnecte | null }>('/api/auth/moi'),
+  connexion: (courriel: string, motDePasse: string) =>
+    envoyer<{ utilisateur: UtilisateurConnecte }>('/api/auth/connexion', { courriel, motDePasse }),
+  deconnexion: () => envoyer<{ statut: string }>('/api/auth/deconnexion', {}),
+};
+
 export const LIBELLES_SOURCES: Record<string, string> = {
   donnees_ouvertes_req: 'Données ouvertes du Registraire des entreprises',
   registre_consultation: 'Consultation du registre',
@@ -501,4 +530,7 @@ export const LIBELLES_ACTIONS: Record<string, string> = {
   'capture.reception': 'Capture reçue du navigateur',
   'capture.validation': 'Capture validée et intégrée',
   'capture.rejet': 'Capture rejetée',
+  'auth.connexion': 'Connexion',
+  'auth.deconnexion': 'Déconnexion',
+  'auth.echec': 'Échec de connexion',
 };

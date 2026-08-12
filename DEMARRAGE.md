@@ -39,7 +39,7 @@ Vérifiez tout de suite que le cœur fonctionne, sans base de données :
 npm test
 ```
 
-Vous devez voir passer **85 tests** (61 pour le moteur d'analyse, 24 pour l'ingestion). Si c'est le cas, la partie la plus substantielle du projet tourne déjà chez vous.
+Vous devez voir passer **113 tests** (moteur d’analyse, capture, ingestion, authentification). Si c'est le cas, la partie la plus substantielle du projet tourne déjà chez vous.
 
 ## 3a. La base de données — installation classique
 
@@ -99,7 +99,9 @@ npm run api
 npm run web
 ```
 
-Ouvrez **http://localhost:5173**.
+Ouvrez **http://localhost:5173** et connectez-vous avec le compte affiché par `npm run seed`.
+
+Pour choisir vous-même le mot de passe : `MOT_DE_PASSE_INITIAL="…" npm run seed`. Aucun mot de passe par défaut n'existe dans le code.
 
 ## 5. Ce que vous devriez voir
 
@@ -136,5 +138,5 @@ Le `DATABASE_URL` défini avec `export` ou `$env:` ne vaut que pour le terminal 
 Rien d'essentiel — mais pour être précis :
 
 - **Les données sont fictives.** Aucune connexion au REQ réel n'est établie, et le raccordement est contraint (voir le document 07).
-- **L'authentification n'existe pas encore.** Toutes les écritures sont attribuées à un utilisateur de démonstration. À n'exposer sur aucun réseau tant que ce point n'est pas traité.
+- **L'authentification existe**, mais sans double facteur ni cloisonnement des dossiers par cabinet : une instance par cabinet, et rien d'exposé publiquement. Voir [DEPLOIEMENT.md](./DEPLOIEMENT.md).
 - **Le rapport s'imprime en PDF par le navigateur**, sans filigrane ni signature côté serveur.

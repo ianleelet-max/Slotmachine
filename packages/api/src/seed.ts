@@ -4,8 +4,11 @@
  *
  * Usage : npm run seed --workspace=@auditreq/api
  */
+import { randomBytes } from 'node:crypto';
+
 import { grapheDemonstration, IndexGraphe, creerContexte, analyser } from '@auditreq/core';
 import { pool } from './db.js';
+import { hacherMotDePasse } from './authentification.js';
 
 const graphe = grapheDemonstration();
 
@@ -24,7 +27,7 @@ const client = await pool.connect();
 try {
   await client.query('BEGIN');
 
-  await client.query(`TRUNCATE avis_req, entite, personne, adresse, relation_detention,
+  await client.query(`TRUNCATE avis_req, entite, personne, adresse, relation_detention, session,
                                relation_administration, lien_adresse, evenement,
                                resolution_identite, red_flag, cabinet, utilisateur,
                                dossier, dossier_entite, annotation
@@ -111,10 +114,22 @@ try {
     `INSERT INTO cabinet (id, nom, type_professionnel) VALUES ($1,$2,$3)`,
     ['C1', 'Syndics Roy & Associés', 'syndic'],
   );
+  // Le mot de passe vient de l'environnement, ou est engendré et affiché une
+  // seule fois. Aucun mot de passe par défaut n'est inscrit dans le code : un
+  // déploiement oublié resterait sinon ouvert avec des identifiants connus.
+  const motDePasse = process.env.MOT_DE_PASSE_INITIAL ?? randomBytes(12).toString('base64url');
   await client.query(
-    `INSERT INTO utilisateur (id, cabinet_id, courriel, nom_complet, role, persona_defaut)
-     VALUES ($1,$2,$3,$4,$5,$6)`,
-    ['U1', 'C1', 'chantal.roy@example.ca', 'Chantal Roy', 'senior', 'syndic'],
+    `INSERT INTO utilisateur (id, cabinet_id, courriel, nom_complet, role, persona_defaut, mot_de_passe_hash)
+     VALUES ($1,$2,$3,$4,$5,$6,$7)`,
+    [
+      'U1',
+      'C1',
+      'chantal.roy@example.ca',
+      'Chantal Roy',
+      'senior',
+      'syndic',
+      await hacherMotDePasse(motDePasse),
+    ],
   );
 
   const dossiers = [
@@ -168,6 +183,16 @@ try {
   await client.query('COMMIT');
 
   const eleves = [...scores.values()].filter((s) => s.niveau === 'eleve').length;
+  console.log('\nCompte de démonstration');
+  console.log('  Courriel     : chantal.roy@example.ca');
+  console.log(`  Mot de passe : ${motDePasse}`);
+  console.log(
+    process.env.MOT_DE_PASSE_INITIAL
+      ? '  (défini par MOT_DE_PASSE_INITIAL)'
+      : '  (engendré — notez-le, il ne sera plus affiché)',
+  );
+  console.log('');
+
   console.log(
     `Jeu de démonstration chargé : ${graphe.entites.length} entités, ` +
       `${graphe.personnes.length} personnes, ${flags.length} red flags ` +

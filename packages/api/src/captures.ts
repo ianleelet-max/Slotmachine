@@ -27,7 +27,11 @@ import { journaliser } from './dossiers.js';
  * l'utilisateur a ouvert lui-même ; le serveur ne va rien chercher.
  */
 
-const UTILISATEUR_COURANT = 'U1';
+function auteur(requete: { utilisateur?: { id: string } }): string {
+  const id = requete.utilisateur?.id;
+  if (!id) throw new Error('Écriture tentée sans session authentifiée.');
+  return id;
+}
 
 /** Au-delà de ce seuil, deux graphies sont proposées au rapprochement — jamais fusionnées. */
 const SEUIL_RAPPROCHEMENT = 0.9;
@@ -57,8 +61,7 @@ export function enregistrerRoutesCaptures(app: FastifyInstance): void {
         ],
       );
 
-      await journaliser(
-        'capture.reception',
+      await journaliser(auteur(requete), 'capture.reception',
         {
           neq: capture.neq?.valeur ?? null,
           personnes: capture.personnes.length,
@@ -130,12 +133,11 @@ export function enregistrerRoutesCaptures(app: FastifyInstance): void {
 
       await client.query(
         `UPDATE capture SET statut = 'validee', traitee_par = $2, traitee_le = now() WHERE id = $1`,
-        [ligne.id, UTILISATEUR_COURANT],
+        [ligne.id, auteur(requete)],
       );
       await client.query('COMMIT');
 
-      await journaliser(
-        'capture.validation',
+      await journaliser(auteur(requete), 'capture.validation',
         { captureId: ligne.id, ...bilan },
         ligne.dossier_id ?? undefined,
       );
@@ -156,15 +158,14 @@ export function enregistrerRoutesCaptures(app: FastifyInstance): void {
         `UPDATE capture SET statut = 'rejetee', motif_rejet = $2, traitee_par = $3, traitee_le = now()
          WHERE id = $1 AND statut = 'en_attente'
          RETURNING id, dossier_id`,
-        [requete.params.id, requete.body?.motif ?? null, UTILISATEUR_COURANT],
+        [requete.params.id, requete.body?.motif ?? null, auteur(requete)],
       );
 
       if (resultat.rowCount === 0) {
         return reponse.code(409).send({ erreur: 'Capture introuvable ou déjà traitée.' });
       }
 
-      await journaliser(
-        'capture.rejet',
+      await journaliser(auteur(requete), 'capture.rejet',
         { captureId: requete.params.id, motif: requete.body?.motif ?? null },
         resultat.rows[0]!.dossier_id ?? undefined,
       );
