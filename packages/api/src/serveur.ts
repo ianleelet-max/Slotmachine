@@ -15,6 +15,7 @@ import {
 } from '@velocereq/core';
 
 import { chargerGraphe, pool } from './db.js';
+import { enregistrerRoutesDossiers, journaliser } from './dossiers.js';
 
 /**
  * État analytique du service : le graphe et son analyse sont calculés une fois
@@ -69,6 +70,10 @@ export async function creerServeur(): Promise<FastifyInstance> {
         limite: requete.query.limite ? Number(requete.query.limite) : undefined,
       });
 
+      // Toute recherche est journalisée : c'est l'exigence de traçabilité qui
+      // rend un rapport défendable, et elle ne souffre pas d'exception.
+      await journaliser('recherche', { requete: q, resultats: resultats.length });
+
       return {
         requete: q,
         resultats: resultats.map((r) => {
@@ -96,6 +101,7 @@ export async function creerServeur(): Promise<FastifyInstance> {
     if (!entite) return reponse.code(404).send({ erreur: 'Entité introuvable' });
 
     const score = etat.scores.get(entite.id);
+    await journaliser('entite.consultation', { entiteId: entite.id, neq: entite.neq });
 
     return {
       entite,
@@ -307,6 +313,11 @@ export async function creerServeur(): Promise<FastifyInstance> {
       ),
     };
   });
+
+  // Routes de travail du cabinet : dossiers, annotations, comparaison,
+  // rapport et journal. Elles reçoivent l'état analytique par accesseur pour
+  // rester valides après un recalcul.
+  enregistrerRoutesDossiers(app, { index: () => etat.index, flags: () => etat.flags });
 
   return app;
 }

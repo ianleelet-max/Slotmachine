@@ -6,16 +6,19 @@ La conception produit complète — vision, architecture, parcours utilisateurs,
 
 ## État d'avancement
 
-Le MVP décrit dans la [roadmap](./docs/velocereq/05-roadmap-mvp-v1-v2.md) est amorcé :
+Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadmap-mvp-v1-v2.md) sont en place :
 
 | Livrable | État |
 |---|---|
-| Moteur d'analyse (UBO, cycles, 8 règles de détection, scoring) | Implémenté et testé (45 tests) |
+| Moteur d'analyse (UBO, cycles, 8 règles de détection, scoring) | Implémenté et testé (61 tests) |
 | Recherche multi-critères avec similarité orthographique | Implémentée |
 | Schéma PostgreSQL et jeu de données de démonstration | Implémentés |
-| API de consultation (recherche, fiche, graphe, UBO, chronologie, signaux) | Implémentée |
+| API (recherche, fiche, graphe, UBO, chronologie, signaux, dossiers, rapport) | Implémentée |
 | Interface web (tableau de bord, recherche, fiche, graphe, chronologie, UBO, signaux) | Implémentée |
-| Dossiers d'audit, annotations, génération de rapports | Prévu en V1 |
+| Dossiers d'audit, annotations horodatées, journal d'accès | Implémentés |
+| Comparaison de structures entre deux dates | Implémentée |
+| Rapport d'audit structuré et sourcé, imprimable en PDF | Implémenté |
+| Partage de dossier intra-cabinet, SSO, authentification réelle | À faire |
 | Sources complémentaires (RDPRM, foncier, BSF), alertes | Prévu en V2 |
 
 > Les données présentes sont **entièrement fictives**. Aucune connexion au REQ réel n'est établie : le raccordement aux données officielles est un chantier à part entière (voir [architecture, §2.1](./docs/velocereq/01-architecture-fonctionnelle.md)).
@@ -58,6 +61,12 @@ Tests du moteur d'analyse :
 npm test
 ```
 
+## Le rapport d'audit
+
+Depuis un dossier, « Ouvrir le rapport d'audit » produit un document structuré : résumé exécutif, limites explicites du rapport, structure de propriété entité par entité, chronologie, signaux détectés, observations du professionnel, et **annexe listant tous les avis du registre cités**. Chaque énoncé factuel se rattache à l'un de ces avis.
+
+Le rapport est du HTML mis en page pour l'impression : le PDF s'obtient par la commande d'impression du navigateur. Un export PDF côté serveur, avec filigrane et signature, reste à faire pour la diffusion hors cabinet.
+
 ## Ce que fait le jeu de démonstration
 
 Le montage fictif chargé par le seed exerce chaque règle de détection :
@@ -77,3 +86,6 @@ Chercher « 9284-1057 » ou « Lavalée » (avec la faute d'orthographe) permet 
 - **Les angles morts sont montrés, pas comblés.** Quand le registre ne permet pas d'établir le contrôle réel — capital partiellement déclaré, cycle, administrateur unique sans détention — le calcul le dit explicitement plutôt que de conclure.
 - **Aucune fusion d'identité automatique.** Deux graphies proches restent deux fiches distinctes tant qu'un humain n'a pas tranché.
 - **Disposition de graphe déterministe.** Deux consultations du même dossier produisent la même image, condition pour qu'une capture puisse être versée à un rapport.
+- **Traçabilité sans exception.** Recherches, consultations, ajouts au dossier et exports sont inscrits au journal d'accès. La table refuse les `UPDATE` et les `DELETE` par une règle Postgres : le journal ne peut pas être réécrit après coup, y compris par un administrateur.
+- **Aucun dossier sans finalité déclarée.** L'ouverture d'un dossier exige de documenter la base légale de la consultation, reprise au journal et en tête du rapport.
+- **L'absence de signal n'est pas un quitus.** Un rapport sans détection le dit explicitement plutôt que de laisser lire une attestation de conformité.

@@ -11,6 +11,7 @@ import {
   type TableauDeBord,
   type Ubo,
 } from './api';
+import { EcranComparaison, EcranDossier, EcranDossiers, EcranJournal } from './dossiers';
 import {
   Etiquette,
   EtiquetteRisque,
@@ -24,7 +25,11 @@ import {
 type Vue =
   | { nom: 'tableau' }
   | { nom: 'recherche'; requete: string }
-  | { nom: 'entite'; id: string };
+  | { nom: 'entite'; id: string }
+  | { nom: 'dossiers' }
+  | { nom: 'dossier'; id: string }
+  | { nom: 'comparaison' }
+  | { nom: 'journal' };
 
 type Onglet = 'fiche' | 'graphe' | 'chronologie' | 'ubo' | 'signaux';
 
@@ -82,6 +87,24 @@ export default function App() {
           <kbd>/</kbd>
         </form>
 
+        <nav className="navigation">
+          <button
+            aria-current={vue.nom === 'dossiers' || vue.nom === 'dossier'}
+            onClick={() => setVue({ nom: 'dossiers' })}
+          >
+            Dossiers
+          </button>
+          <button
+            aria-current={vue.nom === 'comparaison'}
+            onClick={() => setVue({ nom: 'comparaison' })}
+          >
+            Comparer
+          </button>
+          <button aria-current={vue.nom === 'journal'} onClick={() => setVue({ nom: 'journal' })}>
+            Journal
+          </button>
+        </nav>
+
         <div className="bascule-mode">
           <button aria-pressed={mode === 'rapide'} onClick={() => setMode('rapide')}>
             Investigation rapide
@@ -93,13 +116,24 @@ export default function App() {
       </header>
 
       <main className="contenu">
-        {vue.nom === 'tableau' && <EcranTableau onOuvrirEntite={ouvrirEntite} />}
+        {vue.nom === 'tableau' && (
+          <EcranTableau
+            onOuvrirEntite={ouvrirEntite}
+            onOuvrirDossier={(id) => setVue({ nom: 'dossier', id })}
+          />
+        )}
         {vue.nom === 'recherche' && (
           <EcranRecherche requete={vue.requete} onOuvrirEntite={ouvrirEntite} />
         )}
         {vue.nom === 'entite' && (
           <EcranEntite id={vue.id} mode={mode} onOuvrirEntite={ouvrirEntite} />
         )}
+        {vue.nom === 'dossiers' && (
+          <EcranDossiers onOuvrirDossier={(id) => setVue({ nom: 'dossier', id })} />
+        )}
+        {vue.nom === 'dossier' && <EcranDossier id={vue.id} onOuvrirEntite={ouvrirEntite} />}
+        {vue.nom === 'comparaison' && <EcranComparaison />}
+        {vue.nom === 'journal' && <EcranJournal />}
       </main>
     </>
   );
@@ -107,7 +141,13 @@ export default function App() {
 
 /* -------------------------------------------------------- Tableau de bord */
 
-function EcranTableau({ onOuvrirEntite }: { onOuvrirEntite: (id: string) => void }) {
+function EcranTableau({
+  onOuvrirEntite,
+  onOuvrirDossier,
+}: {
+  onOuvrirEntite: (id: string) => void;
+  onOuvrirDossier: (id: string) => void;
+}) {
   const [donnees, setDonnees] = useState<TableauDeBord | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
 
@@ -145,7 +185,12 @@ function EcranTableau({ onOuvrirEntite }: { onOuvrirEntite: (id: string) => void
         <div className="carte">
           <h3>Dossiers actifs</h3>
           {donnees.dossiers.map((d) => (
-            <div className="ligne" key={d.id}>
+            <div
+              className="ligne"
+              key={d.id}
+              style={{ cursor: 'pointer' }}
+              onClick={() => onOuvrirDossier(d.id)}
+            >
               <div>
                 <div style={{ fontWeight: 600 }}>{d.nom}</div>
                 <div className="sourdine">

@@ -196,13 +196,32 @@ export interface FlagsEntite {
   flags: RedFlag[];
 }
 
+/**
+ * Requêtes en vol, par URL.
+ *
+ * Deux appels identiques lancés avant que le premier n'ait répondu partagent sa
+ * promesse. Ce n'est pas qu'une économie de réseau : chaque consultation est
+ * inscrite au journal d'accès, et un journal qui enregistre deux fois le même
+ * geste perd sa valeur probante. Le cas se produit notamment sous React
+ * StrictMode, qui exécute les effets deux fois en développement.
+ */
+const requetesEnVol = new Map<string, Promise<unknown>>();
+
 async function obtenir<T>(chemin: string): Promise<T> {
-  const reponse = await fetch(chemin);
-  if (!reponse.ok) {
-    const corps = await reponse.json().catch(() => ({ erreur: reponse.statusText }));
-    throw new Error(corps.erreur ?? `Requête échouée (${reponse.status})`);
-  }
-  return reponse.json() as Promise<T>;
+  const enCours = requetesEnVol.get(chemin);
+  if (enCours) return enCours as Promise<T>;
+
+  const promesse = (async () => {
+    const reponse = await fetch(chemin);
+    if (!reponse.ok) {
+      const corps = await reponse.json().catch(() => ({ erreur: reponse.statusText }));
+      throw new Error(corps.erreur ?? `Requête échouée (${reponse.status})`);
+    }
+    return reponse.json() as Promise<T>;
+  })().finally(() => requetesEnVol.delete(chemin));
+
+  requetesEnVol.set(chemin, promesse);
+  return promesse;
 }
 
 export const api = {
@@ -264,4 +283,131 @@ export const LIBELLES_FORMES: Record<string, string> = {
   cooperative: 'Coopérative',
   association: 'Association',
   autre: 'Autre',
+};
+
+/* ------------------------------------------------------- Dossiers (V1) */
+
+export interface Dossier {
+  id: string;
+  nom: string;
+  client: string | null;
+  finalite_declaree: string;
+  mode: string;
+  statut: string;
+  echeance: string | null;
+  cree_le: string;
+  nb_entites?: number;
+}
+
+export interface EntiteDossier {
+  entiteId: string;
+  nomLegal: string;
+  neq?: string;
+  statut?: string;
+  nbSignaux: number;
+  severiteMax: Niveau;
+  ajouteLe: string;
+}
+
+export interface Annotation {
+  id: string;
+  contenu: string;
+  cree_le: string;
+  auteur: string;
+  entite_cible_id: string | null;
+  entiteLibelle: string | null;
+}
+
+export interface DetailDossier {
+  dossier: Dossier;
+  entites: EntiteDossier[];
+  annotations: Annotation[];
+}
+
+export interface Comparaison {
+  dateAvant: string;
+  dateApres: string;
+  aucunChangement: boolean;
+  detentions: {
+    nature: 'apparu' | 'disparu' | 'modifie';
+    relationId: string;
+    detenteurLibelle: string;
+    cibleLibelle: string;
+    pourcentageAvant?: number;
+    pourcentageApres?: number;
+    avisReqId: string;
+  }[];
+  administrations: {
+    nature: 'apparu' | 'disparu' | 'modifie';
+    relationId: string;
+    personneLibelle: string;
+    entiteLibelle: string;
+    titre: string;
+    avisReqId: string;
+  }[];
+  entites: {
+    nature: 'apparu' | 'disparu' | 'modifie';
+    entiteId: string;
+    libelle: string;
+    detail: string;
+  }[];
+}
+
+export interface EntreeJournal {
+  id: string;
+  action: string;
+  finalite: string | null;
+  contexte: Record<string, unknown>;
+  horodate: string;
+  dossier_id: string | null;
+  utilisateur: string | null;
+}
+
+async function envoyer<T>(chemin: string, corps: unknown, methode = 'POST'): Promise<T> {
+  const reponse = await fetch(chemin, {
+    method: methode,
+    headers: { 'Content-Type': 'application/json' },
+    body: corps === undefined ? undefined : JSON.stringify(corps),
+  });
+  if (!reponse.ok) {
+    const detail = await reponse.json().catch(() => ({ erreur: reponse.statusText }));
+    throw new Error(detail.erreur ?? `Requête échouée (${reponse.status})`);
+  }
+  return reponse.json() as Promise<T>;
+}
+
+export const apiDossiers = {
+  liste: () => obtenirPublic<{ dossiers: Dossier[] }>('/api/dossiers'),
+  detail: (id: string) => obtenirPublic<DetailDossier>(`/api/dossiers/${encodeURIComponent(id)}`),
+  creer: (corps: { nom: string; client?: string; finaliteDeclaree: string; echeance?: string }) =>
+    envoyer<{ id: string }>('/api/dossiers', corps),
+  ajouterEntite: (dossierId: string, entiteId: string) =>
+    envoyer<{ ajoute: boolean }>(`/api/dossiers/${encodeURIComponent(dossierId)}/entites`, {
+      entiteId,
+    }),
+  annoter: (dossierId: string, contenu: string, entiteCibleId?: string) =>
+    envoyer<{ id: string }>(`/api/dossiers/${encodeURIComponent(dossierId)}/annotations`, {
+      contenu,
+      entiteCibleId,
+    }),
+  urlRapport: (dossierId: string) =>
+    `/api/dossiers/${encodeURIComponent(dossierId)}/rapport?format=html`,
+  comparer: (avant: string, apres: string) =>
+    obtenirPublic<Comparaison>(
+      `/api/comparaison?avant=${encodeURIComponent(avant)}&apres=${encodeURIComponent(apres)}`,
+    ),
+  journal: (limite = 40) => obtenirPublic<{ entrees: EntreeJournal[] }>(`/api/journal?limite=${limite}`),
+};
+
+const obtenirPublic = obtenir;
+
+export const LIBELLES_ACTIONS: Record<string, string> = {
+  recherche: 'Recherche',
+  'entite.consultation': 'Consultation de fiche',
+  'dossier.creation': 'Création de dossier',
+  'dossier.consultation': 'Consultation de dossier',
+  'dossier.ajout_entite': 'Ajout d’une entité au dossier',
+  'dossier.retrait_entite': 'Retrait d’une entité du dossier',
+  'annotation.creation': 'Note ajoutée',
+  'rapport.generation': 'Génération de rapport',
 };

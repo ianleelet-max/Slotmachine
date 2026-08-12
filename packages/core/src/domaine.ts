@@ -157,3 +157,38 @@ export function ecartJours(debut: string, fin: string): number {
   const ms = Date.parse(fin) - Date.parse(debut);
   return Math.round(ms / 86_400_000);
 }
+
+/** Libellés lisibles des statuts et formes juridiques, partagés par l'API,
+ *  les rapports et l'interface — un document d'audit ne montre jamais la
+ *  valeur brute d'une énumération. */
+export const LIBELLES_STATUTS: Record<StatutEntite, string> = {
+  immatriculee: 'Immatriculée',
+  radiee_office: 'Radiée d’office',
+  radiee_volontaire: 'Radiée volontairement',
+  dissoute: 'Dissoute',
+  fusionnee: 'Fusionnée',
+};
+
+export const LIBELLES_FORMES: Record<FormeJuridique, string> = {
+  societe_par_actions: 'Société par actions',
+  societe_nom_collectif: 'Société en nom collectif',
+  societe_commandite: 'Société en commandite',
+  entreprise_individuelle: 'Entreprise individuelle',
+  cooperative: 'Coopérative',
+  association: 'Association',
+  autre: 'Autre',
+};
+
+export const LIBELLES_EVENEMENTS: Record<TypeEvenement, string> = {
+  constitution: 'Constitution',
+  changement_nom: 'Changement de dénomination',
+  changement_siege: 'Changement de siège social',
+  changement_administrateur: 'Changement d’administrateur',
+  transfert_actions: 'Transfert d’actions',
+  fusion: 'Fusion',
+  scission: 'Scission',
+  dissolution: 'Dissolution',
+  radiation: 'Radiation',
+  faillite: 'Faillite',
+  proposition_concordataire: 'Proposition concordataire',
+};

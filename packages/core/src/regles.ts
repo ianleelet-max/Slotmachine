@@ -587,6 +587,18 @@ export const regleChangementAvantEvenementCritique: Regle = ({ index, config }) 
 
 // ---------------------------------------------------------------------------
 
+/** Libellés lisibles des règles, partagés par l'API, les rapports et l'interface. */
+export const LIBELLES_REGLES: Record<TypeRegle, string> = {
+  cycle_detention: 'Cycle de détention',
+  cascade_excessive: 'Cascade de sociétés interposées',
+  administrateur_recurrent: 'Administrateur récurrent en entités défaillantes',
+  prete_nom_probable: 'Profil de prête-nom probable',
+  transfert_avant_evenement_critique: 'Transfert avant événement critique',
+  dissolution_reconstitution: 'Dissolution puis reconstitution apparentée',
+  adresse_partagee_massive: 'Grappe d’entités à une même adresse',
+  changement_avant_evenement_critique: 'Changement d’identité avant événement critique',
+};
+
 export const REGLES: Regle[] = [
   regleCycleDetention,
   regleCascadeExcessive,

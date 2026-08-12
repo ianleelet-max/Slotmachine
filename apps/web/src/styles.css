@@ -610,3 +610,69 @@ tbody tr.cliquable:hover td {
   font-size: 12.5px;
   font-weight: 600;
 }
+
+/* ------------------------------------------------------- Navigation et formulaires */
+
+.navigation {
+  display: flex;
+  gap: 2px;
+}
+
+.navigation button {
+  border: none;
+  background: none;
+  color: var(--text-2);
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.navigation button:hover {
+  background: var(--surface-2);
+  color: var(--text-1);
+}
+
+.navigation button[aria-current='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.champ label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-1);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 9px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[type='date'] {
+  font-variant-numeric: tabular-nums;
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: default;
+}

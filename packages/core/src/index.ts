@@ -6,4 +6,6 @@ export * from './ubo.js';
 export * from './regles.js';
 export * from './scoring.js';
 export * from './recherche.js';
+export * from './comparaison.js';
+export * from './rapport.js';
 export * from './fixtures.js';

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   LIBELLES_EVENEMENTS,
   LIBELLES_FORMES,
@@ -13,6 +13,7 @@ import {
   type NoeudGraphe,
   type Ubo,
 } from './api';
+import { apiDossiers, type Dossier } from './api';
 
 export function Etiquette({ niveau, texte }: { niveau: Niveau | 'neutre'; texte: string }) {
   return <span className={`etiquette ${niveau}`}>{texte}</span>;
@@ -55,6 +56,7 @@ export function VueFiche({
             Anciennement : {entite.nomsAnterieurs.join(', ')}
           </p>
         )}
+        <AjoutAuDossier entiteId={entite.id} />
       </div>
 
       <div className="grille-2">
@@ -201,6 +203,62 @@ export function VueFiche({
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Ajout de l'entité consultée à un dossier ouvert. Le geste est placé sur la
+ * fiche elle-même : c'est là que le professionnel décide qu'une entité fait
+ * partie de son périmètre, pas depuis un écran d'administration séparé.
+ */
+function AjoutAuDossier({ entiteId }: { entiteId: string }) {
+  const [dossiers, setDossiers] = useState<Dossier[]>([]);
+  const [choix, setChoix] = useState('');
+  const [etat, setEtat] = useState<'inactif' | 'envoi' | 'ajoute' | 'deja'>('inactif');
+
+  useEffect(() => {
+    apiDossiers
+      .liste()
+      .then((r) => {
+        setDossiers(r.dossiers);
+        setChoix(r.dossiers[0]?.id ?? '');
+      })
+      .catch(() => setDossiers([]));
+  }, []);
+
+  useEffect(() => setEtat('inactif'), [entiteId]);
+
+  if (dossiers.length === 0) return null;
+
+  const ajouter = async () => {
+    if (!choix) return;
+    setEtat('envoi');
+    const { ajoute } = await apiDossiers.ajouterEntite(choix, entiteId);
+    setEtat(ajoute ? 'ajoute' : 'deja');
+  };
+
+  return (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 12, flexWrap: 'wrap' }}>
+      <select
+        value={choix}
+        onChange={(e) => {
+          setChoix(e.target.value);
+          setEtat('inactif');
+        }}
+        aria-label="Dossier de destination"
+      >
+        {dossiers.map((d) => (
+          <option key={d.id} value={d.id}>
+            {d.nom}
+          </option>
+        ))}
+      </select>
+      <button className="bouton" onClick={ajouter} disabled={etat === 'envoi'}>
+        Ajouter au dossier
+      </button>
+      {etat === 'ajoute' && <span className="sourdine">Ajoutée au dossier.</span>}
+      {etat === 'deja' && <span className="sourdine">Déjà au dossier.</span>}
     </div>
   );
 }
