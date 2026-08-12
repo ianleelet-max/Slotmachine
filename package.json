@@ -9,9 +9,9 @@
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=@velocereq/core && npm run build --workspace=@velocereq/api",
+    "build": "npm run build --workspace=@velocereq/core && npm run build --workspace=@velocereq/api && npm run build --workspace=@velocereq/web",
     "test": "npm run test --workspace=@velocereq/core",
-    "db:reset": "psql -v ON_ERROR_STOP=1 -f db/schema.sql && psql -v ON_ERROR_STOP=1 -f db/seed.sql",
+    "seed": "npm run seed --workspace=@velocereq/api",
     "api": "npm run dev --workspace=@velocereq/api",
     "web": "npm run dev --workspace=@velocereq/web"
   },
