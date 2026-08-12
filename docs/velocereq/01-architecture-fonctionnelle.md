@@ -62,10 +62,13 @@ flowchart TB
 
 ### 2.1 Sources de données
 
+> **Correction (août 2026).** Ce tableau supposait initialement que les administrateurs et actionnaires figuraient dans le jeu de données ouvertes du REQ. **C'est faux** : le jeu ouvert exclut toute personne physique, et sa licence interdit l'usage commercial. Voir [07 — Accès aux données du REQ](./07-acces-donnees-req.md) pour le détail des voies d'accès réelles et leurs conséquences.
+
 | Source | Contenu | Fréquence de mise à jour | Statut |
 |---|---|---|---|
-| REQ (données ouvertes + service Rechercher une entreprise) | NEQ, nom, statut, forme juridique, administrateurs, actionnaires ≥10 %, adresses, avis de modification | Quotidienne (export officiel) | Primaire |
-| Registre des bénéficiaires ultimes (volet LPLE 2023) | Personnes physiques exerçant un contrôle | Quotidienne | Primaire |
+| REQ — données ouvertes (Données Québec) | NEQ, noms historisés, statut, forme et régime juridiques, établissements et domiciles, activités, fusions/scissions, continuations, indicateurs de faillite et de convention unanime d'actionnaires. **Aucune personne physique.** | Deux fois par mois | Primaire, licence CC BY-NC-SA 4.0 (non commercial) |
+| REQ — service de consultation du registre | Fiche complète : administrateurs, actionnaires, bénéficiaires ultimes ; recherche par nom de personne depuis juillet 2024 | Continue | Indispensable au produit, **soumis à entente** — pas d'extraction automatisée sans accord |
+| REQ — compilation de renseignements / entente d'échange | Listes ciblées ou flux négocié | Sur commande | Contractuel, payant |
 | Corporations Canada (LCSA) | Entités fédérales avec activités au Québec | Hebdomadaire | Complémentaire |
 | RDPRM | Sûretés, hypothèques mobilières — indices de nantissement d'actifs | Hebdomadaire | Complémentaire, corrobore transferts d'actifs |
 | BSF (faillites/propositions) | Procédures d'insolvabilité liées à une entité/personne | Hebdomadaire | Complémentaire, critique pour syndics |

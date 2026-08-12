@@ -21,7 +21,9 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadm
 | Partage de dossier intra-cabinet, SSO, authentification réelle | À faire |
 | Sources complémentaires (RDPRM, foncier, BSF), alertes | Prévu en V2 |
 
-> Les données présentes sont **entièrement fictives**. Aucune connexion au REQ réel n'est établie : le raccordement aux données officielles est un chantier à part entière (voir [architecture, §2.1](./docs/velocereq/01-architecture-fonctionnelle.md)).
+> Les données présentes sont **entièrement fictives**. Aucune connexion au REQ réel n'est établie.
+>
+> Le raccordement aux données officielles est contraint : le jeu de données ouvertes du REQ **ne contient aucune personne physique** (ni administrateur, ni actionnaire, ni bénéficiaire ultime) et sa licence interdit l'usage commercial. Les personnes ne sont accessibles que par le service de consultation du registre, dont l'extraction automatisée suppose une entente avec le Registraire. Analyse complète : [07 — Accès aux données du REQ](./docs/velocereq/07-acces-donnees-req.md).
 
 ## Structure
 
