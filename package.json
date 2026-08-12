@@ -1,0 +1,24 @@
+{
+  "name": "velocereq",
+  "private": true,
+  "version": "0.1.0",
+  "description": "VéloceREQ — système d'intelligence d'audit corporatif sur le Registre des entreprises du Québec",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace=@velocereq/core && npm run build --workspace=@velocereq/api",
+    "test": "npm run test --workspace=@velocereq/core",
+    "db:reset": "psql -v ON_ERROR_STOP=1 -f db/schema.sql && psql -v ON_ERROR_STOP=1 -f db/seed.sql",
+    "api": "npm run dev --workspace=@velocereq/api",
+    "web": "npm run dev --workspace=@velocereq/web"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
