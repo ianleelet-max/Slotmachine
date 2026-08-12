@@ -1,0 +1,623 @@
+<title>VéloceREQ — Maquettes</title>
+<style>
+  :root {
+    --bg: #F5F4F0;
+    --surface: #FFFFFF;
+    --surface-2: #ECEAE3;
+    --border: #DCD9CF;
+    --text-1: #1A1C1B;
+    --text-2: #5B615E;
+    --text-3: #8A908C;
+    --accent: #2C7C72;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #DEEEEA;
+    --risk-low: #3F7A49;
+    --risk-low-soft: #E1EEE1;
+    --risk-med: #A8681F;
+    --risk-med-soft: #F2E6D3;
+    --risk-high: #A83B31;
+    --risk-high-soft: #F5DEDA;
+    --shadow: 0 1px 2px rgba(20,20,18,0.06), 0 8px 24px -12px rgba(20,20,18,0.18);
+    --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0E1110;
+      --surface: #171A19;
+      --surface-2: #1F2321;
+      --border: #2C3130;
+      --text-1: #ECEEEC;
+      --text-2: #A4ABA7;
+      --text-3: #757C79;
+      --accent: #4FB3A6;
+      --accent-ink: #06110F;
+      --accent-soft: #1B302C;
+      --risk-low: #7FBF88;
+      --risk-low-soft: #1D2B1F;
+      --risk-med: #E0A855;
+      --risk-med-soft: #2E2418;
+      --risk-high: #E28277;
+      --risk-high-soft: #331F1C;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -16px rgba(0,0,0,0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0E1110;
+    --surface: #171A19;
+    --surface-2: #1F2321;
+    --border: #2C3130;
+    --text-1: #ECEEEC;
+    --text-2: #A4ABA7;
+    --text-3: #757C79;
+    --accent: #4FB3A6;
+    --accent-ink: #06110F;
+    --accent-soft: #1B302C;
+    --risk-low: #7FBF88;
+    --risk-low-soft: #1D2B1F;
+    --risk-med: #E0A855;
+    --risk-med-soft: #2E2418;
+    --risk-high: #E28277;
+    --risk-high-soft: #331F1C;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4), 0 12px 32px -16px rgba(0,0,0,0.6);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { text-wrap: balance; margin: 0; }
+  ::selection { background: var(--accent-soft); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .shell { max-width: 1320px; margin: 0 auto; padding: 28px 24px 80px; }
+
+  /* ---------- Masthead ---------- */
+  .masthead { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 6px; flex-wrap: wrap; }
+  .wordmark { display: flex; align-items: baseline; gap: 10px; }
+  .wordmark .mark { width: 30px; height: 30px; border-radius: 7px; background: var(--accent); display: inline-flex; align-items: center; justify-content: center; color: var(--accent-ink); font-weight: 800; font-size: 15px; font-family: var(--font-mono); flex: none; }
+  .wordmark h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .wordmark .sub { color: var(--text-3); font-size: 12.5px; letter-spacing: 0.02em; }
+  .meta-line { color: var(--text-3); font-size: 12.5px; max-width: 460px; text-align: right; line-height: 1.5; }
+  .top-rule { height: 1px; background: var(--border); margin: 18px 0 22px; }
+
+  /* ---------- Tabs ---------- */
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 22px; border-bottom: 1px solid var(--border); }
+  .tab-btn {
+    appearance: none; background: none; border: none; cursor: pointer;
+    font-family: var(--font-ui); color: var(--text-2); font-size: 13.5px; font-weight: 600;
+    padding: 10px 14px 12px; border-bottom: 2px solid transparent; letter-spacing: 0.01em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .tab-btn .n { font-family: var(--font-mono); font-size: 10.5px; color: var(--text-3); }
+  .tab-btn:hover { color: var(--text-1); }
+  .tab-btn[aria-selected="true"] { color: var(--text-1); border-bottom-color: var(--accent); }
+
+  .screen { display: none; }
+  .screen.active { display: block; animation: fade .25s ease; }
+  @media (prefers-reduced-motion: reduce) { .screen.active { animation: none; } }
+  @keyframes fade { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+
+  .frame-caption { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; gap: 12px; flex-wrap: wrap; }
+  .frame-caption h2 { font-size: 15px; font-weight: 700; }
+  .frame-caption p { margin: 2px 0 0; color: var(--text-3); font-size: 12.5px; max-width: 560px; }
+
+  /* ---------- Browser chrome ---------- */
+  .chrome {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    box-shadow: var(--shadow); overflow: hidden;
+  }
+  .chrome-bar { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+  .chrome-dots { display: flex; gap: 6px; }
+  .chrome-dots span { width: 9px; height: 9px; border-radius: 50%; background: var(--border); }
+  .chrome-url { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
+  .app-canvas { background: var(--bg); min-height: 560px; }
+
+  /* ---------- App chrome inside canvas ---------- */
+  .app-topbar { display: flex; align-items: center; gap: 16px; padding: 10px 18px; border-bottom: 1px solid var(--border); background: var(--surface); }
+  .app-topbar .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; }
+  .app-topbar .brand .dot { width: 16px; height: 16px; border-radius: 4px; background: var(--accent); }
+  .search-pill { flex: 1; max-width: 420px; display: flex; align-items: center; gap: 8px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; color: var(--text-3); font-size: 12.5px; }
+  .search-pill kbd { margin-left: auto; font-family: var(--font-mono); font-size: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; }
+  .mode-toggle { display: flex; background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 2px; font-size: 11.5px; font-weight: 600; }
+  .mode-toggle span { padding: 5px 10px; border-radius: 6px; color: var(--text-3); }
+  .mode-toggle span.on { background: var(--surface); color: var(--text-1); box-shadow: var(--shadow); }
+  .persona-pill { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-2); }
+  .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 700; color: var(--text-2); }
+
+  .app-body { padding: 18px; }
+
+  /* ---------- Generic UI atoms ---------- */
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; letter-spacing: 0.01em; }
+  .badge.low { background: var(--risk-low-soft); color: var(--risk-low); }
+  .badge.med { background: var(--risk-med-soft); color: var(--risk-med); }
+  .badge.high { background: var(--risk-high-soft); color: var(--risk-high); }
+  .badge.neutral { background: var(--surface-2); color: var(--text-2); border: 1px solid var(--border); }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .eyebrow { font-size: 10.5px; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--text-3); }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .neq { font-family: var(--font-mono); font-variant-numeric: tabular-nums; color: var(--text-2); font-size: 12px; }
+  .btn { appearance: none; border: 1px solid var(--border); background: var(--surface); color: var(--text-1); font-family: var(--font-ui); font-size: 12.5px; font-weight: 600; padding: 7px 12px; border-radius: 7px; cursor: pointer; }
+  .btn:hover { border-color: var(--text-3); }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+  .btn.primary:hover { filter: brightness(1.05); }
+  .provenance { display: inline-flex; align-items: center; gap: 4px; color: var(--text-3); font-size: 10.5px; cursor: default; }
+  .provenance svg { width: 10px; height: 10px; }
+
+  /* ---------- Dashboard ---------- */
+  .grid-dash { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .grid-dash { grid-template-columns: 1fr; } }
+  .widget h3 { font-size: 12.5px; font-weight: 700; margin-bottom: 10px; }
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid var(--border); font-size: 12.5px; }
+  .row:first-of-type { border-top: none; }
+  .row .name { font-weight: 600; }
+  .row .sub { color: var(--text-3); font-size: 11.5px; }
+  .stat-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin-bottom: 14px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; }
+  .stat .v { font-family: var(--font-mono); font-size: 20px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+  /* ---------- Recherche ---------- */
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip { font-size: 11.5px; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-2); background: var(--surface); }
+  .chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  table.results { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  table.results th { text-align: left; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-3); padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  table.results td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  table.results tr:last-child td { border-bottom: none; }
+  table.results tr:hover td { background: var(--surface-2); }
+
+  /* ---------- Fiche entité ---------- */
+  .entity-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .entity-head h2 { font-size: 19px; }
+  .entity-actions { display: flex; gap: 8px; }
+  .fiche-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 14px; }
+  @media (max-width: 760px) { .fiche-grid { grid-template-columns: 1fr; } }
+  .kv { display: grid; grid-template-columns: 130px 1fr; gap: 4px 10px; font-size: 12.5px; padding: 6px 0; border-top: 1px solid var(--border); }
+  .kv:first-of-type { border-top: none; }
+  .kv .k { color: var(--text-3); }
+  .kv .v { font-weight: 600; }
+  .mini-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .mini-table th { text-align: left; color: var(--text-3); font-weight: 600; padding: 5px 6px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .mini-table td { padding: 6px; border-top: 1px solid var(--border); }
+
+  /* ---------- Graphe ---------- */
+  .graph-layout { display: grid; grid-template-columns: 1fr 280px; gap: 0; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  @media (max-width: 760px) { .graph-layout { grid-template-columns: 1fr; } }
+  .graph-canvas { background: var(--surface); position: relative; min-height: 460px; }
+  .graph-legend { position: absolute; top: 10px; left: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 10.5px; color: var(--text-2); display: flex; flex-direction: column; gap: 5px; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-swatch { width: 10px; height: 10px; border-radius: 3px; flex: none; }
+  .graph-drawer { background: var(--surface-2); border-left: 1px solid var(--border); padding: 14px; font-size: 12.5px; }
+  .node { cursor: pointer; }
+  .node rect, .node circle { stroke-width: 1.5; }
+  .node text { font-family: var(--font-ui); font-weight: 700; fill: var(--text-1); }
+  .edge-label { font-family: var(--font-mono); font-size: 9.5px; fill: var(--text-3); }
+  .flag-item { display: flex; gap: 8px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12px; }
+  .flag-item:first-of-type { border-top: none; }
+  .flag-item p { margin: 2px 0 0; color: var(--text-2); font-size: 11.5px; line-height: 1.4; }
+
+  /* ---------- Timeline ---------- */
+  .timeline-track { position: relative; padding: 34px 10px 10px; overflow-x: auto; }
+  .timeline-line { position: relative; height: 2px; background: var(--border); min-width: 900px; margin: 0 20px; }
+  .tl-event { position: absolute; top: -7px; width: 16px; height: 16px; border-radius: 50%; border: 3px solid var(--bg); cursor: pointer; transform: translateX(-50%); }
+  .tl-label { position: absolute; top: -46px; transform: translateX(-50%); font-size: 10.5px; white-space: nowrap; color: var(--text-3); }
+  .tl-date { position: absolute; top: 16px; transform: translateX(-50%); font-family: var(--font-mono); font-size: 10px; color: var(--text-3); }
+  .tl-detail { margin-top: 40px; }
+
+  /* ---------- Rapport ---------- */
+  .report-layout { display: grid; grid-template-columns: 260px 1fr; gap: 14px; }
+  @media (max-width: 760px) { .report-layout { grid-template-columns: 1fr; } }
+  .section-check { display: flex; align-items: flex-start; gap: 9px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 12.5px; }
+  .section-check:first-of-type { border-top: none; }
+  .section-check input { margin-top: 2px; accent-color: var(--accent); }
+  .section-check .t { font-weight: 600; }
+  .section-check .d { color: var(--text-3); font-size: 11px; }
+  .doc-page { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 26px 30px; font-size: 11px; box-shadow: var(--shadow); }
+  .doc-page h1 { font-size: 16px; margin-bottom: 3px; }
+  .doc-page .doc-sub { color: var(--text-3); font-size: 10.5px; margin-bottom: 16px; }
+  .doc-block { margin-bottom: 14px; }
+  .doc-block h4 { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-3); margin-bottom: 6px; }
+  .doc-tree { display: flex; gap: 20px; align-items: center; justify-content: center; padding: 14px; background: var(--surface-2); border-radius: 6px; }
+  .doc-node { text-align: center; font-size: 9.5px; }
+  .doc-node .box { width: 60px; height: 32px; border: 1px solid var(--border); border-radius: 4px; margin: 0 auto 4px; background: var(--surface); }
+
+  .footer-note { margin-top: 30px; color: var(--text-3); font-size: 11.5px; line-height: 1.6; max-width: 760px; }
+  .footer-note a { color: var(--accent); }
+</style>
+
+<div class="shell">
+  <div class="masthead">
+    <div class="wordmark">
+      <span class="mark">VR</span>
+      <div>
+        <h1>VéloceREQ</h1>
+        <div class="sub">Système d'intelligence d'audit corporatif — Registre des entreprises du Québec</div>
+      </div>
+    </div>
+    <div class="meta-line">Galerie de maquettes — 6 écrans clés du parcours recherche → graphe → timeline → rapport. Données d'illustration fictives.</div>
+  </div>
+  <div class="top-rule"></div>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <main id="screens"></main>
+
+  <p class="footer-note">
+    Maquette d'intention (fidélité intermédiaire), données d'entreprises et de personnes entièrement fictives à des fins d'illustration. Voir la documentation complète — vision, architecture, algorithmes, modèle de données, roadmap — dans <code>docs/velocereq/</code>.
+  </p>
+</div>
+
+<script>
+(function(){
+  const screens = [
+    { id: 'dashboard', label: 'Tableau de bord', n: '01', title: 'Tableau de bord — mode Audit approfondi', desc: 'Vue d’entrée personnalisée par persona : dossiers actifs, alertes de surveillance, entités à risque détectées récemment.' , url: 'app.velocereq.ca/tableau-de-bord' },
+    { id: 'recherche', label: 'Recherche', n: '02', title: 'Recherche multi-critères', desc: 'Recherche fuzzy sur nom, NEQ, administrateur ou adresse, avec résultats triés et score de risque visible immédiatement.', url: 'app.velocereq.ca/recherche?q=lavall%C3%A9e' },
+    { id: 'fiche', label: 'Fiche entité', n: '03', title: 'Fiche entité', desc: 'Identité légale complète, adresses historiques, administrateurs et actionnaires, avec renvoi systématique à l’avis REQ source.', url: 'app.velocereq.ca/entite/1171234567' },
+    { id: 'graphe', label: 'Graphe relationnel', n: '04', title: 'Graphe relationnel et détection', desc: 'Cartographie interactive de contrôle et de propriété ; panneau contextuel avec red flags expliqués au clic sur un nœud.', url: 'app.velocereq.ca/entite/1171234567/graphe' },
+    { id: 'timeline', label: 'Timeline', n: '05', title: 'Timeline chronologique', desc: 'Historique unifié des avis affectant la structure sélectionnée, utile pour repérer une coïncidence temporelle suspecte.', url: 'app.velocereq.ca/entite/1171234567/chronologie' },
+    { id: 'rapport', label: 'Rapport', n: '06', title: 'Générateur de rapport d’audit', desc: 'Sélection des sections, prévisualisation fidèle avant export PDF/Word — chaque affirmation reste sourcée.', url: 'app.velocereq.ca/dossier/D-2026-014/rapport' },
+  ];
+
+  const tabsEl = document.getElementById('tabs');
+  const screensEl = document.getElementById('screens');
+
+  screens.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'tab-btn';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-selected', i===0 ? 'true' : 'false');
+    b.innerHTML = '<span class="n">'+s.n+'</span>'+s.label;
+    b.addEventListener('click', () => activate(s.id));
+    b.dataset.for = s.id;
+    tabsEl.appendChild(b);
+  });
+
+  function activate(id){
+    document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', b.dataset.for === id ? 'true':'false'));
+    document.querySelectorAll('.screen').forEach(sc => sc.classList.toggle('active', sc.id === 'screen-'+id));
+  }
+
+  function frame(s, bodyHtml){
+    const el = document.createElement('section');
+    el.className = 'screen' + (s.id==='dashboard' ? ' active' : '');
+    el.id = 'screen-'+s.id;
+    el.innerHTML = `
+      <div class="frame-caption">
+        <div><h2>${s.n} — ${s.title}</h2><p>${s.desc}</p></div>
+      </div>
+      <div class="chrome">
+        <div class="chrome-bar">
+          <div class="chrome-dots"><span></span><span></span><span></span></div>
+          <div class="chrome-url">${s.url}</div>
+        </div>
+        <div class="app-canvas">${bodyHtml}</div>
+      </div>`;
+    screensEl.appendChild(el);
+  }
+
+  const appTopbar = (mode) => `
+    <div class="app-topbar">
+      <div class="brand"><span class="dot"></span>VéloceREQ</div>
+      <div class="search-pill">Rechercher une entité, un NEQ, une personne…<kbd>/</kbd></div>
+      <div class="mode-toggle"><span class="${mode==='rapide'?'on':''}">Investigation rapide</span><span class="${mode==='audit'?'on':''}">Audit approfondi</span></div>
+      <div class="persona-pill">Chantal Roy · Syndic <span class="avatar">CR</span></div>
+    </div>`;
+
+  // 1 — DASHBOARD
+  frame(screens[0], appTopbar('audit') + `
+    <div class="app-body">
+      <div class="stat-row">
+        <div class="stat"><div class="v">14</div><div class="l">Dossiers actifs</div></div>
+        <div class="stat"><div class="v">3</div><div class="l">Échéances sous 7 jours</div></div>
+        <div class="stat"><div class="v">7</div><div class="l">Alertes non lues</div></div>
+        <div class="stat"><div class="v">2</div><div class="l">Entités à risque élevé (7 j)</div></div>
+      </div>
+      <div class="grid-dash">
+        <div class="card widget">
+          <h3>Dossiers actifs</h3>
+          <div class="row"><div><div class="name">Faillite — 9284-1057 Québec Inc.</div><div class="sub">Client : Syndicat Roy &amp; Associés · échéance 18 août</div></div><span class="badge high"><span class="dot"></span>Élevé</span></div>
+          <div class="row"><div><div class="name">Diligence M&amp;A — Groupe Nordet</div><div class="sub">Client : Fonds Cardinal Capital · échéance 2 sept.</div></div><span class="badge med"><span class="dot"></span>Moyen</span></div>
+          <div class="row"><div><div class="name">Litige actionnaires — Rive-Nord SENC</div><div class="sub">Client : Me J. Bérubé · échéance 22 sept.</div></div><span class="badge low"><span class="dot"></span>Faible</span></div>
+        </div>
+        <div class="card widget">
+          <h3>Alertes de surveillance</h3>
+          <div class="row"><div><div class="name">Nouvel administrateur</div><div class="sub">9412-8837 Québec Inc. · il y a 2 h</div></div><span class="badge neutral">Avis</span></div>
+          <div class="row"><div><div class="name">Franchissement de seuil de risque</div><div class="sub">Gestion Lavallée-Bouchard Inc. · il y a 1 j</div></div><span class="badge high"><span class="dot"></span>Élevé</span></div>
+          <div class="row"><div><div class="name">Dissolution</div><div class="sub">Placements Rive-Nord S.E.N.C. · il y a 3 j</div></div><span class="badge neutral">Avis</span></div>
+        </div>
+      </div>
+    </div>`);
+
+  // 2 — RECHERCHE
+  frame(screens[1], appTopbar('audit') + `
+    <div class="app-body">
+      <div class="filters">
+        <span class="chip active">Nom : « Lavallée »</span>
+        <span class="chip">+ NEQ</span>
+        <span class="chip">+ Administrateur</span>
+        <span class="chip">+ Adresse</span>
+        <span class="chip">+ Statut</span>
+        <span class="chip">Similarité orthographique : activée</span>
+      </div>
+      <table class="results">
+        <thead><tr><th>Entité</th><th>NEQ</th><th>Statut</th><th>Forme juridique</th><th>Risque</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><b>Gestion Lavallée-Bouchard Inc.</b></td><td class="neq">1163098221</td><td>Immatriculée</td><td>Société par actions</td><td><span class="badge high"><span class="dot"></span>78</span></td><td><span class="btn">Ouvrir</span></td></tr>
+          <tr><td>Lavallée Transport &amp; Logistique Inc.</td><td class="neq">1157720093</td><td>Immatriculée</td><td>Société par actions</td><td><span class="badge low"><span class="dot"></span>12</span></td><td><span class="btn">Ouvrir</span></td></tr>
+          <tr><td>9284-1057 Québec Inc. <span class="provenance">(admin. : Lavallée)</span></td><td class="neq">1171234567</td><td>Immatriculée</td><td>Société par actions</td><td><span class="badge high"><span class="dot"></span>82</span></td><td><span class="btn">Ouvrir</span></td></tr>
+          <tr><td>Lavallée &amp; Filles Notaires Inc.</td><td class="neq">1149982341</td><td>Immatriculée</td><td>Société par actions</td><td><span class="badge low"><span class="dot"></span>4</span></td><td><span class="btn">Ouvrir</span></td></tr>
+          <tr><td>9412-8837 Québec Inc. <span class="provenance">(similaire : Lavalé)</span></td><td class="neq">1179834502</td><td>Radiée d’office</td><td>Société par actions</td><td><span class="badge med"><span class="dot"></span>55</span></td><td><span class="btn">Ouvrir</span></td></tr>
+        </tbody>
+      </table>
+    </div>`);
+
+  // 3 — FICHE ENTITÉ
+  frame(screens[2], appTopbar('audit') + `
+    <div class="app-body">
+      <div class="entity-head">
+        <div>
+          <div class="eyebrow" style="margin-bottom:6px;">Entité · Société par actions</div>
+          <h2>9284-1057 Québec Inc.</h2>
+          <div style="display:flex; gap:10px; align-items:center; margin-top:6px;">
+            <span class="neq">NEQ 1171234567</span>
+            <span class="badge neutral">Immatriculée</span>
+            <span class="badge high"><span class="dot"></span>Score de risque : 82/100</span>
+          </div>
+        </div>
+        <div class="entity-actions">
+          <span class="btn">+ Ajouter au dossier</span>
+          <span class="btn">Surveiller</span>
+          <span class="btn primary">Voir le graphe →</span>
+        </div>
+      </div>
+      <div class="fiche-grid">
+        <div class="card">
+          <h3 style="font-size:12.5px;margin-bottom:8px;">Identité</h3>
+          <div class="kv"><span class="k">Forme juridique</span><span class="v">Société par actions (Partie IA)</span></div>
+          <div class="kv"><span class="k">Constituée le</span><span class="v">14 mars 2019 <span class="provenance">avis n° REQ-19-088231</span></span></div>
+          <div class="kv"><span class="k">Noms antérieurs</span><span class="v">9284-1057 Canada Inc. (2019–2021)</span></div>
+          <div class="kv"><span class="k">Siège social</span><span class="v">1500 boul. René-Lévesque O., bur. 2400, Montréal</span></div>
+          <div class="kv"><span class="k">Adresse antérieure</span><span class="v">425 rue Saint-Jean, Québec (2019–2022)</span></div>
+          <h3 style="font-size:12.5px;margin:14px 0 8px;">Documents sources</h3>
+          <div class="kv"><span class="k">28 nov. 2023</span><span class="v">Avis de modification — administrateurs <span class="provenance">n° REQ-23-441209</span></span></div>
+          <div class="kv"><span class="k">02 juin 2021</span><span class="v">Changement de nom <span class="provenance">n° REQ-21-119042</span></span></div>
+        </div>
+        <div class="card">
+          <h3 style="font-size:12.5px;margin-bottom:8px;">Administrateurs actuels</h3>
+          <table class="mini-table"><thead><tr><th>Nom</th><th>Titre</th><th>Depuis</th></tr></thead>
+          <tbody>
+            <tr><td>Marc-André Fortin</td><td>Président</td><td>2023</td></tr>
+            <tr><td>Nathalie Girard</td><td>Secrétaire</td><td>2019</td></tr>
+          </tbody></table>
+          <h3 style="font-size:12.5px;margin:14px 0 8px;">Actionnaires déclarés</h3>
+          <table class="mini-table"><thead><tr><th>Nom</th><th>%</th><th>UBO</th></tr></thead>
+          <tbody>
+            <tr><td>Gestion Lavallée-Bouchard Inc.</td><td>65 %</td><td><span class="badge med"><span class="dot"></span>Chaîne à 2 sauts</span></td></tr>
+            <tr><td>Chantal Rousseau</td><td>35 %</td><td><span class="badge low"><span class="dot"></span>Directe</span></td></tr>
+          </tbody></table>
+        </div>
+      </div>
+    </div>`);
+
+  // 4 — GRAPHE
+  frame(screens[3], appTopbar('audit') + `
+    <div class="app-body">
+      <div class="graph-layout">
+        <div class="graph-canvas">
+          <div class="graph-legend">
+            <div class="legend-item"><span class="legend-swatch" style="background:var(--surface);border:1.5px solid var(--text-2);"></span>Entité</div>
+            <div class="legend-item"><span class="legend-swatch" style="border-radius:50%;background:var(--surface);border:1.5px solid var(--text-2);"></span>Personne</div>
+            <div class="legend-item"><span class="legend-swatch" style="background:var(--risk-high-soft);border:1.5px solid var(--risk-high);"></span>Nœud à risque élevé</div>
+            <div class="legend-item"><span class="legend-swatch" style="background:var(--risk-med-soft);border:1.5px solid var(--risk-med);"></span>Nœud à risque moyen</div>
+          </div>
+          <svg viewBox="0 0 640 460" width="100%" height="460" style="display:block;">
+            <line x1="320" y1="230" x2="150" y2="120" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="320" y1="230" x2="490" y2="120" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="150" y1="120" x2="150" y2="60" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="150" y1="120" x2="255" y2="60" stroke="var(--border)" stroke-width="1.5"/>
+            <line x1="150" y1="120" x2="150" y2="230" stroke="var(--risk-high)" stroke-width="1.8" stroke-dasharray="3 3"/>
+            <line x1="320" y1="230" x2="320" y2="360" stroke="var(--border)" stroke-width="1.5"/>
+
+            <text x="235" y="168" class="edge-label">détient 65 %</text>
+            <text x="410" y="168" class="edge-label">détient 35 %</text>
+            <text x="105" y="95" class="edge-label">administre</text>
+            <text x="245" y="95" class="edge-label">actionnaire 40 %</text>
+            <text x="345" y="300" class="edge-label">cycle détecté</text>
+
+            <g class="node" data-node="root" transform="translate(320,230)">
+              <rect x="-78" y="-22" width="156" height="44" rx="6" fill="var(--risk-high-soft)" stroke="var(--risk-high)"/>
+              <text text-anchor="middle" y="-3" font-size="11">9284-1057</text>
+              <text text-anchor="middle" y="12" font-size="10" fill="var(--text-3)">Québec Inc.</text>
+            </g>
+
+            <g class="node" data-node="lavallee" transform="translate(150,120)">
+              <rect x="-72" y="-20" width="144" height="40" rx="6" fill="var(--risk-med-soft)" stroke="var(--risk-med)"/>
+              <text text-anchor="middle" y="0" font-size="10.5">Gestion Lavallée-</text>
+              <text text-anchor="middle" y="13" font-size="10.5">Bouchard Inc.</text>
+            </g>
+
+            <g class="node" data-node="rousseau" transform="translate(490,120)">
+              <circle r="26" fill="var(--surface)" stroke="var(--text-2)"/>
+              <text text-anchor="middle" y="4" font-size="10">C. Rousseau</text>
+            </g>
+
+            <g class="node" data-node="fortin" transform="translate(150,60)">
+              <circle r="24" fill="var(--surface)" stroke="var(--text-2)"/>
+              <text text-anchor="middle" y="3" font-size="9.5">M.-A. Fortin</text>
+            </g>
+
+            <g class="node" data-node="girard" transform="translate(255,60)">
+              <circle r="24" fill="var(--surface)" stroke="var(--text-2)"/>
+              <text text-anchor="middle" y="3" font-size="9.5">N. Girard</text>
+            </g>
+
+            <g class="node" data-node="cycle" transform="translate(150,230)">
+              <rect x="-74" y="-20" width="148" height="40" rx="6" fill="var(--risk-high-soft)" stroke="var(--risk-high)"/>
+              <text text-anchor="middle" y="0" font-size="10">9412-8837</text>
+              <text text-anchor="middle" y="13" font-size="10">Québec Inc.</text>
+            </g>
+
+            <g class="node" data-node="nordet" transform="translate(320,360)">
+              <rect x="-70" y="-18" width="140" height="36" rx="6" fill="var(--surface)" stroke="var(--text-2)"/>
+              <text text-anchor="middle" y="4" font-size="10">Immobilière du Nordet</text>
+            </g>
+          </svg>
+        </div>
+        <div class="graph-drawer" id="drawer"></div>
+      </div>
+    </div>`);
+
+  // 5 — TIMELINE
+  frame(screens[4], appTopbar('audit') + `
+    <div class="app-body">
+      <div class="card">
+        <div class="eyebrow" style="margin-bottom:12px;">9284-1057 Québec Inc. et 2 entités liées · 2019 – 2026</div>
+        <div class="timeline-track">
+          <div class="timeline-line" id="tl-line">
+            <div class="tl-event" data-i="0" style="left:4%; background:var(--text-2);"></div>
+            <div class="tl-label" style="left:4%;">Constitution</div>
+            <div class="tl-date" style="left:4%;">14 mars 2019</div>
+
+            <div class="tl-event" data-i="1" style="left:26%; background:var(--text-2);"></div>
+            <div class="tl-label" style="left:26%;">Changement de nom</div>
+            <div class="tl-date" style="left:26%;">02 juin 2021</div>
+
+            <div class="tl-event" data-i="2" style="left:52%; background:var(--risk-high);"></div>
+            <div class="tl-label" style="left:52%;">Transfert de 65 % des actions</div>
+            <div class="tl-date" style="left:52%;">03 oct. 2023</div>
+
+            <div class="tl-event" data-i="3" style="left:60%; background:var(--risk-high);"></div>
+            <div class="tl-label" style="left:60%;">Dissolution liée</div>
+            <div class="tl-date" style="left:60%;">19 nov. 2023</div>
+
+            <div class="tl-event" data-i="4" style="left:74%; background:var(--risk-med);"></div>
+            <div class="tl-label" style="left:74%;">Reconstitution similaire</div>
+            <div class="tl-date" style="left:74%;">08 fév. 2024</div>
+
+            <div class="tl-event" data-i="5" style="left:92%; background:var(--text-2);"></div>
+            <div class="tl-label" style="left:92%;">Nouvel administrateur</div>
+            <div class="tl-date" style="left:92%;">28 nov. 2025</div>
+          </div>
+        </div>
+        <div class="tl-detail" id="tl-detail"></div>
+      </div>
+    </div>`);
+
+  // 6 — RAPPORT
+  frame(screens[5], appTopbar('audit') + `
+    <div class="app-body">
+      <div class="report-layout">
+        <div class="card">
+          <h3 style="font-size:12.5px;margin-bottom:4px;">Sections du rapport</h3>
+          <div class="section-check"><input type="checkbox" checked><div><div class="t">Résumé exécutif</div><div class="d">Conclusion et principaux constats</div></div></div>
+          <div class="section-check"><input type="checkbox" checked><div><div class="t">Arbre de propriété</div><div class="d">Graphe figé, annexe visuelle</div></div></div>
+          <div class="section-check"><input type="checkbox" checked><div><div class="t">Chronologie</div><div class="d">Événements clés horodatés</div></div></div>
+          <div class="section-check"><input type="checkbox" checked><div><div class="t">Red flags &amp; score de risque</div><div class="d">Détail des règles déclenchées</div></div></div>
+          <div class="section-check"><input type="checkbox"><div><div class="t">Annexes sourcées</div><div class="d">Liste complète des avis REQ cités</div></div></div>
+          <div style="display:flex; gap:8px; margin-top:14px;">
+            <span class="btn primary" style="flex:1;text-align:center;">Exporter en PDF</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <span class="btn" style="flex:1;text-align:center;">Exporter en Word</span>
+          </div>
+        </div>
+        <div class="doc-page">
+          <div class="eyebrow" style="margin-bottom:10px;">Rapport d’audit — confidentiel</div>
+          <h1>Structure de propriété et de contrôle — 9284-1057 Québec Inc.</h1>
+          <div class="doc-sub">Dossier D-2026-014 · Préparé par Chantal Roy, syndic · 12 août 2026</div>
+          <div class="doc-block">
+            <h4>Résumé exécutif</h4>
+            <p style="margin:0;line-height:1.6;">L’analyse révèle une chaîne de détention à 2 niveaux et un cycle de détention non résolu impliquant 9412-8837 Québec Inc., ainsi qu’une séquence dissolution–reconstitution dans une fenêtre de 3 mois. Score de risque composite : 82/100 (élevé).</p>
+          </div>
+          <div class="doc-block">
+            <h4>Arbre de propriété (annexe A)</h4>
+            <div class="doc-tree">
+              <div class="doc-node"><div class="box"></div>C. Rousseau</div>
+              <div class="doc-node"><div class="box"></div>Lavallée-Bouchard</div>
+              <div class="doc-node"><div class="box"></div>9284-1057 Qc Inc.</div>
+              <div class="doc-node"><div class="box"></div>9412-8837 Qc Inc.</div>
+            </div>
+          </div>
+          <div class="doc-block">
+            <h4>Red flags identifiés</h4>
+            <p style="margin:0;line-height:1.6;">3 règles déclenchées — cycle de détention (élevé), dissolution/reconstitution rapide (élevé), transfert d’actions précédant une dissolution liée (moyen). Détail et sources en annexe B.</p>
+          </div>
+        </div>
+      </div>
+    </div>`);
+
+  activate('dashboard');
+
+  // Graph drawer interactivity
+  const nodeInfo = {
+    root: { title: '9284-1057 Québec Inc.', body: 'NEQ 1171234567 · Score de risque 82/100. Détenue à 65 % par Gestion Lavallée-Bouchard Inc. et à 35 % par Chantal Rousseau.', flags: [
+      ['Élevé','Cycle de détention détecté avec 9412-8837 Québec Inc. — le calcul de bénéficiaire ultime est indéterminé sur cette branche.'],
+      ['Moyen','Transfert de 65 % des actions 47 jours avant la dissolution d’une entité liée (9412-8837 Québec Inc.).']
+    ]},
+    lavallee: { title: 'Gestion Lavallée-Bouchard Inc.', body: 'NEQ 1163098221 · Score de risque 55/100. Administrée par Marc-André Fortin et Nathalie Girard.', flags: [
+      ['Moyen','Administrateur (M.-A. Fortin) siège dans 4 autres entités sans lien professionnel apparent.']
+    ]},
+    rousseau: { title: 'Chantal Rousseau', body: 'Personne physique · Actionnaire directe à 35 % de 9284-1057 Québec Inc. Aucun autre mandat détecté.', flags: [] },
+    fortin: { title: 'Marc-André Fortin', body: 'Personne physique · Administrateur de 4 entités depuis 2023, mandats de courte durée récurrents.', flags: [
+      ['Moyen','Motif récurrent : mandats courts dans des entités sans lien sectoriel apparent — à corroborer.']
+    ]},
+    girard: { title: 'Nathalie Girard', body: 'Personne physique · Secrétaire de 9284-1057 Québec Inc. depuis la constitution (2019).', flags: [] },
+    cycle: { title: '9412-8837 Québec Inc.', body: 'NEQ 1179834502 · Radiée d’office. Détient une participation circulaire remontant à 9284-1057 Québec Inc.', flags: [
+      ['Élevé','Cycle de détention — calcul UBO indéterminé.'],
+      ['Élevé','Dissolution suivie 81 jours plus tard d’une reconstitution partageant 2 administrateurs et une adresse.']
+    ]},
+    nordet: { title: 'Immobilière du Nordet Ltée', body: 'NEQ 1168459023 · Filiale immobilière détenue à 100 % par 9284-1057 Québec Inc.', flags: [] },
+  };
+
+  function renderDrawer(key){
+    const d = nodeInfo[key];
+    const drawer = document.getElementById('drawer');
+    if(!drawer) return;
+    let flagsHtml = d.flags.length
+      ? d.flags.map(f => `<div class="flag-item"><span class="badge ${f[0]==='Élevé'?'high':'med'}"><span class="dot"></span>${f[0]}</span><p>${f[1]}</p></div>`).join('')
+      : '<p style="color:var(--text-3);font-size:11.5px;">Aucun red flag détecté sur ce nœud.</p>';
+    drawer.innerHTML = `
+      <div class="eyebrow" style="margin-bottom:6px;">Nœud sélectionné</div>
+      <h3 style="font-size:14px;margin-bottom:6px;">${d.title}</h3>
+      <p style="color:var(--text-2);line-height:1.5;margin:0 0 14px;">${d.body}</p>
+      <span class="btn" style="width:100%;text-align:center;display:block;margin-bottom:14px;">Ouvrir la fiche →</span>
+      <div class="eyebrow" style="margin-bottom:6px;">Red flags</div>
+      ${flagsHtml}`;
+  }
+  document.querySelectorAll('.node').forEach(n => n.addEventListener('click', () => renderDrawer(n.dataset.node)));
+  renderDrawer('root');
+
+  // Timeline interactivity
+  const tlInfo = [
+    { t: 'Constitution', d: '14 mars 2019', s: 'Constitution de 9284-1057 Québec Inc. (alors 9284-1057 Canada Inc.).', src: 'REQ-19-088231', sev: null },
+    { t: 'Changement de nom', d: '02 juin 2021', s: 'Changement de dénomination sociale vers la forme actuelle.', src: 'REQ-21-119042', sev: null },
+    { t: 'Transfert de 65 % des actions', d: '03 octobre 2023', s: 'Transfert de 65 % des actions ordinaires vers Gestion Lavallée-Bouchard Inc.', src: 'REQ-23-402118', sev: 'high' },
+    { t: 'Dissolution liée', d: '19 novembre 2023', s: 'Dissolution de 9412-8837 Québec Inc., entité liée par cycle de détention — 47 jours après le transfert d’actions ci-dessus.', src: 'REQ-23-448830', sev: 'high' },
+    { t: 'Reconstitution similaire', d: '08 février 2024', s: 'Constitution d’une nouvelle entité partageant 2 administrateurs et l’adresse de l’entité dissoute.', src: 'REQ-24-011276', sev: 'med' },
+    { t: 'Nouvel administrateur', d: '28 novembre 2025', s: 'Ajout de Marc-André Fortin comme administrateur.', src: 'REQ-25-390014', sev: null },
+  ];
+  function renderTl(i){
+    const e = tlInfo[i];
+    const badge = e.sev ? `<span class="badge ${e.sev}"><span class="dot"></span>${e.sev==='high'?'Élevé':'Moyen'}</span>` : '<span class="badge neutral">Info</span>';
+    document.getElementById('tl-detail').innerHTML = `
+      <div class="card" style="display:flex; gap:14px; align-items:flex-start;">
+        <div style="flex:1;">
+          <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+            <b style="font-size:13px;">${e.t}</b>${badge}
+          </div>
+          <p style="margin:0 0 6px;color:var(--text-2);font-size:12.5px;line-height:1.5;">${e.s}</p>
+          <span class="provenance">Source : avis ${e.src} · ${e.d}</span>
+        </div>
+      </div>`;
+  }
+  document.querySelectorAll('.tl-event').forEach(ev => ev.addEventListener('click', () => renderTl(+ev.dataset.i)));
+  renderTl(2);
+})();
+</script>
