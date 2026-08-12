@@ -1,20 +1,20 @@
 {
-  "name": "velocereq",
+  "name": "auditreq",
   "private": true,
   "version": "0.1.0",
-  "description": "VéloceREQ — système d'intelligence d'audit corporatif sur le Registre des entreprises du Québec",
+  "description": "AudiTREQ — système d'intelligence d'audit corporatif sur le Registre des entreprises du Québec",
   "type": "module",
   "workspaces": [
     "packages/*",
     "apps/*"
   ],
   "scripts": {
-    "build": "npm run build --workspace=@velocereq/core && npm run build --workspace=@velocereq/ingestion && npm run build --workspace=@velocereq/api && npm run build --workspace=@velocereq/web",
-    "test": "npm run test --workspace=@velocereq/core && npm run test --workspace=@velocereq/ingestion",
-    "seed": "npm run seed --workspace=@velocereq/api",
-    "api": "npm run dev --workspace=@velocereq/api",
-    "web": "npm run dev --workspace=@velocereq/web",
-    "ingerer": "npm run ingerer --workspace=@velocereq/ingestion --"
+    "build": "npm run build --workspace=@auditreq/core && npm run build --workspace=@auditreq/ingestion && npm run build --workspace=@auditreq/api && npm run build --workspace=@auditreq/web",
+    "test": "npm run test --workspace=@auditreq/core && npm run test --workspace=@auditreq/ingestion",
+    "seed": "npm run seed --workspace=@auditreq/api",
+    "api": "npm run dev --workspace=@auditreq/api",
+    "web": "npm run dev --workspace=@auditreq/web",
+    "ingerer": "npm run ingerer --workspace=@auditreq/ingestion --"
   },
   "devDependencies": {
     "typescript": "^5.7.2"

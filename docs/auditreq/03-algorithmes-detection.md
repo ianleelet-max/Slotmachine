@@ -1,4 +1,4 @@
-# VéloceREQ — Algorithmes de cartographie et de détection
+# AudiTREQ — Algorithmes de cartographie et de détection
 
 ## 1. Construction du graphe de propriété/contrôle
 
@@ -35,7 +35,7 @@ fonction calculerUBO(entite_racine):
     retourner chemins triés par produit_pourcentage décroissant
 ```
 
-- Le **contrôle de fait** (ex. administrateur unique sans détention majoritaire déclarée, procuration, convention entre actionnaires) est signalé séparément comme *indice de contrôle non capturé par le pourcentage déclaré* — VéloceREQ ne l'invente pas, il **expose l'angle mort** (« aucun actionnaire ≥25 % déclaré, mais X est administrateur unique depuis 8 ans — vérifier convention d'actionnaires »).
+- Le **contrôle de fait** (ex. administrateur unique sans détention majoritaire déclarée, procuration, convention entre actionnaires) est signalé séparément comme *indice de contrôle non capturé par le pourcentage déclaré* — AudiTREQ ne l'invente pas, il **expose l'angle mort** (« aucun actionnaire ≥25 % déclaré, mais X est administrateur unique depuis 8 ans — vérifier convention d'actionnaires »).
 - Chaque chemin retourné est affiché à l'utilisateur avec son détail complet (traçabilité du calcul) — jamais un chiffre seul sans le chemin qui le justifie.
 
 ## 2. Bibliothèque de règles de détection (red flags)

@@ -1,12 +1,12 @@
 import pg from 'pg';
-import type { GrapheCorporatif } from '@velocereq/core';
+import type { GrapheCorporatif } from '@auditreq/core';
 
 const { Pool } = pg;
 
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   // Le schéma applicatif est isolé : rien n'est créé dans `public`.
-  options: '-c search_path=velocereq',
+  options: '-c search_path=auditreq',
 });
 
 /**
@@ -16,7 +16,7 @@ export const pool = new Pool({
  * échelle, et les traversées de contrôle (UBO, cycles) y sont d'un ordre de
  * grandeur plus rapides qu'en allers-retours SQL récursifs. Le passage à une
  * base de graphe dédiée est prévu quand le volume ou la concurrence
- * l'imposera (voir docs/velocereq/01, §3).
+ * l'imposera (voir docs/auditreq/01, §3).
  */
 export async function chargerGraphe(): Promise<GrapheCorporatif> {
   const [entites, personnes, adresses, detentions, administrations, liens, evenements] =

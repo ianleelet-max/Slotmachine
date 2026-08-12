@@ -1,4 +1,4 @@
-# VéloceREQ — Accès aux données du REQ
+# AudiTREQ — Accès aux données du REQ
 
 > Vérifié en août 2026 auprès des sources officielles. **Ce document corrige une hypothèse erronée du document d'architecture initial** (§2.1), qui supposait que les administrateurs et actionnaires étaient disponibles dans le jeu de données ouvertes. Ils ne le sont pas.
 
@@ -47,7 +47,7 @@ Le service public de consultation donne la fiche complète, y compris administra
 
 Deux limites pratiques à retenir :
 
-- la recherche par personne exige une **orthographe exacte** (un accent ou un second prénom manquant fait échouer l'appariement) — ce qui justifie d'autant plus le moteur de résolution d'identité côté VéloceREQ ;
+- la recherche par personne exige une **orthographe exacte** (un accent ou un second prénom manquant fait échouer l'appariement) — ce qui justifie d'autant plus le moteur de résolution d'identité côté AudiTREQ ;
 - le service est conçu pour la consultation, fiche par fiche. **L'extraction automatisée en masse n'est pas un usage prévu** : la bâtir sans entente exposerait le produit à un risque contractuel et de réputation disproportionné pour un outil qui se veut opposable devant un tribunal.
 
 ### C et D. Voies contractuelles

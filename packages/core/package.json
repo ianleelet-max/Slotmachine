@@ -1,5 +1,5 @@
 {
-  "name": "@velocereq/core",
+  "name": "@auditreq/core",
   "version": "0.1.0",
   "description": "Moteur d'analyse corporative : calcul UBO, détection de stratagèmes, scoring de risque",
   "type": "module",

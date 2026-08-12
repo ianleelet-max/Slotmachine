@@ -1,4 +1,4 @@
-/** Client de l'API VéloceREQ. Les types reflètent les réponses du serveur. */
+/** Client de l'API AudiTREQ. Les types reflètent les réponses du serveur. */
 
 export type Niveau = 'faible' | 'moyen' | 'eleve';
 export type Severite = 'info' | 'faible' | 'moyen' | 'eleve';

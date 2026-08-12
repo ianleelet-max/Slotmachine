@@ -9,7 +9,7 @@
  * administrateur, ni actionnaire, ni bénéficiaire ultime — le guide l'énonce
  * explicitement. L'ingestion produit donc un graphe d'entités, d'adresses et de
  * filiations, sans arête de détention ni d'administration. Voir
- * docs/velocereq/07-acces-donnees-req.md.
+ * docs/auditreq/07-acces-donnees-req.md.
  *
  * Licence du jeu : CC BY-NC-SA 4.0 — usage non commercial.
  */

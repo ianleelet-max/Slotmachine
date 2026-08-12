@@ -1,7 +1,7 @@
 {
-  "name": "@velocereq/api",
+  "name": "@auditreq/api",
   "version": "0.1.0",
-  "description": "API VéloceREQ — recherche, graphe, UBO, détection",
+  "description": "API AudiTREQ — recherche, graphe, UBO, détection",
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@fastify/cors": "^10.0.1",
-    "@velocereq/core": "*",
+    "@auditreq/core": "*",
     "fastify": "^5.2.0",
     "pg": "^8.13.1"
   },

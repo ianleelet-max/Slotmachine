@@ -5,7 +5,7 @@ import type {
   GrapheCorporatif,
   LienAdresse,
   RelationSuccession,
-} from '@velocereq/core';
+} from '@auditreq/core';
 
 import { normaliserDate, normaliserIndicateur, type LigneCsv } from './lecture-csv.js';
 import {

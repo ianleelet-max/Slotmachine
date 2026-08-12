@@ -4,7 +4,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
-import { IndexGraphe, creerContexte, executerRegles } from '@velocereq/core';
+import { IndexGraphe, creerContexte, executerRegles } from '@auditreq/core';
 
 import { analyserCsv, decouper, detecterSeparateur, normaliserDate, normaliserIndicateur } from './lecture-csv.js';
 import { chargerArchive } from './archive.js';

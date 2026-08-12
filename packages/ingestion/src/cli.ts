@@ -1,14 +1,14 @@
 /**
  * Ingestion d'une archive du jeu de données ouvertes du REQ.
  *
- * Usage : npm run ingerer --workspace=@velocereq/ingestion -- <répertoire> [aaaa-mm-jj]
+ * Usage : npm run ingerer --workspace=@auditreq/ingestion -- <répertoire> [aaaa-mm-jj]
  *
  * Le répertoire doit contenir l'archive décompressée (Entreprise.csv, Nom.csv,
  * Etablissement.csv, FusionScission.csv, ContinuationTransformation.csv,
  * DomaineValeur.csv). La commande n'écrit rien en base : elle charge, analyse
  * et rend compte. La persistance passe par l'API, qui journalise l'opération.
  */
-import { creerContexte, analyser, IndexGraphe } from '@velocereq/core';
+import { creerContexte, analyser, IndexGraphe } from '@auditreq/core';
 
 import { chargerArchive } from './archive.js';
 
@@ -16,7 +16,7 @@ const [repertoire, dateExtraction] = process.argv.slice(2);
 
 if (!repertoire) {
   console.error(
-    'Usage : npm run ingerer --workspace=@velocereq/ingestion -- <répertoire> [aaaa-mm-jj]',
+    'Usage : npm run ingerer --workspace=@auditreq/ingestion -- <répertoire> [aaaa-mm-jj]',
   );
   process.exit(1);
 }
@@ -61,4 +61,4 @@ console.log(
 console.log(
   'de cycle de détention, de cascade et de prête-nom restent inactives tant qu’une source de',
 );
-console.log('personnes n’est pas raccordée (voir docs/velocereq/07-acces-donnees-req.md).');
+console.log('personnes n’est pas raccordée (voir docs/auditreq/07-acces-donnees-req.md).');

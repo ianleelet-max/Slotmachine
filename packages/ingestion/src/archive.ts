@@ -19,7 +19,7 @@ import { transformer, type ResultatTransformation } from './transformation.js';
  * Registraire filtre les requêtes automatisées, et surtout la licence
  * CC BY-NC-SA impose un usage non commercial dont la responsabilité revient à
  * l'exploitant. Le téléchargement reste donc un geste explicite, documenté
- * dans docs/velocereq/07-acces-donnees-req.md.
+ * dans docs/auditreq/07-acces-donnees-req.md.
  */
 
 export interface AnomalieStructure {

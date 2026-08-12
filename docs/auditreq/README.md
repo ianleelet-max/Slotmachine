@@ -1,6 +1,6 @@
-# VéloceREQ — Conception produit
+# AudiTREQ — Conception produit
 
-**VéloceREQ** (alt. « AuditVoile Québec ») est un système d'intelligence d'audit corporatif bâti sur le Registre des entreprises du Québec (REQ). Il transforme une consultation fiche-par-fiche, manuelle et fragmentée, en cartographie relationnelle instantanée, détection automatisée de stratagèmes de dissimulation d'actifs, et rapports d'audit opposables.
+**AudiTREQ** est un système d'intelligence d'audit corporatif bâti sur le Registre des entreprises du Québec (REQ). Il transforme une consultation fiche-par-fiche, manuelle et fragmentée, en cartographie relationnelle instantanée, détection automatisée de stratagèmes de dissimulation d'actifs, et rapports d'audit opposables.
 
 ## Sommaire des livrables
 

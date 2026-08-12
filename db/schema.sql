@@ -1,5 +1,5 @@
--- VéloceREQ — schéma relationnel (MVP)
--- Dérivé de docs/velocereq/04-modele-donnees.md.
+-- AudiTREQ — schéma relationnel (MVP)
+-- Dérivé de docs/auditreq/04-modele-donnees.md.
 --
 -- Principe structurant : toute relation issue du registre porte l'avis REQ qui
 -- l'atteste. Les tables de travail (dossiers, annotations, journal) sont
@@ -8,9 +8,9 @@
 
 BEGIN;
 
-DROP SCHEMA IF EXISTS velocereq CASCADE;
-CREATE SCHEMA velocereq;
-SET search_path TO velocereq;
+DROP SCHEMA IF EXISTS auditreq CASCADE;
+CREATE SCHEMA auditreq;
+SET search_path TO auditreq;
 
 -- --------------------------------------------------------------------------
 -- Données publiques issues du registre

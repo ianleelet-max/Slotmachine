@@ -1,12 +1,12 @@
-# VéloceREQ
+# AudiTREQ
 
 Système d'intelligence d'audit corporatif bâti sur le Registre des entreprises du Québec (REQ) : reconstitution de l'arbre de propriété et de contrôle, calcul du bénéficiaire ultime, détection automatisée de stratagèmes de dissimulation d'actifs, et traçabilité de chaque affirmation jusqu'à son avis REQ source.
 
-La conception produit complète — vision, architecture, parcours utilisateurs, algorithmes, modèle de données, roadmap, recommandations UX — se trouve dans [`docs/velocereq/`](./docs/velocereq/).
+La conception produit complète — vision, architecture, parcours utilisateurs, algorithmes, modèle de données, roadmap, recommandations UX — se trouve dans [`docs/auditreq/`](./docs/auditreq/).
 
 ## État d'avancement
 
-Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadmap-mvp-v1-v2.md) sont en place :
+Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/auditreq/05-roadmap-mvp-v1-v2.md) sont en place :
 
 | Livrable | État |
 |---|---|
@@ -24,7 +24,7 @@ Le MVP et le cœur de la V1 décrits dans la [roadmap](./docs/velocereq/05-roadm
 
 > Les données présentes sont **entièrement fictives**. Aucune connexion au REQ réel n'est établie.
 >
-> Le raccordement aux données officielles est contraint : le jeu de données ouvertes du REQ **ne contient aucune personne physique** (ni administrateur, ni actionnaire, ni bénéficiaire ultime) et sa licence interdit l'usage commercial. Les personnes ne sont accessibles que par le service de consultation du registre, dont l'extraction automatisée suppose une entente avec le Registraire. Analyse complète : [07 — Accès aux données du REQ](./docs/velocereq/07-acces-donnees-req.md).
+> Le raccordement aux données officielles est contraint : le jeu de données ouvertes du REQ **ne contient aucune personne physique** (ni administrateur, ni actionnaire, ni bénéficiaire ultime) et sa licence interdit l'usage commercial. Les personnes ne sont accessibles que par le service de consultation du registre, dont l'extraction automatisée suppose une entente avec le Registraire. Analyse complète : [07 — Accès aux données du REQ](./docs/auditreq/07-acces-donnees-req.md).
 
 ## Structure
 
@@ -34,7 +34,7 @@ packages/ingestion/  Lecture des données ouvertes du Registraire
 packages/api/        API Fastify + PostgreSQL
 apps/web/            Interface React + Vite
 db/                  Schéma SQL
-docs/velocereq/      Conception produit
+docs/auditreq/      Conception produit
 ```
 
 Le moteur (`packages/core`) est une fonction pure du graphe corporatif : il ne connaît ni la base de données, ni le réseau. C'est ce qui permet de le tester exhaustivement et de rejouer une analyse sur un état historique.
@@ -47,10 +47,10 @@ Prérequis : Node 22+, PostgreSQL 16+.
 npm install
 
 # Base de données
-createdb velocereq
-export DATABASE_URL="postgres://$USER@localhost/velocereq"
+createdb auditreq
+export DATABASE_URL="postgres://$USER@localhost/auditreq"
 psql "$DATABASE_URL" -f db/schema.sql
-npm run seed --workspace=@velocereq/api   # charge le jeu de démonstration et lance l'analyse
+npm run seed --workspace=@auditreq/api   # charge le jeu de démonstration et lance l'analyse
 
 # API (port 3001)
 npm run api

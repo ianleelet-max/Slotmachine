@@ -1,6 +1,6 @@
-# VéloceREQ — Vision produit
+# AudiTREQ — Vision produit
 
-> Nom provisoire : **VéloceREQ** (alt. « AuditVoile Québec »)
+> Nom du produit : **AudiTREQ**
 > Positionnement : le premier système d'intelligence d'audit corporatif bâti sur le Registre des entreprises du Québec (REQ).
 
 ## 1. Le problème
@@ -18,7 +18,7 @@ Ce travail prend des heures, parfois des jours, pour une structure de taille moy
 
 ## 2. La proposition de valeur
 
-VéloceREQ transforme le REQ, statique et fragmenté, en un **graphe de connaissance corporatif vivant**, interrogeable et analysable :
+AudiTREQ transforme le REQ, statique et fragmenté, en un **graphe de connaissance corporatif vivant**, interrogeable et analysable :
 
 - **De la fiche à l'arbre** : une recherche donne instantanément la structure complète de propriété/contrôle, pas seulement l'entité recherchée.
 - **De la lecture à la détection** : un moteur de règles + scoring signale automatiquement les patrons associés à la dissimulation de valeur (cascades, prête-noms probables, dissolutions-reconstitutions, adresses partagées massives).
@@ -27,7 +27,7 @@ VéloceREQ transforme le REQ, statique et fragmenté, en un **graphe de connaiss
 
 ## 3. Différenciateur
 
-| Axe | REQ / ICRIS actuel | VéloceREQ |
+| Axe | REQ / ICRIS actuel | AudiTREQ |
 |---|---|---|
 | Unité de consultation | Une fiche entreprise | Un graphe de relations multi-entités |
 | Historique | Avis dispersés, non reliés | Timeline unifiée et rejouable |
@@ -37,7 +37,7 @@ VéloceREQ transforme le REQ, statique et fragmenté, en un **graphe de connaiss
 | Collaboration | Aucune | Dossiers, annotations, historique d'équipe |
 | Accès programmatique | Aucun (interface web seulement) | API-first |
 
-VéloceREQ ne remplace pas le REQ comme source de vérité légale — il **augmente** cette source avec de l'intelligence relationnelle, tout en conservant une traçabilité complète vers le document officiel d'origine (principe de non-altération de la preuve).
+AudiTREQ ne remplace pas le REQ comme source de vérité légale — il **augmente** cette source avec de l'intelligence relationnelle, tout en conservant une traçabilité complète vers le document officiel d'origine (principe de non-altération de la preuve).
 
 ## 4. Utilisateurs cibles et jobs-to-be-done
 
@@ -53,7 +53,7 @@ VéloceREQ ne remplace pas le REQ comme source de vérité légale — il **augm
 
 - **LPLE (Loi sur la publicité légale des entreprises)** : source des données de base (NEQ, administrateurs, actionnaires ≥ 10 %, bénéficiaires ultimes depuis la réforme de mars 2023 exigeant la déclaration des « personnes physiques ayant un pouvoir de contrôle »).
 - **Loi 25 (protection des renseignements personnels, Québec) et LPRPDE (fédérale)** : les données du REQ concernant des dirigeants/administrateurs sont publiques par nature légale, mais leur **agrégation** (profil cross-entreprises d'une personne) crée un nouveau renseignement personnel dérivé — traité comme sensible, avec journalisation d'accès, finalité documentée par dossier, et purge des recherches sur demande.
-- **Non-altération de la preuve** : toute donnée affichée référence son avis REQ source (numéro, date de publication) ; VéloceREQ ne modifie ni n'interprète silencieusement — il annote, avec la donnée brute toujours accessible.
+- **Non-altération de la preuve** : toute donnée affichée référence son avis REQ source (numéro, date de publication) ; AudiTREQ ne modifie ni n'interprète silencieusement — il annote, avec la donnée brute toujours accessible.
 - **Usage professionnel encadré** : accès réservé à des professionnels identifiés (CPA, avocats, syndics licenciés OSB, etc.), avec conditions d'utilisation limitant l'usage à des fins légitimes (audit, conformité, litige, diligence) — pas de surveillance de masse ou de profilage sans finalité déclarée.
 
 ## 6. Comment on mesure le succès
@@ -61,4 +61,4 @@ VéloceREQ ne remplace pas le REQ comme source de vérité légale — il **augm
 - **Temps de reconstitution d'une structure de 20 entités** : de plusieurs heures (manuel) à < 2 minutes.
 - **Taux de détection de structures en cascade ≥ 3 niveaux** : 100 % (mécanique, pas heuristique — c'est un graphe).
 - **Taux de faux positifs sur les red flags de niveau « élevé »** validé par des experts en pilote : < 20 % après calibration.
-- **Adoption** : un rapport VéloceREQ cité comme pièce dans au moins une procédure judiciaire ou un dossier de faillite en première année (preuve d'opposabilité réelle).
+- **Adoption** : un rapport AudiTREQ cité comme pièce dans au moins une procédure judiciaire ou un dossier de faillite en première année (preuve d'opposabilité réelle).

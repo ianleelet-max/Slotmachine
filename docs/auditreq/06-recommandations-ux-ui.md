@@ -1,4 +1,4 @@
-# VéloceREQ — Recommandations UX/UI
+# AudiTREQ — Recommandations UX/UI
 
 ## 1. Principes directeurs
 

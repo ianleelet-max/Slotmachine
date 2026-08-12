@@ -3,7 +3,7 @@
  *
  * Règle structurante : toute relation porte l'identifiant de l'avis REQ qui
  * l'atteste (`avisReqId`). Une arête sans source officielle n'existe pas —
- * c'est ce qui rend une conclusion opposable (voir docs/velocereq/04).
+ * c'est ce qui rend une conclusion opposable (voir docs/auditreq/04).
  */
 
 export type IdentifiantEntite = string;

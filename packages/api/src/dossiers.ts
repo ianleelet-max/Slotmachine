@@ -5,7 +5,7 @@ import {
   type IdentifiantEntite,
   type IndexGraphe,
   type RedFlag,
-} from '@velocereq/core';
+} from '@auditreq/core';
 
 import { pool } from './db.js';
 import { rendreRapportHtml } from './rapport-html.js';

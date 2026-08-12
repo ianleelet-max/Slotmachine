@@ -2,9 +2,9 @@
  * Charge le jeu de démonstration en base, puis exécute l'analyse et persiste
  * ses résultats — le même chemin que suivra un lot d'avis REQ réel.
  *
- * Usage : npm run seed --workspace=@velocereq/api
+ * Usage : npm run seed --workspace=@auditreq/api
  */
-import { grapheDemonstration, IndexGraphe, creerContexte, analyser } from '@velocereq/core';
+import { grapheDemonstration, IndexGraphe, creerContexte, analyser } from '@auditreq/core';
 import { pool } from './db.js';
 
 const graphe = grapheDemonstration();

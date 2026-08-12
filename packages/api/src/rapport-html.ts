@@ -1,4 +1,4 @@
-import { LIBELLES_STATUTS, type Rapport, type StatutEntite } from '@velocereq/core';
+import { LIBELLES_STATUTS, type Rapport, type StatutEntite } from '@auditreq/core';
 
 const LIBELLES_NIVEAUX: Record<string, string> = {
   faible: 'faible',
@@ -204,7 +204,7 @@ ${
 </section>
 
 <footer>
-  Rapport produit par VéloceREQ à partir des données publiques du Registre des entreprises du Québec.
+  Rapport produit par AudiTREQ à partir des données publiques du Registre des entreprises du Québec.
   Les analyses relationnelles et les signaux sont des aides à l'audit : ils ne constituent ni un avis
   juridique, ni une preuve, et demeurent sous la responsabilité du professionnel signataire.
   Document généré le ${echapper(entete.genereLe)} pour ${echapper(entete.auteur)} — usage réservé au dossier ${echapper(entete.dossierId)}.

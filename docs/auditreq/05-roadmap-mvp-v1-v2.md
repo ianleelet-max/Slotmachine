@@ -1,4 +1,4 @@
-# VéloceREQ — Priorisation MVP → V1 → V2
+# AudiTREQ — Priorisation MVP → V1 → V2
 
 Principe de priorisation : le MVP doit déjà livrer la promesse centrale — *de la fiche à l'arbre* — sur des données REQ pures, sans dépendre des sources complémentaires ni du machine learning. Chaque phase suivante ajoute une couche de valeur sans remettre en cause l'architecture (voir doc 01, pensée API-first et graphe dès le MVP).
 

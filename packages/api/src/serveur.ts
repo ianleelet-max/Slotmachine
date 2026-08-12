@@ -12,7 +12,7 @@ import {
   type IdentifiantEntite,
   type RedFlag,
   type ScoreRisque,
-} from '@velocereq/core';
+} from '@auditreq/core';
 
 import { chargerGraphe, pool } from './db.js';
 import { enregistrerRoutesDossiers, journaliser } from './dossiers.js';

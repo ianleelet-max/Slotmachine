@@ -1,4 +1,4 @@
-<title>VéloceREQ — Maquettes</title>
+<title>AudiTREQ — Maquettes</title>
 <style>
   :root {
     --bg: #F5F4F0;
@@ -235,9 +235,9 @@
 <div class="shell">
   <div class="masthead">
     <div class="wordmark">
-      <span class="mark">VR</span>
+      <span class="mark">AT</span>
       <div>
-        <h1>VéloceREQ</h1>
+        <h1>AudiTREQ</h1>
         <div class="sub">Système d'intelligence d'audit corporatif — Registre des entreprises du Québec</div>
       </div>
     </div>
@@ -250,19 +250,19 @@
   <main id="screens"></main>
 
   <p class="footer-note">
-    Maquette d'intention (fidélité intermédiaire), données d'entreprises et de personnes entièrement fictives à des fins d'illustration. Voir la documentation complète — vision, architecture, algorithmes, modèle de données, roadmap — dans <code>docs/velocereq/</code>.
+    Maquette d'intention (fidélité intermédiaire), données d'entreprises et de personnes entièrement fictives à des fins d'illustration. Voir la documentation complète — vision, architecture, algorithmes, modèle de données, roadmap — dans <code>docs/auditreq/</code>.
   </p>
 </div>
 
 <script>
 (function(){
   const screens = [
-    { id: 'dashboard', label: 'Tableau de bord', n: '01', title: 'Tableau de bord — mode Audit approfondi', desc: 'Vue d’entrée personnalisée par persona : dossiers actifs, alertes de surveillance, entités à risque détectées récemment.' , url: 'app.velocereq.ca/tableau-de-bord' },
-    { id: 'recherche', label: 'Recherche', n: '02', title: 'Recherche multi-critères', desc: 'Recherche fuzzy sur nom, NEQ, administrateur ou adresse, avec résultats triés et score de risque visible immédiatement.', url: 'app.velocereq.ca/recherche?q=lavall%C3%A9e' },
-    { id: 'fiche', label: 'Fiche entité', n: '03', title: 'Fiche entité', desc: 'Identité légale complète, adresses historiques, administrateurs et actionnaires, avec renvoi systématique à l’avis REQ source.', url: 'app.velocereq.ca/entite/1171234567' },
-    { id: 'graphe', label: 'Graphe relationnel', n: '04', title: 'Graphe relationnel et détection', desc: 'Cartographie interactive de contrôle et de propriété ; panneau contextuel avec red flags expliqués au clic sur un nœud.', url: 'app.velocereq.ca/entite/1171234567/graphe' },
-    { id: 'timeline', label: 'Timeline', n: '05', title: 'Timeline chronologique', desc: 'Historique unifié des avis affectant la structure sélectionnée, utile pour repérer une coïncidence temporelle suspecte.', url: 'app.velocereq.ca/entite/1171234567/chronologie' },
-    { id: 'rapport', label: 'Rapport', n: '06', title: 'Générateur de rapport d’audit', desc: 'Sélection des sections, prévisualisation fidèle avant export PDF/Word — chaque affirmation reste sourcée.', url: 'app.velocereq.ca/dossier/D-2026-014/rapport' },
+    { id: 'dashboard', label: 'Tableau de bord', n: '01', title: 'Tableau de bord — mode Audit approfondi', desc: 'Vue d’entrée personnalisée par persona : dossiers actifs, alertes de surveillance, entités à risque détectées récemment.' , url: 'app.auditreq.ca/tableau-de-bord' },
+    { id: 'recherche', label: 'Recherche', n: '02', title: 'Recherche multi-critères', desc: 'Recherche fuzzy sur nom, NEQ, administrateur ou adresse, avec résultats triés et score de risque visible immédiatement.', url: 'app.auditreq.ca/recherche?q=lavall%C3%A9e' },
+    { id: 'fiche', label: 'Fiche entité', n: '03', title: 'Fiche entité', desc: 'Identité légale complète, adresses historiques, administrateurs et actionnaires, avec renvoi systématique à l’avis REQ source.', url: 'app.auditreq.ca/entite/1171234567' },
+    { id: 'graphe', label: 'Graphe relationnel', n: '04', title: 'Graphe relationnel et détection', desc: 'Cartographie interactive de contrôle et de propriété ; panneau contextuel avec red flags expliqués au clic sur un nœud.', url: 'app.auditreq.ca/entite/1171234567/graphe' },
+    { id: 'timeline', label: 'Timeline', n: '05', title: 'Timeline chronologique', desc: 'Historique unifié des avis affectant la structure sélectionnée, utile pour repérer une coïncidence temporelle suspecte.', url: 'app.auditreq.ca/entite/1171234567/chronologie' },
+    { id: 'rapport', label: 'Rapport', n: '06', title: 'Générateur de rapport d’audit', desc: 'Sélection des sections, prévisualisation fidèle avant export PDF/Word — chaque affirmation reste sourcée.', url: 'app.auditreq.ca/dossier/D-2026-014/rapport' },
   ];
 
   const tabsEl = document.getElementById('tabs');
@@ -304,7 +304,7 @@
 
   const appTopbar = (mode) => `
     <div class="app-topbar">
-      <div class="brand"><span class="dot"></span>VéloceREQ</div>
+      <div class="brand"><span class="dot"></span>AudiTREQ</div>
       <div class="search-pill">Rechercher une entité, un NEQ, une personne…<kbd>/</kbd></div>
       <div class="mode-toggle"><span class="${mode==='rapide'?'on':''}">Investigation rapide</span><span class="${mode==='audit'?'on':''}">Audit approfondi</span></div>
       <div class="persona-pill">Chantal Roy · Syndic <span class="avatar">CR</span></div>

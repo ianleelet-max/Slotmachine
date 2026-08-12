@@ -73,7 +73,7 @@ export default function App() {
       <header className="app-barre">
         <button className="marque" onClick={() => setVue({ nom: 'tableau' })}>
           <span className="pastille" />
-          VéloceREQ
+          AudiTREQ
         </button>
 
         <form

@@ -1,6 +1,6 @@
-# VéloceREQ — Modèle de données relationnel
+# AudiTREQ — Modèle de données relationnel
 
-VéloceREQ combine une **base de graphe** (traversées de propriété/contrôle, performantes sur des milliers de sauts) et une **base relationnelle** (historique versionné, documents sources, dossiers, utilisateurs). Le schéma ci-dessous présente le modèle relationnel complet ; les entités `entite`, `personne` et `relation_*` sont répliquées comme nœuds/arêtes dans la base de graphe pour les besoins de traversée.
+AudiTREQ combine une **base de graphe** (traversées de propriété/contrôle, performantes sur des milliers de sauts) et une **base relationnelle** (historique versionné, documents sources, dossiers, utilisateurs). Le schéma ci-dessous présente le modèle relationnel complet ; les entités `entite`, `personne` et `relation_*` sont répliquées comme nœuds/arêtes dans la base de graphe pour les besoins de traversée.
 
 ## 1. Diagramme entité-relation
 
