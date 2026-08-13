@@ -43,26 +43,26 @@ Vous devez voir passer **113 tests** (moteur d’analyse, capture, ingestion, au
 
 ## 3a. La base de données — installation classique
 
-Créez une base vide, puis chargez le schéma et le jeu de démonstration :
+**Vous n'avez pas besoin de `createdb` ni de `psql`** : `db:init` crée la base et les tables lui-même. C'est voulu — ces outils ne sont pas dans le PATH par défaut sous Windows, et c'est l'obstacle sur lequel une première installation bute.
+
+Indiquez seulement où joindre PostgreSQL :
 
 ```bash
 # macOS / Linux
-createdb auditreq
 export DATABASE_URL="postgres://$USER@localhost/auditreq"
+```
 
-# Windows (PowerShell) — adaptez l'utilisateur et le mot de passe choisis à l'installation
-createdb -U postgres auditreq
+```powershell
+# Windows (PowerShell) — le mot de passe est celui choisi à l'installation de PostgreSQL
 $env:DATABASE_URL = "postgres://postgres:VOTRE_MOT_DE_PASSE@localhost/auditreq"
 ```
 
-Puis, dans les deux cas :
+Puis :
 
 ```bash
 npm run db:init
 npm run seed
 ```
-
-`db:init` crée les tables sans passer par l'outil `psql` — inutile donc de le chercher dans votre PATH.
 
 ## 3b. La base de données — avec Docker
 
@@ -125,8 +125,9 @@ L'archive se télécharge à la main depuis [Données Québec](https://www.donne
 | Symptôme | Cause probable | Correctif |
 |---|---|---|
 | `ECONNREFUSED ... 5432` | PostgreSQL n'est pas démarré | Démarrez le service, ou `docker compose up -d` |
-| `password authentication failed` | Mot de passe absent de `DATABASE_URL` | Reprenez la chaîne de connexion du §3 |
-| `database "auditreq" does not exist` | Base non créée | `createdb auditreq`, puis `npm run db:init` |
+| `Could not read package.json` | Vous n'êtes pas dans le dossier du projet | `cd` vers le dossier cloné, puis relancez |
+| `createdb : Le terme … n'est pas reconnu` | Outils PostgreSQL absents du PATH | Sans objet : `npm run db:init` s'en passe |
+| `password authentication failed` | Mot de passe absent ou erroné dans `DATABASE_URL` | Reprenez la chaîne du §3 avec le bon mot de passe |
 | `EADDRINUSE ... 3001` | Un serveur tourne déjà | Fermez-le, ou lancez avec `PORT=3002` |
 | `Unsupported engine ... node` | Node trop ancien | Installez Node 22 ou plus |
 | L'interface affiche « Erreur » partout | L'API n'est pas lancée | Vérifiez le terminal 1 |

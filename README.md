@@ -51,9 +51,8 @@ Prérequis : Node 22+, PostgreSQL 16+ (ou Docker). Guide détaillé, par systèm
 npm install
 npm test                 # 85 tests, sans base de données
 
-createdb auditreq
 export DATABASE_URL="postgres://$USER@localhost/auditreq"
-npm run db:init          # crée le schéma, sans exiger l'outil psql
+npm run db:init          # crée la base et le schéma, sans exiger createdb ni psql
 npm run seed             # jeu de démonstration + analyse (affiche le mot de passe du compte)
 
 npm run api              # port 3001
