@@ -54,6 +54,14 @@ export function App() {
       desc: 'Surveillance et réinsertion judiciaire',
     },
     {
+      name: 'PowAI TEL',
+      badge: 'VoIP Android',
+      url: 'https://powai.ca/tel',
+      icon: '📱',
+      color: '#06b6d4',
+      desc: 'Téléphonie et messagerie IP simplissime avec achat de numéros VoIP',
+    },
+    {
       name: 'AudiTREQ',
       badge: 'Graphes & Audit',
       url: 'https://powai.ca/auditreq',

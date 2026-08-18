@@ -1,0 +1,16 @@
+{
+  "short_name": "PowAI TEL",
+  "name": "PowAI TEL — Téléphonie & Messagerie VoIP",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "display": "standalone",
+  "orientation": "portrait"
+}

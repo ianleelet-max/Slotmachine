@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", sans-serif;
+  background-color: #060911;
+  color: #f1f5f9;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Effets Android Material You */
+.android-ripple {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.android-ripple:active {
+  transform: scale(0.96);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Scrollbar discrète */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 4px;
+}
+
+/* Effets d'ombre et néon */
+.glow-cyan {
+  box-shadow: 0 0 20px -3px rgba(6, 182, 212, 0.35);
+}
+.glow-green {
+  box-shadow: 0 0 25px -3px rgba(16, 185, 129, 0.45);
+}

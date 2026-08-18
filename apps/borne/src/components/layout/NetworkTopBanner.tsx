@@ -68,6 +68,16 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
       desc: 'Analyse d’intégrité corporative',
     },
     {
+      id: 'tel',
+      name: 'PowAI TEL',
+      badge: 'VoIP Android',
+      url: 'https://powai.ca/tel',
+      isLocalTab: false,
+      icon: '📱',
+      color: '#06b6d4',
+      desc: 'Téléphonie & messagerie IP ultra-simpliste pour Android',
+    },
+    {
       id: 'home',
       name: 'Portail PowAI.ca',
       badge: 'Hub',
