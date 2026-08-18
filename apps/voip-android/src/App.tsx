@@ -7,18 +7,20 @@ import { CallHistory } from './components/dialer/CallHistory';
 import { ConversationList } from './components/messaging/ConversationList';
 import { ChatThread } from './components/messaging/ChatThread';
 import { NumberStore } from './components/store/NumberStore';
-import { VoipNumber, CallRecord, Conversation } from './types/voip';
-import { Phone, Shield, ExternalLink, Download } from 'lucide-react';
+import { DidInventoryManager } from './components/admin/DidInventoryManager';
+import { ApkDownloadBanner } from './components/apk/ApkDownloadBanner';
+import { VoipNumber, CallRecord, Conversation, DidStockItem, SubscriptionPlan } from './types/voip';
+import { PROPRIETARY_DID_INVENTORY } from './data/privateDidBank';
 
 const INITIAL_PURCHASED_LINES: VoipNumber[] = [
   {
-    id: 'line-qc-514',
+    id: 'did-qc-514-01',
     number: '+1 (514) 800-7691',
     country: 'Canada',
     flag: '🇨🇦',
-    region: 'Montréal, QC',
+    region: 'Montréal (Centre-Ville), QC',
     type: 'local',
-    monthlyPrice: 2.50,
+    monthlyPrice: 4.99,
     setupFee: 0,
     features: ['Appels HD', 'SMS/MMS', 'Messagerie Vocale AI', 'SIP TLS'],
     isPurchased: true,
@@ -27,110 +29,19 @@ const INITIAL_PURCHASED_LINES: VoipNumber[] = [
     sipServer: 'sip.powai.ca:5060'
   },
   {
-    id: 'line-qc-418',
+    id: 'did-qc-418-01',
     number: '+1 (418) 907-5520',
     country: 'Canada',
     flag: '🇨🇦',
-    region: 'Québec, QC',
+    region: 'Québec & Lévis, QC',
     type: 'local',
-    monthlyPrice: 2.50,
+    monthlyPrice: 4.99,
     setupFee: 0,
     features: ['Appels HD', 'SMS/MMS', 'SIP TLS'],
     isPurchased: true,
     isDefault: false,
     sipUsername: 'powai_4189075520',
     sipServer: 'sip.powai.ca:5060'
-  }
-];
-
-const INITIAL_CATALOG: VoipNumber[] = [
-  {
-    id: 'store-1',
-    number: '+1 (514) 316-8800',
-    country: 'Canada',
-    flag: '🇨🇦',
-    region: 'Montréal (Centre-Ville), QC',
-    type: 'local',
-    monthlyPrice: 2.50,
-    setupFee: 0,
-    features: ['VoIP HD Opus', 'SMS Ililimité', 'WebRTC Direct']
-  },
-  {
-    id: 'store-2',
-    number: '+1 (438) 792-1144',
-    country: 'Canada',
-    flag: '🇨🇦',
-    region: 'Montréal & Laval, QC',
-    type: 'local',
-    monthlyPrice: 2.50,
-    setupFee: 0,
-    features: ['Appels & SMS', 'Transcription IA', 'Enregistrement Légal']
-  },
-  {
-    id: 'store-3',
-    number: '+1 (418) 478-9900',
-    country: 'Canada',
-    flag: '🇨🇦',
-    region: 'Québec & Lévis, QC',
-    type: 'local',
-    monthlyPrice: 2.50,
-    setupFee: 0,
-    features: ['VoIP HD', 'Renvoi Cellulaire', 'SMS entrant gratuit']
-  },
-  {
-    id: 'store-4',
-    number: '+1 (450) 662-7733',
-    country: 'Canada',
-    flag: '🇨🇦',
-    region: 'Laval & Rive-Nord, QC',
-    type: 'local',
-    monthlyPrice: 2.50,
-    setupFee: 0,
-    features: ['VoIP HD', 'SMS/MMS', 'Chiffrement SRTP']
-  },
-  {
-    id: 'store-5',
-    number: '+1 (819) 303-4411',
-    country: 'Canada',
-    flag: '🇨🇦',
-    region: 'Gatineau & Outaouais, QC',
-    type: 'local',
-    monthlyPrice: 2.50,
-    setupFee: 0,
-    features: ['VoIP HD', 'SMS', 'Messagerie Web']
-  },
-  {
-    id: 'store-6',
-    number: '+1 (888) 790-7692',
-    country: 'Canada',
-    flag: '🇨🇦',
-    region: 'Numéro Sans Frais (1-888)',
-    type: 'tollfree',
-    monthlyPrice: 4.99,
-    setupFee: 0,
-    features: ['Sans frais Canada/USA', 'Menu Vocal Interactif', 'Routage multi-postes']
-  },
-  {
-    id: 'store-7',
-    number: '+1 (212) 500-1928',
-    country: 'États-Unis',
-    flag: '🇺🇸',
-    region: 'New York, NY',
-    type: 'local',
-    monthlyPrice: 2.99,
-    setupFee: 0,
-    features: ['VoIP HD', 'SMS USA', 'SIP Trunking']
-  },
-  {
-    id: 'store-8',
-    number: '+33 (1) 79 36 00 24',
-    country: 'France',
-    flag: '🇫🇷',
-    region: 'Paris, Île-de-France',
-    type: 'local',
-    monthlyPrice: 3.50,
-    setupFee: 0,
-    features: ['VoIP HD Européenne', 'Conforme RGPD', 'Opus 48kHz']
   }
 ];
 
@@ -194,13 +105,14 @@ const INITIAL_CONVERSATIONS: Conversation[] = [
 
 export function App() {
   const [activeTab, setActiveTab] = useState<TabType>('dialer');
+  const [didInventory, setDidInventory] = useState<DidStockItem[]>(PROPRIETARY_DID_INVENTORY);
   const [purchasedLines, setPurchasedLines] = useState<VoipNumber[]>(INITIAL_PURCHASED_LINES);
   const [activeLine, setActiveLine] = useState<VoipNumber>(INITIAL_PURCHASED_LINES[0]);
-  const [catalog, setCatalog] = useState<VoipNumber[]>(INITIAL_CATALOG);
-  const [balance, setBalance] = useState<number>(25.00);
+  const [balance, setBalance] = useState<number>(35.00);
   const [calls, setCalls] = useState<CallRecord[]>(INITIAL_CALLS);
   const [conversations, setConversations] = useState<Conversation[]>(INITIAL_CONVERSATIONS);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   
   // État de l'appel actif
   const [callingTarget, setCallingTarget] = useState<string | null>(null);
@@ -209,7 +121,6 @@ export function App() {
 
   const handleStartCall = (targetNum: string) => {
     setCallingTarget(targetNum);
-    // Ajouter au journal des appels
     const newCall: CallRecord = {
       id: `call-${Date.now()}`,
       number: targetNum,
@@ -225,19 +136,51 @@ export function App() {
     setCallingTarget(null);
   };
 
-  const handlePurchaseNumber = (item: VoipNumber) => {
-    const purchasedItem: VoipNumber = {
-      ...item,
+  const handlePurchaseNumber = (didItem: DidStockItem, plan?: SubscriptionPlan) => {
+    // 1. Marquer le DID comme 'assigned' dans notre banque propriétaire
+    setDidInventory((prev) =>
+      prev.map((d) =>
+        d.id === didItem.id
+          ? { ...d, status: 'assigned', assignedTo: 'Client PowAI TEL', assignedDate: new Date().toISOString().slice(0, 10), planId: plan?.id }
+          : d
+      )
+    );
+
+    // 2. Ajouter le numéro aux lignes utilisables par l'utilisateur
+    const newLine: VoipNumber = {
+      id: didItem.id,
+      number: didItem.number,
+      country: didItem.country,
+      flag: didItem.flag,
+      region: didItem.region,
+      type: didItem.type,
+      monthlyPrice: plan ? plan.monthlyPrice : didItem.resalePrice,
+      setupFee: 0,
+      features: didItem.features,
       isPurchased: true,
       isDefault: false,
-      sipUsername: `powai_${item.number.replace(/\D/g, '')}`,
+      sipUsername: `powai_${didItem.number.replace(/\D/g, '')}`,
       sipServer: 'sip.powai.ca:5060'
     };
-    setPurchasedLines([...purchasedLines, purchasedItem]);
-    setActiveLine(purchasedItem);
-    setCatalog(catalog.filter((c) => c.id !== item.id));
-    setBalance((prev) => Math.max(0, prev - item.monthlyPrice));
+
+    setPurchasedLines([...purchasedLines, newLine]);
+    setActiveLine(newLine);
+    setBalance((prev) => Math.max(0, prev - newLine.monthlyPrice));
     setActiveTab('dialer');
+  };
+
+  const handleAddDidToBank = (newDid: DidStockItem) => {
+    setDidInventory([newDid, ...didInventory]);
+  };
+
+  const handleUpdateDidPrice = (didId: string, newPrice: number) => {
+    setDidInventory((prev) =>
+      prev.map((d) =>
+        d.id === didId
+          ? { ...d, resalePrice: newPrice, monthlyProfit: newPrice - d.wholesaleCost }
+          : d
+      )
+    );
   };
 
   const handleTopUp = (amount: number) => {
@@ -276,75 +219,89 @@ export function App() {
     <div className="min-h-screen bg-[#04060b] flex items-center justify-center p-0 sm:p-4">
       
       {/* Cadre Téléphone Android / PWA Viewport */}
-      <div className="w-full max-w-md h-screen sm:h-[844px] bg-[#070a12] sm:rounded-[36px] border-0 sm:border-4 border-slate-800 flex flex-col justify-between overflow-hidden shadow-2xl relative">
+      <div className="w-full max-w-md h-screen sm:h-[860px] bg-[#070a12] sm:rounded-[36px] border-0 sm:border-4 border-slate-800 flex flex-col justify-between overflow-hidden shadow-2xl relative">
         
         {/* Barre de Statut Android */}
         <AndroidStatusBar />
 
-        {/* Contenu Principal selon l'onglet */}
+        {/* Bannière Téléchargement APK Direct */}
+        <ApkDownloadBanner />
+
+        {/* Contenu Principal selon l'onglet ou modal admin */}
         <main className="flex-1 flex flex-col overflow-hidden relative">
           
-          {activeTab === 'dialer' && (
-            <Keypad
-              onStartCall={handleStartCall}
-              activeLine={activeLine}
-              purchasedLines={purchasedLines}
-              onSelectLine={(l) => setActiveLine(l)}
+          {showAdminPanel ? (
+            <DidInventoryManager
+              inventory={didInventory}
+              onAddDid={handleAddDidToBank}
+              onUpdateDidPrice={handleUpdateDidPrice}
+              onClose={() => setShowAdminPanel(false)}
             />
-          )}
+          ) : (
+            <>
+              {activeTab === 'dialer' && (
+                <Keypad
+                  onStartCall={handleStartCall}
+                  activeLine={activeLine}
+                  purchasedLines={purchasedLines}
+                  onSelectLine={(l) => setActiveLine(l)}
+                />
+              )}
 
-          {activeTab === 'history' && (
-            <CallHistory
-              calls={calls}
-              onCallNumber={handleStartCall}
-              onClearHistory={() => setCalls([])}
-            />
-          )}
+              {activeTab === 'history' && (
+                <CallHistory
+                  calls={calls}
+                  onCallNumber={handleStartCall}
+                  onClearHistory={() => setCalls([])}
+                />
+              )}
 
-          {activeTab === 'messages' && (
-            activeConvo ? (
-              <ChatThread
-                conversation={activeConvo}
-                activeLine={activeLine}
-                onBack={() => setActiveConversationId(null)}
-                onSendMessage={handleSendMessage}
-                onCallContact={handleStartCall}
-              />
-            ) : (
-              <ConversationList
-                conversations={conversations}
-                onSelectConversation={(c) => {
-                  setActiveConversationId(c.id);
-                  // Marquer comme lu
-                  setConversations(conversations.map((item) => item.id === c.id ? { ...item, unreadCount: 0 } : item));
-                }}
-                onNewMessage={() => {
-                  const newNumber = prompt('Entrez le numéro du destinataire (ex: +1 514 555-0100) :');
-                  if (newNumber) {
-                    const newConvo: Conversation = {
-                      id: `conv-${Date.now()}`,
-                      peerNumber: newNumber,
-                      avatarColor: '#a855f7',
-                      unreadCount: 0,
-                      lastMessage: 'Nouvelle conversation',
-                      lastTimestamp: 'Maintenant',
-                      messages: []
-                    };
-                    setConversations([newConvo, ...conversations]);
-                    setActiveConversationId(newConvo.id);
-                  }
-                }}
-              />
-            )
-          )}
+              {activeTab === 'messages' && (
+                activeConvo ? (
+                  <ChatThread
+                    conversation={activeConvo}
+                    activeLine={activeLine}
+                    onBack={() => setActiveConversationId(null)}
+                    onSendMessage={handleSendMessage}
+                    onCallContact={handleStartCall}
+                  />
+                ) : (
+                  <ConversationList
+                    conversations={conversations}
+                    onSelectConversation={(c) => {
+                      setActiveConversationId(c.id);
+                      setConversations(conversations.map((item) => item.id === c.id ? { ...item, unreadCount: 0 } : item));
+                    }}
+                    onNewMessage={() => {
+                      const newNumber = prompt('Entrez le numéro du destinataire (ex: +1 514 555-0100) :');
+                      if (newNumber) {
+                        const newConvo: Conversation = {
+                          id: `conv-${Date.now()}`,
+                          peerNumber: newNumber,
+                          avatarColor: '#a855f7',
+                          unreadCount: 0,
+                          lastMessage: 'Nouvelle conversation',
+                          lastTimestamp: 'Maintenant',
+                          messages: []
+                        };
+                        setConversations([newConvo, ...conversations]);
+                        setActiveConversationId(newConvo.id);
+                      }
+                    }}
+                  />
+                )
+              )}
 
-          {activeTab === 'store' && (
-            <NumberStore
-              availableNumbers={catalog}
-              onPurchaseNumber={handlePurchaseNumber}
-              balance={balance}
-              onTopUp={handleTopUp}
-            />
+              {activeTab === 'store' && (
+                <NumberStore
+                  availableNumbers={didInventory}
+                  onPurchaseNumber={handlePurchaseNumber}
+                  balance={balance}
+                  onTopUp={handleTopUp}
+                  onOpenAdmin={() => setShowAdminPanel(true)}
+                />
+              )}
+            </>
           )}
 
         </main>
@@ -358,12 +315,13 @@ export function App() {
           />
         )}
 
-        {/* Navigation Inférieure Android (cachée si en plein fil de clavardage) */}
-        {!activeConvo && (
+        {/* Navigation Inférieure Android (cachée si en plein fil de clavardage ou console admin) */}
+        {!activeConvo && !showAdminPanel && (
           <BottomNav
             activeTab={activeTab}
             onChangeTab={(t) => {
               setActiveConversationId(null);
+              setShowAdminPanel(false);
               setActiveTab(t);
             }}
             unreadCount={totalUnread}
