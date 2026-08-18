@@ -78,6 +78,16 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
       desc: 'Téléphonie & messagerie IP ultra-simpliste pour Android',
     },
     {
+      id: 'tel-admin',
+      name: 'TEL Admin',
+      badge: 'VoIP.ms Carrier',
+      url: 'https://powai.ca/tel-admin',
+      isLocalTab: false,
+      icon: '🏢',
+      color: '#f59e0b',
+      desc: 'Console de gestion de flotte DID & interconnexion VoIP.ms',
+    },
+    {
       id: 'home',
       name: 'Portail PowAI.ca',
       badge: 'Hub',

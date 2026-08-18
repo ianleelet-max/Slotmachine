@@ -54,6 +54,14 @@ export function App() {
       desc: 'Surveillance et réinsertion judiciaire',
     },
     {
+      name: 'PowAI TEL Admin',
+      badge: 'VoIP.ms Carrier',
+      url: 'https://powai.ca/tel-admin',
+      icon: '🏢',
+      color: '#f59e0b',
+      desc: 'Console de gestion de flotte DID, marges et abonnements VoIP.ms',
+    },
+    {
       name: 'PowAI TEL',
       badge: 'VoIP Android',
       url: 'https://powai.ca/tel',
