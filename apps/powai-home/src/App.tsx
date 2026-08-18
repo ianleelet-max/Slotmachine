@@ -54,6 +54,14 @@ export function App() {
       desc: 'Surveillance et réinsertion judiciaire',
     },
     {
+      name: 'ComfyUI Studio',
+      badge: 'RunPod Serverless',
+      url: 'https://powai.ca/comfy',
+      icon: '🎨',
+      color: '#8b5cf6',
+      desc: 'Studio génératif d images Flux/SDXL connecté à votre volume réseau RunPod',
+    },
+    {
       name: 'PowAI TEL Admin',
       badge: 'VoIP.ms Carrier',
       url: 'https://powai.ca/tel-admin',

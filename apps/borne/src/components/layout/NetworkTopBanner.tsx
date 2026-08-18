@@ -68,6 +68,16 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
       desc: 'Analyse d’intégrité corporative',
     },
     {
+      id: 'comfy',
+      name: 'ComfyUI Studio',
+      badge: 'RunPod GPU',
+      url: 'https://powai.ca/comfy',
+      isLocalTab: false,
+      icon: '🎨',
+      color: '#8b5cf6',
+      desc: 'Studio de génération d images Flux/SDXL connecté au volume RunPod',
+    },
+    {
       id: 'tel',
       name: 'PowAI TEL',
       badge: 'VoIP Android',
