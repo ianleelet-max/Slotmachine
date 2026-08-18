@@ -1,0 +1,62 @@
+{
+  "rgsVersion": "1.0",
+  "gameId": "quantum-chrono-slots",
+  "gameTitle": "Quantum Chrono Slots (Stake Edition)",
+  "rtp": 0.965,
+  "hitRate": 0.312,
+  "maxWinMultiplier": 10000,
+  "betLevels": [
+    { "id": "level_1", "bet": 0.20, "isDefault": false },
+    { "id": "level_2", "bet": 0.50, "isDefault": false },
+    { "id": "level_3", "bet": 1.00, "isDefault": false },
+    { "id": "level_4", "bet": 2.00, "isDefault": true },
+    { "id": "level_5", "bet": 5.00, "isDefault": false },
+    { "id": "level_6", "bet": 10.00, "isDefault": false },
+    { "id": "level_7", "bet": 20.00, "isDefault": false },
+    { "id": "level_8", "bet": 50.00, "isDefault": false },
+    { "id": "level_9", "bet": 100.00, "isDefault": false },
+    { "id": "level_10", "bet": 200.00, "isDefault": false }
+  ],
+  "gameModes": [
+    {
+      "modeId": "base",
+      "name": "Base Game",
+      "rtp": 0.965,
+      "hitRate": 0.312,
+      "maxWinMultiplier": 10000
+    },
+    {
+      "modeId": "free_spins",
+      "name": "Quantum Free Spins",
+      "rtp": 0.965,
+      "hitRate": 0.450,
+      "maxWinMultiplier": 10000
+    },
+    {
+      "modeId": "buy_bonus",
+      "name": "Buy Bonus (100x Wager)",
+      "rtp": 0.968,
+      "hitRate": 0.450,
+      "maxWinMultiplier": 10000
+    }
+  ],
+  "reels": 5,
+  "rows": 4,
+  "paylines": 20,
+  "symbols": [
+    { "id": "wild", "name": "Quantum Core", "multiplier": 100, "weight": 3, "isWild": true },
+    { "id": "scatter", "name": "Chrono Portal", "multiplier": 50, "weight": 5, "isScatter": true },
+    { "id": "multiverse", "name": "Multiverse", "multiplier": 50, "weight": 8 },
+    { "id": "saturn", "name": "Cyber Saturn", "multiplier": 30, "weight": 12 },
+    { "id": "cybereye", "name": "Cyber Eye", "multiplier": 20, "weight": 18 },
+    { "id": "crystal_a", "name": "Crystal A", "multiplier": 10, "weight": 25 },
+    { "id": "crystal_k", "name": "Crystal K", "multiplier": 6, "weight": 30 },
+    { "id": "crystal_q", "name": "Crystal Q", "multiplier": 4, "weight": 35 },
+    { "id": "crystal_j", "name": "Crystal J", "multiplier": 2.5, "weight": 40 }
+  ],
+  "provablyFair": {
+    "algorithm": "HMAC-SHA256",
+    "clientSeed": "stake-quantum-2026",
+    "nonceIncrement": 1
+  }
+}

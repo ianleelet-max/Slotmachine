@@ -157,7 +157,12 @@ export async function lireFichier(
 
   const trouve = entrees.find((entree) => {
     const normalise = entree.toLowerCase().replace(/[^a-z0-9]/g, '');
-    return normalise === `${cible}csv` || normalise === cible;
+    return (
+      normalise === `${cible}csv` ||
+      normalise === `${cible}scsv` ||
+      normalise === cible ||
+      normalise === `${cible}s`
+    );
   });
   if (!trouve) return null;
 

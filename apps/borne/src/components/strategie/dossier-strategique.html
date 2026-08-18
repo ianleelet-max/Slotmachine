@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BORNE — LE CERTIFICAT DE LOCALISATION AU QUÉBEC</title>
+<meta name="description" content="Anatomie d’un péage, et le plan pour le démonter. Dossier stratégique sur le certificat de localisation au Québec : anatomie du système actuel, faiblesses, intérêts des acteurs, et plan de réforme.">
+<style>
+  :root{
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --ring:rgba(255,255,255,0.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#c98500;
+    --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+  }
+  :root[data-theme="light"]{
+    color-scheme: light;
+    --page:#f9f9f7; --surface:#fcfcfb;
+    --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --axis:#c3c2b7; --ring:rgba(11,11,11,0.10);
+    --s1:#2a78d6; --s2:#eb6834; --s3:#a06a00;
+    --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+    --shadow:0 1px 2px rgba(11,11,11,.05), 0 8px 24px rgba(11,11,11,.04);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0; background:var(--page); color:var(--ink);
+    font:16px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--s1)}
+  .skip{position:absolute;left:-999px;top:auto}
+  .skip:focus{left:16px;top:16px;z-index:100;background:var(--surface);color:var(--ink);
+    padding:10px 16px;border-radius:8px;border:1px solid var(--ring)}
+
+  /* theme toggle */
+  .toggle{position:fixed;top:16px;right:16px;z-index:50;background:var(--surface);color:var(--ink2);
+    border:1px solid var(--ring);border-radius:999px;padding:8px 15px;font:inherit;font-size:13px;cursor:pointer;box-shadow:var(--shadow)}
+  .toggle:hover{color:var(--ink)}
+  .toggle:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+
+  /* layout: sticky TOC + article */
+  .shell{max-width:1160px;margin:0 auto;padding:0 24px 96px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:56px}
+  header.top{grid-column:1 / -1;padding:60px 0 36px;border-bottom:1px solid var(--grid);margin-bottom:8px}
+  .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-weight:600;margin:0 0 14px}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.1;margin:0 0 16px;letter-spacing:-.025em;font-weight:700;max-width:20ch}
+  .lede{font-size:18px;font-style:italic;color:var(--ink2);max-width:62ch;margin:0 0 10px}
+  .datestamp{font-size:13px;color:var(--muted)}
+
+  nav.toc{position:sticky;top:24px;align-self:start;font-size:13.5px}
+  nav.toc .h{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 12px}
+  nav.toc ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;
+    border-left:1px solid var(--grid)}
+  nav.toc a{display:block;color:var(--ink2);text-decoration:none;padding:6px 0 6px 14px;border-left:2px solid transparent;margin-left:-1px;line-height:1.4}
+  nav.toc a:hover{color:var(--ink)}
+  nav.toc a.active{color:var(--s1);border-left-color:var(--s1);font-weight:600}
+
+  main{min-width:0}
+  section{margin:0 0 64px;scroll-margin-top:20px}
+  section h2{font-size:clamp(22px,2.8vw,29px);letter-spacing:-.015em;margin:0 0 20px;font-weight:700;
+    padding-bottom:14px;border-bottom:2px solid var(--ring)}
+  section h3{font-size:16.5px;font-weight:650;margin:30px 0 12px;padding-left:12px;border-left:3px solid var(--s1)}
+  section p{margin:0 0 14px;color:var(--ink);max-width:74ch}
+  section p em{color:var(--ink2)}
+  section ul,section ol{margin:0 0 16px;padding-left:22px;max-width:74ch}
+  section li{margin:0 0 8px;color:var(--ink)}
+  section li > p{margin:0}
+  strong{color:var(--ink);font-weight:700}
+
+  /* evidence tags */
+  .tag{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.03em;
+    padding:2px 7px;border-radius:5px;white-space:nowrap;vertical-align:1px}
+  .tag-fait{color:var(--s1);background:color-mix(in srgb, var(--s1) 16%, transparent)}
+  .tag-usage{color:var(--s2);background:color-mix(in srgb, var(--s2) 16%, transparent)}
+  .tag-modele{color:var(--s3);background:color-mix(in srgb, var(--s3) 20%, transparent)}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:6px 0 26px;
+    background:var(--surface);border:1px solid var(--ring);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:11px 13px;border-bottom:1px solid var(--grid);vertical-align:top}
+  th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--s1);font-weight:700;
+    background:color-mix(in srgb, var(--s1) 10%, var(--surface))}
+  tr:last-child td{border-bottom:none}
+  tbody tr:nth-child(odd){background:color-mix(in srgb, var(--surface) 100%, var(--grid) 30%)}
+  td:first-child{color:var(--ink);font-weight:600}
+
+  /* blockquote / callouts */
+  blockquote{margin:22px 0;padding:16px 20px;background:color-mix(in srgb, var(--s1) 10%, var(--surface));
+    border-left:4px solid var(--s1);border-radius:0 10px 10px 0;max-width:74ch}
+  blockquote p{margin:4px 0;font-weight:600;color:var(--ink)}
+
+  code{background:var(--surface);padding:1px 6px;border-radius:4px;color:var(--ink2);font-size:.92em}
+  hr{display:none}
+
+  #synthese{background:var(--surface);border:1px solid var(--ring);border-radius:14px;padding:32px 34px;box-shadow:var(--shadow)}
+  #synthese h2{border-bottom:none;padding-bottom:0}
+  #synthese ol{padding-left:20px}
+  #synthese li{font-size:15.5px;margin-bottom:12px}
+  #synthese p em{display:block;margin-top:18px;padding-top:18px;border-top:1px solid var(--grid);font-size:13px}
+
+  footer{border-top:1px solid var(--grid);padding-top:26px;color:var(--muted);font-size:13px;line-height:1.6;grid-column:1 / -1}
+  footer a{color:var(--muted)}
+  .totop{display:inline-flex;align-items:center;gap:6px;color:var(--ink2);text-decoration:none;font-size:13px;margin-top:6px}
+  .totop:hover{color:var(--ink)}
+
+  details.toc-m{display:none}
+
+  @media (max-width:920px){
+    .shell{grid-template-columns:1fr}
+    nav.toc{position:static;order:-1}
+    nav.toc.desktop{display:none}
+    details.toc-m{display:block;background:var(--surface);border:1px solid var(--ring);border-radius:12px;
+      padding:14px 16px;margin:0 0 32px}
+    details.toc-m summary{cursor:pointer;font-weight:600;font-size:14px;color:var(--ink)}
+    details.toc-m ul{list-style:none;margin:14px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+    details.toc-m a{color:var(--ink2);text-decoration:none;font-size:14px}
+  }
+  @media print{
+    .toggle,nav.toc,details.toc-m{display:none}
+    body{background:#fff;color:#000}
+    .shell{grid-template-columns:1fr;display:block}
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Aller au contenu</a>
+<button class="toggle" id="tg" aria-label="Basculer le thème clair ou sombre">Thème</button>
+
+<div class="shell">
+
+  <header class="top">
+    <p class="eyebrow">BORNE — Dossier stratégique</p>
+    <h1>LE CERTIFICAT DE LOCALISATION AU QUÉBEC</h1>
+    <p class="lede">Anatomie d’un péage, et le plan pour le démonter</p>
+    <p class="datestamp">Août 2026</p>
+  </header>
+
+  <nav class="toc desktop" aria-label="Table des matières">
+    <p class="h">Sommaire</p>
+    <ul>
+<li><a href="#comment-lire">0 — Comment lire ce dossier</a></li>
+<li><a href="#partie-1-ce-quest-réellement-le-certificat-de-localisation">1 — Ce qu’est le certificat</a></li>
+<li><a href="#partie-2-le-processus-réel-avec-les-horloges">2 — Le processus réel</a></li>
+<li><a href="#partie-3-la-carte-des-intérêts">3 — La carte des intérêts</a></li>
+<li><a href="#partie-4-les-sept-faiblesses-du-système">4 — Les sept faiblesses</a></li>
+<li><a href="#partie-5-ce-qui-est-solide-dans-la-position-de-la-profession">5 — Ce qui est solide</a></li>
+<li><a href="#partie-6-le-gisement-technologique-disponible-aujourdhui">6 — Le gisement technologique</a></li>
+<li><a href="#partie-7-le-processus-cible">7 — Le processus cible</a></li>
+<li><a href="#partie-8-le-modèle-chiffré">8 — Le modèle chiffré</a></li>
+<li><a href="#partie-9-machine-contre-humain-où-est-vraiment-la-marge-derreur">9 — Machine contre humain</a></li>
+<li><a href="#partie-10-les-mécanismes-de-transparence-forcée">10 — Transparence forcée</a></li>
+<li><a href="#partie-11-séquence-de-déploiement">11 — Séquence de déploiement</a></li>
+<li><a href="#en-une-page">En une page</a></li>
+    </ul>
+  </nav>
+
+  <details class="toc-m">
+    <summary>Sommaire du dossier</summary>
+    <ul>
+<li><a href="#comment-lire">0 — Comment lire ce dossier</a></li>
+<li><a href="#partie-1-ce-quest-réellement-le-certificat-de-localisation">1 — Ce qu’est le certificat</a></li>
+<li><a href="#partie-2-le-processus-réel-avec-les-horloges">2 — Le processus réel</a></li>
+<li><a href="#partie-3-la-carte-des-intérêts">3 — La carte des intérêts</a></li>
+<li><a href="#partie-4-les-sept-faiblesses-du-système">4 — Les sept faiblesses</a></li>
+<li><a href="#partie-5-ce-qui-est-solide-dans-la-position-de-la-profession">5 — Ce qui est solide</a></li>
+<li><a href="#partie-6-le-gisement-technologique-disponible-aujourdhui">6 — Le gisement technologique</a></li>
+<li><a href="#partie-7-le-processus-cible">7 — Le processus cible</a></li>
+<li><a href="#partie-8-le-modèle-chiffré">8 — Le modèle chiffré</a></li>
+<li><a href="#partie-9-machine-contre-humain-où-est-vraiment-la-marge-derreur">9 — Machine contre humain</a></li>
+<li><a href="#partie-10-les-mécanismes-de-transparence-forcée">10 — Transparence forcée</a></li>
+<li><a href="#partie-11-séquence-de-déploiement">11 — Séquence de déploiement</a></li>
+<li><a href="#en-une-page">En une page</a></li>
+    </ul>
+  </details>
+
+  <main id="main">
+<section id="comment-lire" aria-labelledby="comment-lire-h">
+<h2 id="comment-lire-ce-dossier">0. Comment lire ce dossier</h2>
+<p>Trois niveaux de preuve sont utilisés partout, et je les distingue systématiquement. Ne les mélangez jamais quand vous défendrez ce dossier devant quelqu’un.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Marqueur</th>
+<th>Signification</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong><span class="tag tag-fait">FAIT</span></strong></td>
+<td>Texte de loi, règlement, donnée publiée par une source officielle. Vérifiable, citée en annexe.</td>
+</tr>
+<tr class="even">
+<td><strong><span class="tag tag-usage">USAGE</span></strong></td>
+<td>Pratique du marché sans fondement légal. C’est là que se cache la rente.</td>
+</tr>
+<tr class="odd">
+<td><strong><span class="tag tag-modele">MODÈLE</span></strong></td>
+<td>Estimation calculée par moi à partir de paramètres explicites. À valider par la donnée réelle — et l’app est justement conçue pour produire cette donnée.</td>
+</tr>
+</tbody>
+</table>
+<p>Le nerf de tout ce dossier tient dans un écart : <strong>entre ce que la loi exige <span class="tag tag-fait">FAIT</span> et ce que le marché impose <span class="tag tag-usage">USAGE</span>, il y a environ 70 M$ par année.</strong></p>
+<p>Je ne suis pas avocat et ceci n’est pas un avis juridique. Chaque affirmation légale doit être confirmée par un juriste avant d’être utilisée dans une démarche formelle.</p>
+
+</section><section id="partie-1-ce-quest-réellement-le-certificat-de-localisation" aria-labelledby="partie-1-ce-quest-réellement-le-certificat-de-localisation-h"><h2 id="partie-1-ce-quest-réellement-le-certificat-de-localisation-h">PARTIE 1 — CE QU’EST RÉELLEMENT LE CERTIFICAT DE LOCALISATION</h2>
+<h3 id="les-cinq-textes-qui-gouvernent-tout">1.1 Les cinq textes qui gouvernent tout</h3>
+<p>Tout le système tient sur cinq textes. Pas plus.</p>
+<p><strong><span class="tag tag-fait">FAIT</span> <em>Loi sur les arpenteurs-géomètres</em>, RLRQ c. A-23</strong></p>
+<ul>
+<li><strong>Art. 34</strong> — définit l’arpentage : « tous arpentages de terrains, mesurages aux fins de borner, bornages, levés de plans, toutes confections de plans… ». Et cette phrase, qui est la clé de voûte de tout l’édifice : <strong>« L’arpenteur-géomètre est un officier public. »</strong></li>
+<li><strong>Art. 35</strong> — « Aucune des opérations définies à l’article 34 n’est valide, à moins qu’elle n’ait été entreprise par un arpenteur-géomètre. » Ce n’est pas seulement interdit à d’autres : c’est <em>nul</em>.</li>
+<li><strong>Art. 36</strong> — l’arpenteur ne peut signer un document qu’il n’a pas entrepris lui-même ou qui n’a pas été fait <strong>sous sa surveillance immédiate</strong>.</li>
+<li><strong>Art. 42-43</strong> — exercice illégal, sanctions via l’art. 188 du <em>Code des professions</em>.</li>
+</ul>
+<p><strong><span class="tag tag-fait">FAIT</span> <em>Règlement sur la norme de pratique relative au certificat de localisation</em>, RLRQ c. A-23, r. 10</strong> — le cœur opérationnel. Il énumère <strong>23 éléments de vérification obligatoires</strong>. C’est le document le plus important du dossier, et le plus ignoré du public. J’y reviens en 1.2.</p>
+<p><strong><span class="tag tag-fait">FAIT</span> <em>Code civil du Québec</em>, art. 1719</strong> — le vendeur doit délivrer à l’acheteur les titres de propriété <strong>et le certificat de localisation en sa possession</strong>. Lisez bien : <em>en sa possession</em>. L’article n’ordonne pas d’en produire un neuf.</p>
+<p><strong><span class="tag tag-fait">FAIT</span> <em>Code civil du Québec</em>, art. 3027</strong> — le plan cadastral est <strong>présumé exact</strong>.</p>
+<p><strong><span class="tag tag-fait">FAIT</span> <em>Loi favorisant la réforme du cadastre québécois</em>, art. 19.2</strong> — présomption de concordance entre la désignation dans les titres et le lot au plan de rénovation, ce qui évite la correction judiciaire en cas de discordance.</p>
+<p>Voilà. C’est tout. <strong>Aucun de ces cinq textes ne fixe une date de péremption au certificat de localisation.</strong></p>
+<h3 id="les-23-vérifications-linventaire-complet-du-travail">1.2 Les 23 vérifications — l’inventaire complet du travail</h3>
+<p>La norme A-23 r. 10 impose à l’arpenteur de vérifier et de se prononcer sur, en substance :</p>
+<p><strong>Bloc titres et cadastre</strong> 1. Désignation cadastrale et concordance avec les titres 2. Historique cadastral (jusqu’au lot d’origine pour la copropriété) 3. Lien de titre et chaîne de propriété 4. Servitudes actives publiées 5. Servitudes passives publiées 6. Charges et restrictions publiées au bureau de la publicité des droits</p>
+<p><strong>Bloc mesure et géométrie</strong> 7. Description à jour du terrain, mesures et bornes 8. Superficie 9. Distances entre les limites de propriété et les bâtiments, dépendances et ouvrages 10. Marques d’occupation</p>
+<p><strong>Bloc réglementaire</strong> 11. Zonage municipal et usages autorisés 12. Marges de recul prescrites et conformité 13. Autres normes d’implantation (hauteur, coefficient d’occupation, etc.) 14. Conformité aux règlements en vigueur <strong>au moment de la préparation</strong></p>
+<p><strong>Bloc contraintes territoriales</strong> 15. Zone agricole (CPTAQ) 16. Zone inondable 17. Rive, littoral et bande riveraine 18. Zone patrimoniale (<em>Loi sur le patrimoine culturel</em>) 19. Servitudes aéronautiques</p>
+<p><strong>Bloc interprétation — le vrai métier</strong> 20. Empiètements apparents 21. Empiètements exercés ou soufferts 22. <strong>Servitudes apparentes ou charges « qui devraient normalement faire l’objet d’une servitude »</strong> (art. 9 de la norme) — c’est-à-dire : un jugement professionnel sur ce que le registre ne dit pas 23. Opinion finale de l’arpenteur</p>
+<p>Le règlement impose aussi que <strong>les références aux règlements consultés soient conservées au dossier</strong> (art. 8), que les opérations soient consignées dans des notes écrites fidèles au terrain (art. 5), et que l’arpenteur se rende sur place ou valide personnellement les observations.</p>
+<p><strong>Retenez la structure : 19 vérifications sur 23 sont déterministes ou documentaires. 4 relèvent du jugement.</strong> Toute la stratégie technologique découle de ce ratio.</p>
+<h3 id="ce-que-le-certificat-nest-pas">1.3 Ce que le certificat n’est PAS</h3>
+<p>Cette liste vaut de l’or en négociation, parce qu’elle défait les arguments les plus courants.</p>
+<ul>
+<li><strong>Ce n’est pas un titre de propriété.</strong> Il n’en crée ni n’en transfère aucun.</li>
+<li><strong>Ce n’est pas un bornage.</strong> <span class="tag tag-fait">FAIT</span> Le cadastre « indique les limites des immeubles. Il ne les détermine cependant pas. Seul le bornage permet de déterminer de façon définitive les limites d’une propriété. » L’arpenteur qui produit un certificat <em>exprime une opinion</em> sur des limites qu’il n’a pas le pouvoir de fixer.</li>
+<li><strong>Ce n’est pas un document public.</strong> Il n’est pas publié au Registre foncier. Il dort dans le greffe privé de l’arpenteur.</li>
+<li><strong>Ce n’est pas un document dont la loi fixe la durée de vie.</strong> J’y reviens, c’est la faiblesse n° 1.</li>
+<li><strong>Ce n’est pas une garantie.</strong> C’est une opinion professionnelle, adossée à une assurance responsabilité.</li>
+</ul>
+
+</section><section id="partie-2-le-processus-réel-avec-les-horloges" aria-labelledby="partie-2-le-processus-réel-avec-les-horloges-h"><h2 id="partie-2-le-processus-réel-avec-les-horloges-h">PARTIE 2 — LE PROCESSUS RÉEL, AVEC LES HORLOGES</h2>
+<h3 id="le-parcours-du-citoyen-13-étapes-4-à-8-semaines">2.1 Le parcours du citoyen — 13 étapes, 4 à 8 semaines</h3>
+<p><span class="tag tag-fait">FAIT</span> Le délai standard annoncé au marché est de <strong>4 à 8 semaines</strong>, plus long en haute saison (printemps-été), c’est-à-dire exactement quand les transactions se font.</p>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Étape</th>
+<th>Qui</th>
+<th>Temps typique</th>
+<th>Temps <em>utile</em></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Le vendeur décide de vendre</td>
+<td>Vendeur</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Découvre que son certificat a « plus de 10 ans »</td>
+<td>Courtier / notaire</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Cherche un arpenteur</td>
+<td>Vendeur</td>
+<td>1-5 j</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Demande 1 à 3 soumissions</td>
+<td>Vendeur</td>
+<td>2-10 j</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Attend le rappel</td>
+<td>Arpenteur</td>
+<td>1-7 j</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Accepte le devis, dossier ouvert</td>
+<td>Firme</td>
+<td>1-3 j</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><strong>Le dossier attend dans la file</strong></td>
+<td>Firme</td>
+<td><strong>10-30 j</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>Recherche de titres et cadastrale</td>
+<td>Technicien</td>
+<td>2-4 j calendrier</td>
+<td>2,5 h</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>Recherche réglementaire et contraintes</td>
+<td>Technicien</td>
+<td>2-5 j calendrier</td>
+<td>2,5 h</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>Levé terrain</td>
+<td>Équipe</td>
+<td>1 j + déplacement</td>
+<td>2 h</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>Calculs, DAO, rédaction</td>
+<td>Technicien</td>
+<td>2-5 j calendrier</td>
+<td>2,5 h</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>Révision, sceau, signature</td>
+<td>Arpenteur</td>
+<td>1-3 j calendrier</td>
+<td>1 h</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td>Livraison au client, au notaire, au prêteur</td>
+<td>Firme</td>
+<td>1-3 j</td>
+<td>15 min</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span class="tag tag-modele">MODÈLE</span> Sur 28 à 56 jours calendrier, le travail humain réel représente environ 11 heures.</strong> Le reste, c’est de la file d’attente et du transfert de dossier. <strong>Le taux d’occupation du dossier est de l’ordre de 3 %.</strong></p>
+<p>C’est la donnée la plus importante du dossier. Le problème du certificat de localisation <strong>n’est pas un problème de travail. C’est un problème de file d’attente devant une ressource rare.</strong></p>
+<h3 id="la-décomposition-du-travail-où-vont-les-11-heures">2.2 La décomposition du travail — où vont les 11 heures</h3>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tâche</th>
+<th>Heures</th>
+<th>Nature</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ouverture, intake, devis</td>
+<td>0,5</td>
+<td>administratif</td>
+</tr>
+<tr class="even">
+<td>Recherche titres / Registre foncier</td>
+<td>1,5</td>
+<td>documentaire</td>
+</tr>
+<tr class="odd">
+<td>Recherche cadastrale, greffe, plans antérieurs</td>
+<td>1,0</td>
+<td>documentaire</td>
+</tr>
+<tr class="even">
+<td>Zonage, grille de spécifications, marges</td>
+<td>1,2</td>
+<td>réglementaire</td>
+</tr>
+<tr class="odd">
+<td>Contraintes (inondable, rives, CPTAQ, patrimoine)</td>
+<td>0,8</td>
+<td>géospatial</td>
+</tr>
+<tr class="even">
+<td>Permis municipaux et conformité</td>
+<td>0,5</td>
+<td>documentaire</td>
+</tr>
+<tr class="odd">
+<td>Déplacement + levé terrain</td>
+<td>2,0</td>
+<td>terrain</td>
+</tr>
+<tr class="even">
+<td>Calculs et dessin du plan (DAO)</td>
+<td>1,5</td>
+<td>production</td>
+</tr>
+<tr class="odd">
+<td>Rédaction du rapport</td>
+<td>1,0</td>
+<td>production</td>
+</tr>
+<tr class="even">
+<td><strong>Analyse, jugement professionnel, sceau, signature</strong></td>
+<td><strong>1,0</strong></td>
+<td><strong>réservé</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>TOTAL</strong></td>
+<td><strong>11,0 h</strong></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p><span class="tag tag-fait">FAIT</span> Aux taux horaires suggérés par l’Ordre pour 2026 (junior 173 $, intermédiaire 248 $, senior 321 $, terrain 173 $, recherche/DAO 158 $), 11 heures représentent entre 1 700 $ et 2 700 $ de main-d’œuvre facturable. Le tarif suggéré du certificat est de <strong>1 630 $</strong>.</p>
+<p><strong>Ce que ça révèle : les firmes ne peuvent pas réellement consacrer 11 heures à un certificat au tarif suggéré. Elles en consacrent moins. La compression du temps de vérification se fait donc déjà — mais silencieusement, sans traçabilité, et au détriment de la qualité plutôt qu’à celui du prix.</strong> L’automatisation ne fait pas qu’économiser : elle <em>rétablit</em> la conformité à la norme que l’économie actuelle rend impraticable.</p>
+<h3 id="où-se-perdent-les-semaines">2.3 Où se perdent les semaines</h3>
+<p>Trois goulots, aucun n’est technique.</p>
+<ol type="1">
+<li><strong>La file d’attente devant l’arpenteur signataire</strong> (étape 7, 10 à 30 jours). Une seule signature légale, 1 084 signataires pour la province entière.</li>
+<li><strong>Le séquencement strictement linéaire.</strong> Recherche → terrain → dessin → rédaction → signature. Rien ne se fait en parallèle parce que rien n’est structuré en données.</li>
+<li><strong>La saisonnalité.</strong> Le pic de transactions et le pic de faisabilité du levé terrain coïncident. Le système est dimensionné pour le creux.</li>
+</ol>
+
+</section><section id="partie-3-la-carte-des-intérêts" aria-labelledby="partie-3-la-carte-des-intérêts-h"><h2 id="partie-3-la-carte-des-intérêts-h">PARTIE 3 — LA CARTE DES INTÉRÊTS</h2>
+<p>Voici la partie que vous m’avez demandé de démêler. Je la présente sans complaisance mais sans procès d’intention : <strong>la plupart de ces acteurs ne font rien d’illégal ni même de malhonnête. Ils répondent rationnellement à des incitatifs mal alignés.</strong> C’est le système qui est en cause, pas les personnes. Et c’est une bien meilleure position de départ pour le réformer.</p>
+<h3 id="larpenteur-géomètre">3.1 L’arpenteur-géomètre</h3>
+<p><strong>Ce qu’il défend légitimement :</strong> un acte réservé fondé sur une compétence réelle. Le bloc interprétatif (les 4 vérifications sur 23) est authentiquement difficile et sa mauvaise exécution cause des litiges de voisinage sur des décennies. Son statut d’officier public engage sa responsabilité personnelle. C’est solide.</p>
+<p><strong>Ce qui l’est moins :</strong> - <span class="tag tag-fait">FAIT</span> L’effectif de l’Ordre <strong>décroît</strong> : 1 135 membres en 2021 → 1 084 au 31 mars 2025. Les nouvelles admissions sont passées de 35 à <strong>19 par année</strong>. - <span class="tag tag-fait">FAIT</span> Pendant ce temps, 97 214 transactions résidentielles en 2025, en hausse de 8 %. - <span class="tag tag-fait">FAIT</span> Le tarif suggéré est passé de 1 550 $ (2024) à <strong>1 630 $</strong> (2026).</p>
+<p><strong>Une profession dont l’effectif baisse de 4,5 %, dont le recrutement baisse de 46 %, dont la demande monte de 8 %, et dont les prix montent, n’a aucun incitatif économique à réduire le délai ou le prix.</strong> La rareté <em>est</em> le modèle d’affaires — même si personne ne l’a jamais décidé.</p>
+<p>Il faut dire l’autre moitié : cette rareté n’est pas orchestrée. Elle vient d’un problème de relève réel, d’une filière universitaire unique (géomatique, Université Laval) et d’une profession méconnue. L’Ordre ne fabrique pas la pénurie. <strong>Mais il n’a aucune raison de vouloir la résoudre par la productivité.</strong></p>
+<h3 id="le-notaire">3.2 Le notaire</h3>
+<p><strong>Rôle légitime :</strong> <span class="tag tag-fait">FAIT</span> il vérifie que le certificat a été remis, en explique la portée, et refuse de conclure si la situation est irrégulière. C’est un contrôle réel de qualité de la transaction.</p>
+<p><strong>Le point sensible :</strong> <span class="tag tag-fait">FAIT</span> c’est la Chambre des notaires qui <strong>enjoint ses membres d’exiger un certificat de moins de 10 ans</strong>. La Chambre le formule elle-même comme un « critère essentiel » de la durée de vie utile, tout en reconnaissant que même un certificat de moins de 10 ans peut ne pas refléter la réalité, ce qui « nécessite le jugement du notaire ».</p>
+<p>Traduction : <strong>le seuil de 10 ans n’est ni une loi, ni une garantie. C’est une règle de gestion du risque professionnel du notaire, dont le coût — 1 630 $ — est intégralement transféré au vendeur.</strong> Le notaire ne paie rien pour exiger. Le vendeur paie tout pour fournir. C’est la définition d’une externalité.</p>
+<p><strong>L’incitatif du notaire est asymétrique et le restera :</strong> exiger un certificat neuf lui coûte zéro et le protège totalement. Ne pas l’exiger lui coûte potentiellement sa responsabilité. Aucun notaire rationnel n’assouplira jamais spontanément.</p>
+<h3 id="le-courtier-immobilier-et-loaciq">3.3 Le courtier immobilier et l’OACIQ</h3>
+<p><span class="tag tag-fait">FAIT</span> L’OACIQ enjoint également ses membres d’exiger un certificat de moins de 10 ans. Il recommande la clause 3.20 du formulaire de promesse d’achat plutôt que la clause 9.1, précisément parce que la 9.1 fait courir à l’acheteur le risque d’avoir « accepté » un certificat non examiné dans un délai de 7 jours jugé « relativement court ».</p>
+<p><strong>L’incitatif du courtier :</strong> un certificat propre et récent fluidifie la transaction et sécurise sa commission. Il n’a aucun intérêt au conflit, donc aucun intérêt à contester une exigence. Le courtier est un <strong>amplificateur</strong> de l’usage, pas son auteur.</p>
+<h3 id="le-prêteur-hypothécaire">3.4 Le prêteur hypothécaire</h3>
+<p>Le maillon le plus puissant et le moins visible. C’est lui qui, en dernière analyse, peut bloquer le financement. Ses exigences sont <strong>des politiques internes non publiées</strong>, variables d’une institution à l’autre, et souvent appliquées par des employés qui ne connaissent pas leur fondement.</p>
+<p><strong><span class="tag tag-usage">USAGE</span></strong> C’est ici que se trouve, à mon avis, le vrai verrou. Personne ne publie ces politiques. Personne ne les conteste. Personne ne mesure combien de transactions sont retardées par une exigence qu’aucune loi ne fonde. <strong>C’est le point d’attaque le plus rentable de tout le dossier.</strong></p>
+<h3 id="lassureur-titres">3.5 L’assureur titres</h3>
+<p>Le concurrent structurel — et le révélateur.</p>
+<p><span class="tag tag-fait">FAIT</span> Coût d’une police résidentielle : <strong>250 à 400 $</strong> pour une propriété de 500 000 $. Contre 1 630 $ pour un certificat. Elle couvre la fraude, les servitudes non déclarées, les empiètements, les hypothèques non libérées, les erreurs de registre.</p>
+<p><span class="tag tag-fait">FAIT</span> Position officielle de l’OACIQ : l’assurance titres <strong>ne remplace pas</strong> le certificat, elle le complète. Position de l’ordre des arpenteurs de l’Ontario (AOLS) : les deux produits sont « mutuellement exclusifs », « ni l’un ni l’autre ne peut fournir ni remplacer les bénéfices de l’autre », parce que l’assurance ne peut <strong>ni créer ni déplacer une limite de propriété</strong>.</p>
+<p><strong>Cet argument est juste.</strong> Une police d’assurance ne vous dit pas où est votre ligne de lot ; elle vous indemnise si elle est ailleurs que prévu. Ce sont deux produits différents.</p>
+<p><strong>Mais voici ce que l’existence de l’assurance titres révèle malgré tout, et c’est décisif :</strong> le marché financier a déjà démontré qu’il est possible de fermer une transaction, en toute sécurité pour le prêteur, à <strong>250 $</strong> de couverture du risque. Le certificat à 1 630 $ ne peut donc plus se justifier par « le prêteur a besoin de sécurité ». Il doit se justifier par l’<strong>information</strong> qu’il apporte au propriétaire — l’information physique, la géométrie, la conformité. Et cette information-là, c’est exactement celle que la technologie sait produire aujourd’hui pour une fraction du prix.</p>
+<p><strong>L’assurance titres a déplacé le débat sans que personne ne le dise : le certificat n’est plus un produit de sécurisation financière. C’est un produit d’information. Or on continue de le facturer au prix d’un produit de sécurisation.</strong></p>
+<h3 id="létat-québécois">3.6 L’État québécois</h3>
+<p>L’acteur le plus paradoxal du dossier. Il a <strong>déjà payé</strong> pour presque toute l’infrastructure qui rendrait le système bon marché — et n’en récolte presque rien.</p>
+<p><span class="tag tag-fait">FAIT</span> Il a financé et achevé la <strong>rénovation cadastrale</strong> : 3,8 millions de lots, il n’en restait environ <strong>3 000 à finaliser</strong>. Le cadastre est numérique, structuré, et <strong>présumé exact</strong> (art. 3027 C.c.Q.).</p>
+<p><span class="tag tag-fait">FAIT</span> Il a rendu les <strong>données LiDAR gratuites</strong>, avec des modèles numériques de terrain à 1 m de résolution.</p>
+<p><span class="tag tag-fait">FAIT</span> Il a modernisé le Registre foncier (Loi 35, 2020) : transmission électronique, <strong>intelligence artificielle appliquée au traitement de certaines demandes</strong>, numérisation de centaines de milliers de documents papier, carte interactive intégrée depuis octobre 2024, et un allègement au 25 mai 2026 remplaçant le formulaire de documentation par une simple attestation.</p>
+<p><span class="tag tag-fait">FAIT</span> Il diffuse le zonage et les <strong>grilles de spécifications</strong> en données ouvertes.</p>
+<p><strong>L’État a construit l’autoroute et laissé le péage à un tiers.</strong> Toute la matière première du certificat de localisation est aujourd’hui publique, numérique et souvent gratuite. Le prix payé par le citoyen ne rémunère plus la collecte de l’information : il rémunère <strong>l’assemblage manuel</strong> de cette information par un professionnel rare.</p>
+<h3 id="le-citoyen">3.7 Le citoyen</h3>
+<p>Le seul acteur de la chaîne : - qui paie la totalité de la facture - qui subit la totalité du délai - qui n’a <strong>aucun ordre professionnel, aucune association, aucun lobby</strong> pour le représenter - qui ne peut pas comparer les prix, parce qu’aucun prix réel n’est publié - qui ne peut pas comparer les délais, parce qu’aucun délai réel n’est publié - qui ne sait pas que la règle des 10 ans n’est pas une loi - <strong>qui ne possède même pas le document qu’il a payé</strong>, au sens où il ne peut pas le réutiliser dans un système partagé</p>
+<p>C’est là qu’est le vide. <strong>Une plateforme qui organise cette partie de la table change immédiatement le rapport de force</strong>, parce que 97 214 ménages par année pèsent lourd, et qu’ils n’ont jamais été agrégés.</p>
+
+</section><section id="partie-4-les-sept-faiblesses-du-système" aria-labelledby="partie-4-les-sept-faiblesses-du-système-h"><h2 id="partie-4-les-sept-faiblesses-du-système-h">PARTIE 4 — LES SEPT FAIBLESSES DU SYSTÈME</h2>
+<h3 id="f1-la-règle-des-10-ans-nexiste-pas-en-droit">F1 — La règle des 10 ans n’existe pas en droit</h3>
+<p>C’est la faiblesse fondatrice, et elle est admise par l’Ordre lui-même.</p>
+<p><span class="tag tag-fait">FAIT</span> Position officielle de l’OAGQ, mot pour mot : <strong>« Il n’y a pas de lois ou de règlements qui rendraient un certificat de localisation caduc ou périmé. »</strong></p>
+<p><span class="tag tag-fait">FAIT</span> Position officielle de l’OAGQ sur l’origine du seuil : « la Chambre des notaires du Québec et l’Organisme d’autoréglementation du courtage immobilier du Québec <strong>enjoignent leurs membres</strong> à exiger que le certificat de localisation ait moins de 10 ans. »</p>
+<p><span class="tag tag-fait">FAIT</span> L’art. 1719 C.c.Q. oblige le vendeur à délivrer le certificat <strong>en sa possession</strong>. Il n’oblige pas à en produire un neuf.</p>
+<p><strong>Conclusion : le déclencheur de 100 M$ de dépenses annuelles est une consigne interne de deux organismes d’autoréglementation, appliquée à des tiers qui n’en sont pas membres, sans obligation de motivation, et contredite par l’organisme qui produit le document lui-même.</strong></p>
+
+<h3 id="f2-loffre-seffondre-pendant-que-la-demande-monte">F2 — L’offre s’effondre pendant que la demande monte</h3>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Indicateur</th>
+<th>2021</th>
+<th>2025</th>
+<th>Variation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Membres de l’Ordre</td>
+<td>1 135</td>
+<td><strong>1 084</strong></td>
+<td><strong>−4,5 %</strong></td>
+</tr>
+<tr class="even">
+<td>Nouvelles admissions/an</td>
+<td>35</td>
+<td><strong>19</strong></td>
+<td><strong>−45,7 %</strong></td>
+</tr>
+<tr class="odd">
+<td>Transactions résidentielles</td>
+<td>—</td>
+<td>97 214</td>
+<td>+8 % (2024→2025)</td>
+</tr>
+<tr class="even">
+<td>Tarif suggéré</td>
+<td>1 550 $ (2024)</td>
+<td><strong>1 630 $</strong> (2026)</td>
+<td>+5,2 % en 2 ans</td>
+</tr>
+</tbody>
+</table>
+<p><strong><span class="tag tag-modele">MODÈLE</span> 90 transactions résidentielles par membre de l’Ordre par année</strong>, avant même de compter la construction neuve, les refinancements, les lotissements, le bornage, la copropriété, les mandats publics et l’expertise judiciaire.</p>
+
+<h3 id="f3-le-tarif-suggéré-publié-par-lordre-professionnel">F3 — Le tarif suggéré publié par l’ordre professionnel</h3>
+<p><span class="tag tag-fait">FAIT</span> L’OAGQ publie un <strong>Guide des tarifs suggérés 2026</strong> : certificat unifamilial urbain <strong>1 630 $</strong>, implantation + certificat <strong>2 374 $</strong>, piquetage urbain simple <strong>1 548 $</strong>, immatriculation <strong>1 484 $</strong>, taux horaires 158 $ à 321 $.</p>
+
+<h3 id="f4-lamnésie-organisée-le-travail-est-refait-à-neuf-chaque-fois">F4 — L’amnésie organisée : le travail est refait à neuf chaque fois</h3>
+<p><strong><span class="tag tag-modele">MODÈLE</span> Le système actuel a un taux de réutilisation de l’information de 0 %.</strong> Aucune industrie sérieuse ne fonctionne comme ça.</p>
+
+<h3 id="f5-le-greffe-privé-des-millions-de-documents-séquestrés">F5 — Le greffe privé : des millions de documents séquestrés</h3>
+<p><span class="tag tag-fait">FAIT</span> L’arpenteur doit conserver ses procès-verbaux et documents d’arpentage (art. 56 A-23), <strong>sans limite de durée</strong>, sur le territoire du Québec, en papier ou en numérique, dans une voûte ou un classeur ignifuge.</p>
+
+<h3 id="f6-le-refus-non-motivé">F6 — Le refus non motivé</h3>
+<p>Un notaire, un prêteur ou un courtier peut refuser un certificat existant sans avoir à <strong>écrire pourquoi</strong>, sans citer de fondement légal ou réglementaire.</p>
+
+<h3 id="f7-lopacité-totale-du-prix-et-du-délai">F7 — L’opacité totale du prix et du délai</h3>
+<p>Un marché de 100 M$ par an sans un seul prix public.</p>
+
+</section><section id="partie-5-ce-qui-est-solide-dans-la-position-de-la-profession" aria-labelledby="partie-5-ce-qui-est-solide-dans-la-position-de-la-profession-h"><h2 id="partie-5-ce-qui-est-solide-dans-la-position-de-la-profession-h">PARTIE 5 — CE QUI EST SOLIDE DANS LA POSITION DE LA PROFESSION</h2>
+<p>Quatre arguments de la profession qui tiennent debout :</p>
+<p><strong>1. Le bloc interprétatif est authentiquement difficile.</strong> Décider si une allée de gravier constitue une servitude apparente non publiée, si une haie marque une possession contraire au titre, si un empiètement est exercé ou souffert — c’est du jugement juridique appliqué à une scène physique.</p>
+<p><strong>2. La responsabilité personnelle a une valeur réelle.</strong> L’arpenteur est officier public, il engage sa responsabilité, il est assuré, il est inspectable.</p>
+<p><strong>3. Le cadastre n’est pas le terrain.</strong> Le plan cadastral rénové porte des tolérances de positionnement de 0,15 m à 0,30 m.</p>
+<p><strong>4. L’assurance titres ne règle pas le problème physique.</strong></p>
+
+</section><section id="partie-6-le-gisement-technologique-disponible-aujourdhui" aria-labelledby="partie-6-le-gisement-technologique-disponible-aujourdhui-h"><h2 id="partie-6-le-gisement-technologique-disponible-aujourdhui-h">PARTIE 6 — LE GISEMENT TECHNOLOGIQUE DISPONIBLE AUJOURD’HUI</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Ressource</th>
+<th>État</th>
+<th>Ce qu’elle remplace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Cadastre rénové</strong></td>
+<td><span class="tag tag-fait">FAIT</span> 3,8 M lots, ~3 000 restants, présumé exact (art. 3027 C.c.Q.)</td>
+<td>La recherche cadastrale manuelle</td>
+</tr>
+<tr class="even">
+<td><strong>Registre foncier en ligne</strong></td>
+<td><span class="tag tag-fait">FAIT</span> modernisé, électronique, IA appliquée au traitement, carte intégrée</td>
+<td>Le déplacement au bureau de la publicité</td>
+</tr>
+<tr class="odd">
+<td><strong>LiDAR provincial</strong></td>
+<td><span class="tag tag-fait">FAIT</span> <strong>gratuit</strong>, MNT 1 m, densités observées ~7 pts/m²</td>
+<td>Une partie du relevé topographique</td>
+</tr>
+<tr class="even">
+<td><strong>Zonage et grilles de spécifications</strong></td>
+<td><span class="tag tag-fait">FAIT</span> en données ouvertes sur Données Québec</td>
+<td>La lecture manuelle des règlements</td>
+</tr>
+<tr class="odd">
+<td><strong>Infolot</strong></td>
+<td><span class="tag tag-fait">FAIT</span> consultation cadastrale en ligne</td>
+<td>La commande de plans</td>
+</tr>
+<tr class="even">
+<td><strong>Imagerie multi-temporelle</strong></td>
+<td>Disponible commercialement</td>
+<td><strong>La détection de changement</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>Photogrammétrie par drone RTK/PPK</strong></td>
+<td><span class="tag tag-fait">FAIT</span> 2-3 cm horizontal, 3-6 cm vertical</td>
+<td>Le levé en 1 h au lieu d'une journée</td>
+</tr>
+<tr class="even">
+<td><strong>Sceau et signature numériques</strong></td>
+<td><span class="tag tag-fait">FAIT</span> normalisés par l’OAGQ via Notarius</td>
+<td>Le papier, la poste, le délai</td>
+</tr>
+</tbody>
+</table>
+
+</section><section id="partie-7-le-processus-cible" aria-labelledby="partie-7-le-processus-cible-h"><h2 id="partie-7-le-processus-cible-h">PARTIE 7 — LE PROCESSUS CIBLE</h2>
+<blockquote>
+<p><strong>On ne retire pas la signature à l’arpenteur. On lui retire tout ce qui n’est pas la signature.</strong></p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+<col style="width: 20%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Voie</th>
+<th>Situation</th>
+<th>Ce qui se passe</th>
+<th>Prix cible</th>
+<th>Délai cible</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>V1 — Attestation de non-changement</strong></td>
+<td>Certificat existant + aucun changement détecté</td>
+<td>Comparaison imagerie, permis, mutations, zonage. Arpenteur atteste. <strong>Aucune visite terrain.</strong></td>
+<td><strong>~120 $</strong></td>
+<td><strong>24-72 h</strong></td>
+</tr>
+<tr class="even">
+<td><strong>V2 — Mise à jour assistée</strong></td>
+<td>Changement mineur (cabanon, clôture, piscine)</td>
+<td>Dossier pré-instruit + levé ciblé sur la zone modifiée</td>
+<td><strong>~450 $</strong></td>
+<td><strong>5-10 j</strong></td>
+</tr>
+<tr class="odd">
+<td><strong>V3 — Certificat pré-instruit</strong></td>
+<td>Pas de certificat antérieur ou changements majeurs</td>
+<td>19 vérifications déterministes livrées à l'arpenteur.</td>
+<td><strong>~780 $</strong></td>
+<td><strong>7-12 j</strong></td>
+</tr>
+<tr class="even">
+<td><strong>V0 — Dossier complexe</strong></td>
+<td>Copropriété, empiètement litigieux, rural sans borne</td>
+<td>Processus actuel intégral à pleine valeur.</td>
+<td>1 630 $+</td>
+<td>4-8 sem.</td>
+</tr>
+</tbody>
+</table>
+
+</section><section id="partie-8-le-modèle-chiffré" aria-labelledby="partie-8-le-modèle-chiffré-h"><h2 id="partie-8-le-modèle-chiffré-h">PARTIE 8 — LE MODÈLE CHIFFRÉ</h2>
+<blockquote>
+<h3>ÉCONOMIE ANNUELLE : 71,9 M$ — soit 70 % du coût actuel</h3>
+<h3>ÉCONOMIE MOYENNE PAR MÉNAGE : 1 138 $</h3>
+<h3>324 équivalents temps plein libérés (30 % de l'effectif total de l'Ordre)</h3>
+</blockquote>
+
+</section><section id="partie-9-machine-contre-humain-où-est-vraiment-la-marge-derreur" aria-labelledby="partie-9-machine-contre-humain-où-est-vraiment-la-marge-derreur-h"><h2 id="partie-9-machine-contre-humain-où-est-vraiment-la-marge-derreur-h">PARTIE 9 — MACHINE CONTRE HUMAIN : OÙ EST VRAIMENT LA MARGE D’ERREUR</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Architecture</th>
+<th>Risque par dossier</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>A — Tout humain</strong> (le système actuel)</td>
+<td><strong>20 – 56 %</strong></td>
+</tr>
+<tr class="even">
+<td><strong>B — Tout machine</strong> (sans arpenteur)</td>
+<td><strong>31 – 69 %</strong> (Illégal et techniquement inférieur)</td>
+</tr>
+<tr class="odd">
+<td><strong>C — HYBRIDE : machine sur 19, humain sur 4 + signature</strong></td>
+<td><strong>12 – 37 %</strong> (100% Légal, réduction de 34 à 42% du risque)</td>
+</tr>
+</tbody>
+</table>
+
+</section><section id="partie-10-les-mécanismes-de-transparence-forcée" aria-labelledby="partie-10-les-mécanismes-de-transparence-forcée-h"><h2 id="partie-10-les-mécanismes-de-transparence-forcée-h">PARTIE 10 — LES MÉCANISMES DE TRANSPARENCE FORCÉE</h2>
+<p><strong>M1 — L’indice public des prix réels.</strong></p>
+<p><strong>M2 — L’indice public des délais.</strong></p>
+<p><strong>M3 — Le registre des refus motivés.</strong></p>
+<p><strong>M4 — Le compteur de rente évitable.</strong></p>
+<p><strong>M5 — La fiche publique de chaque firme.</strong></p>
+<p><strong>M6 — La preuve vérifiable cryptographique.</strong></p>
+<p><strong>M7 — Le miroir réglementaire.</strong></p>
+
+</section><section id="partie-11-séquence-de-déploiement" aria-labelledby="partie-11-séquence-de-déploiement-h"><h2 id="partie-11-séquence-de-déploiement-h">PARTIE 11 — SÉQUENCE DE DÉPLOIEMENT</h2>
+<p><strong>Phase 1 (Mois 0 à 6) :</strong> Registre gratuit, diagnostic 90s, comparateur.</p>
+<p><strong>Phase 2 (Mois 6 à 18) :</strong> Dossier pré-instruit en partenariat avec les firmes d'arpentage.</p>
+<p><strong>Phase 3 (Mois 12 à 24) :</strong> Voie V1 de non-changement et registre des refus motivés.</p>
+<p><strong>Phase 4 (Mois 24 à 36) :</strong> Dépôt central et indices institutionnels.</p>
+
+</section><section id="synthese" aria-labelledby="en-une-page"><h2 id="en-une-page">En une page</h2>
+<ol type="1">
+<li>La règle qui déclenche 100 M$ de dépenses annuelles <strong>n’est pas une loi</strong> — l’Ordre le dit lui-même.</li>
+<li>L’État a <strong>déjà payé</strong> pour toute la matière première : cadastre rénové, LiDAR gratuit, registre modernisé, zonage ouvert.</li>
+<li>Sur 11 heures de travail, <strong>10 sont automatisables ; 1 relève du jugement réservé</strong> — et c’est celle-là qu’il faut protéger.</li>
+<li>Sur 23 vérifications, <strong>19 sont déterministes</strong> et la machine y est 4 à 9 fois plus fiable ; <strong>4 relèvent du jugement</strong> et l’humain y est 2 à 3 fois meilleur.</li>
+<li><strong>L’architecture hybride est légale aujourd’hui, sans changer une virgule à la loi, et réduit le risque d’erreur de 34 à 42 %.</strong></li>
+<li>Économie : <strong>72 M$/an</strong>, 1 138 $ par ménage, <strong>324 ETP libérés</strong>, 379 t de CO₂, 4 850 années-ménage d’attente supprimées.</li>
+<li>La transparence s’obtient en obligeant chacun à écrire pourquoi, et en publiant le tableau.</li>
+</ol>
+</section>
+  </main>
+
+  <footer>
+    <p>Dossier stratégique BORNE — août 2026. Je ne suis pas avocat et ceci n’est pas un avis juridique ; chaque affirmation légale [FAIT] doit être confirmée par un juriste avant d’être utilisée dans une démarche formelle.</p>
+    <a class="totop" href="#main">↑ Retour en haut</a>
+  </footer>
+
+</div>
+</body>
+</html>

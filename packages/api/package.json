@@ -10,6 +10,7 @@
     "start": "node dist/index.js",
     "seed": "npm run build && node dist/seed.js",
     "db:init": "npm run build && node dist/init-db.js",
+    "ingerer:db": "npm run build && node dist/ingerer-db.js",
     "test": "npm run build && node --test \"dist/**/*.test.js\""
   },
   "dependencies": {

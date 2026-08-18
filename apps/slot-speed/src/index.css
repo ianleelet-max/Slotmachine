@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: #03060c;
+  color: #f1f5f9;
+}
+
+.font-mono-casino {
+  font-family: 'Orbitron', monospace;
+}
+
+.font-speed {
+  font-family: 'Teko', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #080c18;
+}
+::-webkit-scrollbar-thumb {
+  background: #eab308;
+  border-radius: 9999px;
+}
+
+/* High Contrast Minimalist Neon UI */
+.glass-panel-speed {
+  background: linear-gradient(135deg, rgba(12, 18, 32, 0.95) 0%, rgba(6, 9, 16, 0.98) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.9);
+}
+
+.flash-win {
+  animation: flashPulse 0.15s infinite alternate;
+}
+
+@keyframes flashPulse {
+  0% { filter: brightness(1) drop-shadow(0 0 5px rgba(234, 179, 8, 0.8)); }
+  100% { filter: brightness(2) drop-shadow(0 0 35px rgba(234, 179, 8, 1)); }
+}

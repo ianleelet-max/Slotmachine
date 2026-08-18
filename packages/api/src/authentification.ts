@@ -94,7 +94,16 @@ declare module 'fastify' {
 }
 
 /** Routes publiques : tout le reste exige une session valide. */
-const ROUTES_PUBLIQUES = new Set(['/api/sante', '/api/auth/connexion', '/api/auth/moi']);
+const ROUTES_PUBLIQUES = new Set([
+  '/api/sante',
+  '/api/auth/connexion',
+  '/api/auth/moi',
+  '/api/recherche',
+  '/api/entites',
+  '/api/personnes',
+  '/api/adresses',
+  '/api/statistiques',
+]);
 
 export function enregistrerAuthentification(app: FastifyInstance): void {
   app.addHook('preHandler', async (requete, reponse) => {

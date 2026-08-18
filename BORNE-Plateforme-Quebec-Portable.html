@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BORNE — Plateforme québécoise du certificat de localisation</title>
+  <meta name="description" content="Plateforme québécoise de réutilisation, d'automatisation et de transparence du certificat de localisation. Ce qui a déjà été mesuré n'a pas à être remesuré." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- React 18 and Babel -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #64748b;
+      --text-muted: #94a3b8;
+      --border-light: #e2e8f0;
+      --border-medium: #cbd5e1;
+      --status-green: #059669;
+      --status-green-bg: #ecfdf5;
+      --status-green-border: #a7f3d0;
+      --status-amber: #d97706;
+      --status-amber-bg: #fffbeb;
+      --status-amber-border: #fde68a;
+      --status-rose: #dc2626;
+      --status-rose-bg: #fef2f2;
+      --status-rose-border: #fecaca;
+      --qc-blue: #0f4c81;
+      --qc-blue-dark: #092c4d;
+      --qc-blue-light: #e0f2fe;
+      --qc-blue-border: #bae6fd;
+      --stone-accent: #78716c;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    [data-theme='dark'] {
+      --bg-primary: #0b1120;
+      --bg-secondary: #131d31;
+      --bg-tertiary: #1e293b;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-tertiary: #94a3b8;
+      --text-muted: #64748b;
+      --border-light: #1e293b;
+      --border-medium: #334155;
+      --status-green: #34d399;
+      --status-green-bg: #064e3b40;
+      --status-green-border: #05966980;
+      --status-amber: #fbbf24;
+      --status-amber-bg: #78350f40;
+      --status-amber-border: #d9770680;
+      --status-rose: #f87171;
+      --status-rose-bg: #88133740;
+      --status-rose-border: #dc262680;
+      --qc-blue: #38bdf8;
+      --qc-blue-dark: #0284c7;
+      --qc-blue-light: #0369a130;
+      --qc-blue-border: #0284c760;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-sans); background: var(--bg-primary); color: var(--text-primary); line-height: 1.5; }
+    .font-tabular { font-variant-numeric: tabular-nums; }
+    .font-mono { font-family: var(--font-mono); }
+    .borne-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+    .borne-card { background: var(--bg-secondary); border: 1px solid var(--border-light); border-radius: 10px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .borne-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.2rem 0.6rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
+    .badge-green { background: var(--status-green-bg); color: var(--status-green); border: 1px solid var(--status-green-border); }
+    .badge-amber { background: var(--status-amber-bg); color: var(--status-amber); border: 1px solid var(--status-amber-border); }
+    .badge-rose { background: var(--status-rose-bg); color: var(--status-rose); border: 1px solid var(--status-rose-border); }
+    .badge-blue { background: var(--qc-blue-light); color: var(--qc-blue); border: 1px solid var(--qc-blue-border); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.6rem 1.15rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; border: 1px solid transparent; transition: all 0.15s; }
+    .btn-primary { background: var(--qc-blue); color: #ffffff; }
+    .btn-primary:hover { background: var(--qc-blue-dark); }
+    .btn-secondary { background: var(--bg-tertiary); color: var(--text-primary); border-color: var(--border-medium); }
+    .btn-success { background: var(--status-green); color: #fff; }
+    .btn-danger { background: var(--status-rose); color: #fff; }
+    .btn-outline-blue { background: transparent; border-color: var(--qc-blue); color: var(--qc-blue); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const REFERENCE_PARAMETERS = {
+      TARIF_SUGGERE_OAGQ_2026: 1630,
+      TARIF_SUGGERE_OAGQ_2024: 1550,
+      TAUX_HORAIRE_JUNIOR: 173,
+      TAUX_HORAIRE_SENIOR: 321,
+      TRANSACTIONS_QC_2025: 97214,
+      MEMBRES_OAGQ: 1084,
+      TOLERANCE_CADASTRE: "± 15-30 cm",
+      PRECISION_LEVE: "± 2-3 cm"
+    };
+
+    const QUATRE_PHRASES = [
+      { id: 1, texte: "« Il n'y a pas de lois ou de règlements qui rendraient un certificat de localisation caduc ou périmé. »", auteur: "Ordre des arpenteurs-géomètres du Québec (OAGQ)" },
+      { id: 2, texte: "Le seuil de 10 ans provient de consignes internes de la Chambre des notaires du Québec et de l'OACIQ à leurs membres. Ce n'est pas une loi.", auteur: "Chambre des notaires & OACIQ" },
+      { id: 3, texte: "BORNE est un outil d'aide à la décision. Seul un arpenteur-géomètre peut produire un certificat de localisation.", auteur: "Loi sur les arpenteurs-géomètres (RLRQ c. A-23, art. 34-36)" },
+      { id: 4, texte: "Ce qui a déjà été mesuré n'a pas à être remesuré.", auteur: "Signature & Doctrine BORNE" }
+    ];
+
+    const MOCK_DETECTEURS = [
+      { id: "D1", nom: "Empreinte bâtie", declenche: false, source: "Orthophoto MERN 15cm & Satellite 2026", preuve: "Surface 142.4 m² (2015) vs 142.5 m² (2026). 0 modification." },
+      { id: "D2", nom: "Élévation et volume LiDAR", declenche: false, source: "Données Québec LiDAR 1m", preuve: "Élévation faîte 68.42m. Différentiel volume : +0.12 m³ (conforme)." },
+      { id: "D3", nom: "Permis municipaux", declenche: false, source: "Portail Ville de Lévis", preuve: "Permis #2019-0412 (Bardeaux toiture). Aucun permis structural." },
+      { id: "D4", nom: "Mutations & Registre foncier", declenche: false, source: "Registre foncier du Québec", preuve: "Index aux immeubles : aucune servitude nouvelle publiée." },
+      { id: "D5", nom: "Cadastre officiel (Infolot)", declenche: false, source: "Infolot / MERN", preuve: "Lot rénové 3 412 884. Limites et superficie de 684.2 m² intactes." },
+      { id: "D6", nom: "Zonage municipal & marges", declenche: false, source: "Grille spécifications Lévis H-204", preuve: "Zone H-204 : marges avant 6m, arrière 7.5m, latérales 1.5m conformes." },
+      { id: "D7", nom: "Contraintes territoriales", declenche: false, source: "MELCCFP & CPTAQ", preuve: "Hors zone inondable 20/100 ans. Hors zone agricole CPTAQ." }
+    ];
+
+    const MOCK_VERIFICATIONS = [
+      { num: 1, art: "Art. 7(1°)", titre: "Désignation cadastrale et circonscription", nat: "déterministe", conc: "Lot 3 412 884, Cadastre du Québec, Circonscription de Lévis. Rénové.", src: "Infolot MERN", verdict: "validée" },
+      { num: 2, art: "Art. 7(2°)", titre: "Concordance titre et cadastre", nat: "déterministe", conc: "Concordance parfaite avec Acte notarié #18 902 114.", src: "Registre foncier", verdict: "validée" },
+      { num: 6, art: "Art. 9(2°)", titre: "Servitudes passives publiées", nat: "déterministe", conc: "Servitude Hydro-Québec & Bell #9 812 004 (emprise 3.0 m arrière).", src: "Acte notarié #9 812 004", verdict: "validée" },
+      { num: 8, art: "Art. 11", titre: "Superficie du terrain (Cadastre vs Levé)", nat: "déterministe", conc: "Superficie Cadastre 684.2 m² (±30cm) vs Levé 684.05 m² (±2cm). Écart 0.15 m².", src: "Minute #4812 & Infolot", verdict: "validée" },
+      { num: 11, art: "Art. 14(1°)", titre: "Zonage municipal et usages", nat: "déterministe", conc: "Zone H-204 : Unifamiliale isolée conforme aux règlements 2026.", src: "Données Québec", verdict: "validée" },
+      { num: 20, art: "Art. 9(3°)", titre: "Servitudes apparentes non publiées", nat: "interprétative", conc: "[RÉSERVÉ ARPENTEUR] — Examen des lieux : aucune servitude apparente non publiée.", src: "Loi A-23", verdict: "validée" },
+      { num: 21, art: "Art. 16", titre: "Qualification juridique des empiètements", nat: "interprétative", conc: "[RÉSERVÉ ARPENTEUR] — Clôture mitoyenne à 4 cm souffert Sud-Est tolérée.", src: "Loi A-23", verdict: "validée" },
+      { num: 23, art: "Art. 18", titre: "Opinion professionnelle globale & Sceau", nat: "interprétative", conc: "[RÉSERVÉ ARPENTEUR] — État des lieux conforme. Sceau Notarius #2144 apposé.", src: "Loi A-23", verdict: "validée" }
+    ];
+
+    function App() {
+      const [tab, setTab] = useState('registre');
+      const [regSubTab, setRegSubTab] = useState('coffre');
+      const [lang, setLang] = useState('fr');
+      const [diagOpen, setDiagOpen] = useState(false);
+      const [theme, setTheme] = useState('light');
+      const [activeLayer, setActiveLayer] = useState('diff');
+
+      useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme);
+      }, [theme]);
+
+      return (
+        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+          {/* 1. Legal Banner */}
+          <div style={{ background: '#092c4d', color: '#fff', padding: '0.65rem 1rem', fontSize: '0.85rem', fontWeight: 600, borderBottom: '2px solid #0f4c81' }}>
+            <div className="borne-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <span>⚜ <strong>AVIS LÉGAL :</strong> BORNE est un outil d'aide à la décision. Seul un arpenteur-géomètre dument inscrit à l'OAGQ peut produire un <em>certificat de localisation</em> (RLRQ c. A-23).</span>
+              <span style={{ fontSize: '0.75rem', opacity: 0.85 }}>RLRQ c. A-23 & Loi 25 QC</span>
+            </div>
+          </div>
+
+          {/* 2. Header */}
+          <header style={{ background: 'var(--bg-secondary)', borderBottom: '1px solid var(--border-light)' }}>
+            <div className="borne-container" style={{ padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }} onClick={() => setTab('registre')}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '8px', background: 'var(--qc-blue)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '1.2rem' }}>⚜</div>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '1.4rem', fontWeight: 900, color: 'var(--text-primary)' }}>BORNE</span>
+                    <span style={{ fontSize: '0.75rem', fontWeight: 800, color: 'var(--qc-blue)' }}>QUÉBEC</span>
+                  </div>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Ce qui a déjà été mesuré n'a pas à être remesuré.</p>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <button onClick={() => setDiagOpen(true)} className="btn btn-primary" style={{ fontSize: '0.8rem' }}>
+                  🔍 Diagnostic gratuit 90s
+                </button>
+                <button onClick={() => setLang(lang === 'fr' ? 'en' : 'fr')} className="btn btn-secondary" style={{ fontSize: '0.8rem' }}>
+                  🌐 {lang === 'fr' ? 'EN' : 'FR'}
+                </button>
+                <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')} className="btn btn-secondary" style={{ fontSize: '0.8rem' }}>
+                  {theme === 'light' ? '🌙' : '☀️'}
+                </button>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <nav style={{ borderTop: '1px solid var(--border-light)', overflowX: 'auto' }}>
+              <div className="borne-container" style={{ display: 'flex', gap: '0.5rem', padding: '0.25rem 1.5rem' }}>
+                {[
+                  { id: 'registre', label: '1. Registre & Coffre-fort' },
+                  { id: 'dossier', label: '2. Poste Arpenteur (Dossier)' },
+                  { id: 'miroir', label: '3. Miroir Public & Refus' },
+                  { id: 'place', label: '4. Place de Marché' },
+                  { id: 'etalon', label: '5. Étalon (Double-aveugle)' },
+                  { id: 'ethique', label: 'Ce que BORNE ne fera jamais' }
+                ].map(t => (
+                  <button
+                    key={t.id}
+                    onClick={() => setTab(t.id)}
+                    style={{
+                      padding: '0.65rem 1rem',
+                      background: 'none',
+                      border: 'none',
+                      borderBottom: tab === t.id ? '3px solid var(--qc-blue)' : '3px solid transparent',
+                      color: tab === t.id ? 'var(--qc-blue)' : 'var(--text-secondary)',
+                      fontWeight: tab === t.id ? 800 : 500,
+                      cursor: 'pointer',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
+            </nav>
+          </header>
+
+          {/* 3. Main Content */}
+          <main style={{ flex: 1, padding: '2rem 0' }}>
+            <div className="borne-container">
+              {/* The 4 fundamental phrases */}
+              <div className="borne-card" style={{ marginBottom: '1.5rem', borderLeft: '4px solid var(--qc-blue)' }}>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 800, marginBottom: '0.75rem', color: 'var(--text-primary)' }}>
+                  ⚖ FONDEMENTS JURIDIQUES & DOCTRINE QUÉBÉCOISE
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '0.75rem' }}>
+                  {QUATRE_PHRASES.map(q => (
+                    <div key={q.id} style={{ padding: '0.75rem', background: 'var(--bg-tertiary)', borderRadius: '6px', fontSize: '0.8rem' }}>
+                      <p style={{ fontStyle: 'italic', fontWeight: 600, marginBottom: '0.35rem' }}>{q.texte}</p>
+                      <span style={{ color: 'var(--text-tertiary)', fontSize: '0.7rem' }}>— {q.auteur}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* MODULE 1: REGISTRE */}
+              {tab === 'registre' && (
+                <div>
+                  <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', borderBottom: '1px solid var(--border-light)', paddingBottom: '0.5rem' }}>
+                    <button onClick={() => setRegSubTab('coffre')} className={`btn ${regSubTab === 'coffre' ? 'btn-primary' : 'btn-secondary'}`} style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}>Coffre-fort</button>
+                    <button onClick={() => setRegSubTab('carte')} className={`btn ${regSubTab === 'carte' ? 'btn-primary' : 'btn-secondary'}`} style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}>Carte & LiDAR Infolot</button>
+                    <button onClick={() => setRegSubTab('detecteurs')} className={`btn ${regSubTab === 'detecteurs' ? 'btn-primary' : 'btn-secondary'}`} style={{ fontSize: '0.75rem', padding: '0.35rem 0.65rem' }}>7 Détecteurs</button>
+                  </div>
+
+                  {regSubTab === 'coffre' && (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+                      <div className="borne-card" style={{ borderLeft: '4px solid var(--status-green)' }}>
+                        <span className="borne-badge badge-green" style={{ marginBottom: '0.5rem' }}>✓ Certificat Actif & Indexé</span>
+                        <h3 style={{ fontSize: '1.2rem', fontWeight: 800 }}>Minute #4812 — Jean-Marc Tremblay, a.-g.</h3>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Lot 3 412 884 (Saint-Romuald, Lévis) • 684.05 m²</p>
+                        <div style={{ padding: '0.75rem', background: 'var(--bg-tertiary)', borderRadius: '6px', margin: '0.75rem 0', fontSize: '0.8rem' }}>
+                          <div>Score de Validité BORNE (SVB) : <strong style={{ color: 'var(--status-green)' }}>98 / 100</strong> (Voie V1)</div>
+                          <div>Empreinte SHA-256 : <code className="font-mono" style={{ fontSize: '0.7rem' }}>e3b0c44298fc1c...855</code></div>
+                        </div>
+                        <button onClick={() => alert('Attestation V1 signée prête à télécharger')} className="btn btn-primary" style={{ width: '100%', fontSize: '0.8rem' }}>
+                          Télécharger l'Attestation de non-changement (~120 $)
+                        </button>
+                      </div>
+
+                      <div className="borne-card">
+                        <h3 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '0.5rem' }}>Les 7 Détecteurs de Changement</h3>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                          {MOCK_DETECTEURS.map(d => (
+                            <div key={d.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.4rem 0.65rem', background: 'var(--bg-tertiary)', borderRadius: '4px', fontSize: '0.75rem' }}>
+                              <div>
+                                <strong>{d.id} — {d.nom}</strong>
+                                <div style={{ color: 'var(--text-tertiary)', fontSize: '0.65rem' }}>{d.source}</div>
+                              </div>
+                              <span className="borne-badge badge-green">0 delta</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {regSubTab === 'carte' && (
+                    <div className="borne-card">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                        <h4 style={{ fontSize: '1rem', fontWeight: 800 }}>Superposition Cadastrale Infolot (MTM Fuseau 7)</h4>
+                        <div style={{ display: 'flex', gap: '0.35rem' }}>
+                          <button onClick={() => setActiveLayer('diff')} className={`btn ${activeLayer === 'diff' ? 'btn-primary' : 'btn-secondary'}`} style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem' }}>Différentiel 2015/2026</button>
+                          <button onClick={() => setActiveLayer('lidar')} className={`btn ${activeLayer === 'lidar' ? 'btn-primary' : 'btn-secondary'}`} style={{ fontSize: '0.7rem', padding: '0.25rem 0.5rem' }}>LiDAR 1m</button>
+                        </div>
+                      </div>
+                      <div style={{ height: '320px', background: activeLayer === 'lidar' ? '#1e293b' : '#f1f5f9', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid var(--border-medium)' }}>
+                        <svg viewBox="0 0 500 300" style={{ width: '100%', height: '100%' }}>
+                          <polygon points="100,30 400,30 400,260 100,260" fill={activeLayer === 'lidar' ? '#0284c730' : '#ecfdf5'} stroke="#0f4c81" strokeWidth="2" />
+                          <rect x="150" y="80" width="180" height="110" rx="4" fill="#0f4c81" fillOpacity="0.8" />
+                          <text x="180" y="140" fill="#ffffff" fontSize="12" fontWeight="bold">Bâtiment Principal (142.4 m²)</text>
+                          <text x="210" y="280" fill="#475569" fontSize="11" fontWeight="bold">Rue des Sorbiers (Lévis)</text>
+                          <text x="180" y="24" fill="#0f4c81" fontSize="10" fontWeight="bold">Façade: 20.00 m | Profondeur: 34.20 m</text>
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+
+                  {regSubTab === 'detecteurs' && (
+                    <div className="borne-card">
+                      <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '1rem' }}>Faisceau de Preuves sur 7 Détecteurs</h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+                        {MOCK_DETECTEURS.map(d => (
+                          <div key={d.id} style={{ padding: '0.85rem', background: 'var(--bg-tertiary)', borderRadius: '6px', borderTop: '3px solid var(--status-green)' }}>
+                            <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>{d.id} — {d.nom}</div>
+                            <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: '0.35rem 0' }}>{d.preuve}</p>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-tertiary)' }}>Source : {d.source}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* MODULE 2: DOSSIER */}
+              {tab === 'dossier' && (
+                <div className="borne-card">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    <div>
+                      <h3 style={{ fontSize: '1.25rem', fontWeight: 800 }}>BORNE Dossier — Poste de Travail Arpenteur</h3>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>19 vérifications déterministes pré-instruites + 4 vérifications interprétatives réservées</p>
+                    </div>
+                    <span className="borne-badge badge-blue">Chronomètre : 1 min 24 s</span>
+                  </div>
+
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+                      <thead>
+                        <tr style={{ background: 'var(--bg-tertiary)', textAlign: 'left' }}>
+                          <th style={{ padding: '0.6rem' }}>#</th>
+                          <th style={{ padding: '0.6rem' }}>Vérification Norme A-23 r. 10</th>
+                          <th style={{ padding: '0.6rem' }}>Nature</th>
+                          <th style={{ padding: '0.6rem' }}>Conclusion Automatisée / Source</th>
+                          <th style={{ padding: '0.6rem' }}>Verdict</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {MOCK_VERIFICATIONS.map(v => (
+                          <tr key={v.num} style={{ borderBottom: '1px solid var(--border-light)' }}>
+                            <td style={{ padding: '0.6rem', fontWeight: 800 }}>#{v.num}</td>
+                            <td style={{ padding: '0.6rem' }}><strong>{v.art}</strong> — {v.titre}</td>
+                            <td style={{ padding: '0.6rem' }}>
+                              <span className={`borne-badge ${v.nat === 'déterministe' ? 'badge-green' : 'badge-amber'}`}>{v.nat}</span>
+                            </td>
+                            <td style={{ padding: '0.6rem', fontSize: '0.8rem' }}>
+                              <div>{v.conc}</div>
+                              <div style={{ color: 'var(--text-tertiary)', fontSize: '0.7rem' }}>Source : {v.src}</div>
+                            </td>
+                            <td style={{ padding: '0.6rem' }}>
+                              <span className="borne-badge badge-green">{v.verdict}</span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* MODULE 3: MIROIR */}
+              {tab === 'miroir' && (
+                <div>
+                  <div className="borne-card" style={{ textAlign: 'center', padding: '2rem', marginBottom: '1.5rem', border: '2px solid var(--qc-blue-border)' }}>
+                    <span className="borne-badge badge-blue" style={{ marginBottom: '0.5rem' }}>COMPTEUR DE RENTE ÉVITABLE AU QUÉBEC</span>
+                    <h2 style={{ fontSize: '1.1rem', color: 'var(--text-secondary)' }}>Dossiers où un certificat valide existait sans aucun changement et où un nouveau a été exigé</h2>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '1.5rem' }}>
+                      <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Dossiers refaits inutilement</span>
+                        <div className="font-tabular" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--status-rose)' }}>26 420</div>
+                      </div>
+                      <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Surcoût ménages québécois</span>
+                        <div className="font-tabular" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--status-rose)' }}>39 894 200 $</div>
+                      </div>
+                      <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '8px' }}>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>Attente collective</span>
+                        <div className="font-tabular" style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--status-amber)' }}>137 384 sem.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="borne-card">
+                    <h3 style={{ fontSize: '1.15rem', fontWeight: 800, marginBottom: '0.5rem' }}>Registre Public des Refus Motivés (CNQ / OACIQ / Prêteurs)</h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                      <strong style={{ color: 'var(--status-rose)' }}>86 % des refus</strong> enregistrés citent une « politique interne » ou « aucun fondement de loi ».
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* MODULE 4: PLACE */}
+              {tab === 'place' && (
+                <div className="borne-card" style={{ maxWidth: '700px', margin: '0 auto' }}>
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>Commander en 4 minutes</h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '1.25rem' }}>
+                    <div style={{ padding: '0.85rem', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                      <strong>Voie V1 — Attestation de non-changement : 120 $</strong> (Délai 24-72h)
+                    </div>
+                    <div style={{ padding: '0.85rem', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                      <strong>Voie V2 — Mise à jour ciblée : 450 $</strong> (Délai 3-7 jours)
+                    </div>
+                    <div style={{ padding: '0.85rem', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                      <strong>Voie V3 — Certificat complet pré-instruit : 780 $</strong> (Délai 7-12 jours au lieu de 1 630 $)
+                    </div>
+                  </div>
+                  <button onClick={() => alert('Dossier soumis aux arpenteurs de votre secteur')} className="btn btn-primary" style={{ width: '100%' }}>
+                    Lancer l'appel d'offres inversé aux firmes locales
+                  </button>
+                </div>
+              )}
+
+              {/* MODULE 5: ÉTALON */}
+              {tab === 'etalon' && (
+                <div className="borne-card">
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>Protocole Double-Aveugle & Variance Professionnelle</h3>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1.25rem' }}>
+                    Échantillon aléatoire de 5 % des dossiers traité par 2 arpenteurs indépendants.
+                  </p>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+                    <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                      <span style={{ fontSize: '0.75rem' }}>Taux erreur Machine seule</span>
+                      <div className="font-tabular" style={{ fontSize: '1.75rem', fontWeight: 900 }}>3.4 %</div>
+                    </div>
+                    <div style={{ padding: '1rem', background: 'var(--bg-tertiary)', borderRadius: '6px' }}>
+                      <span style={{ fontSize: '0.75rem' }}>Taux désaccord entre 2 arpenteurs</span>
+                      <div className="font-tabular" style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--qc-blue)' }}>6.2 %</div>
+                    </div>
+                    <div style={{ padding: '1rem', background: 'var(--bg-accent-subtle)', borderRadius: '6px', border: '1px solid var(--status-green-border)' }}>
+                      <span style={{ fontSize: '0.75rem' }}>Erreur Architecture Hybride BORNE</span>
+                      <div className="font-tabular" style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--status-green)' }}>&lt; 0.08 %</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* CE QUE BORNE NE FERA JAMAIS */}
+              {tab === 'ethique' && (
+                <div className="borne-card">
+                  <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--status-rose)', marginBottom: '1rem' }}>
+                    Ce que BORNE ne fera JAMAIS
+                  </h3>
+                  <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.875rem' }}>
+                    <li>❌ Produire un certificat de localisation sans arpenteur-géomètre signataire</li>
+                    <li>❌ Apposer un sceau ou une signature professionnelle par voie automatisée</li>
+                    <li>❌ Émettre une opinion sur une servitude apparente non publiée ou un empiètement</li>
+                    <li>❌ Déduire une limite de propriété par superposition cadastre + orthophoto</li>
+                    <li>❌ Publier une donnée de qualité sous n = 100 ou un refus sous n = 20</li>
+                    <li>❌ Noter subjectivement avec des étoiles ou avis diffamatoires</li>
+                    <li>❌ Revendre des données personnelles (Conformité stricte Loi 25)</li>
+                    <li>❌ Facturer un citoyen pour lui dire qu'il n'a pas besoin de payer</li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </main>
+
+          {/* Diagnostic Modal */}
+          {diagOpen && (
+            <div style={{ position: 'fixed', inset: 0, background: 'rgba(15, 23, 42, 0.75)', zIndex: 999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+              <div className="borne-card" style={{ maxWidth: '600px', width: '100%', padding: '2rem' }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: '0.5rem' }}>Diagnostic Gratuit 90 Secondes</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                  « Aucune loi ni aucun règlement du Québec ne rend un certificat caduc ou périmé. »
+                </p>
+                <div style={{ padding: '0.75rem', background: 'var(--status-green-bg)', border: '1px solid var(--status-green-border)', borderRadius: '6px', marginBottom: '1rem' }}>
+                  <strong>Résultat simulé pour votre propriété :</strong>
+                  <div style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>Score de Validité BORNE : 98/100 (Aucun changement sur 7 détecteurs)</div>
+                </div>
+                <button onClick={() => setDiagOpen(false)} className="btn btn-primary" style={{ width: '100%' }}>
+                  Fermer
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Footer */}
+          <footer style={{ background: 'var(--bg-secondary)', borderTop: '1px solid var(--border-light)', padding: '1.5rem 0', fontSize: '0.8rem', color: 'var(--text-tertiary)' }}>
+            <div className="borne-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <span>© 2026 BORNE Québec. Tous droits réservés. Outil d'aide à la décision.</span>
+              <span>Loi sur les arpenteurs-géomètres RLRQ c. A-23 • Loi 25 QC</span>
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>

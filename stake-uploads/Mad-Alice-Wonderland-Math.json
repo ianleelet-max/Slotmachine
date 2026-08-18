@@ -1,0 +1,61 @@
+{
+  "rgsVersion": "1.0",
+  "gameId": "mad-alice-wonderland",
+  "gameTitle": "Mad Alice : Wonderland Matrix",
+  "rtp": 0.968,
+  "hitRate": 0.320,
+  "maxWinMultiplier": 12500,
+  "betLevels": [
+    { "id": "level_1", "bet": 0.20, "isDefault": false },
+    { "id": "level_2", "bet": 0.50, "isDefault": false },
+    { "id": "level_3", "bet": 1.00, "isDefault": false },
+    { "id": "level_4", "bet": 2.00, "isDefault": true },
+    { "id": "level_5", "bet": 5.00, "isDefault": false },
+    { "id": "level_6", "bet": 10.00, "isDefault": false },
+    { "id": "level_7", "bet": 20.00, "isDefault": false },
+    { "id": "level_8", "bet": 50.00, "isDefault": false },
+    { "id": "level_9", "bet": 100.00, "isDefault": false },
+    { "id": "level_10", "bet": 200.00, "isDefault": false }
+  ],
+  "gameModes": [
+    {
+      "modeId": "base_3x3",
+      "name": "Base Matrix 3x3",
+      "rtp": 0.968,
+      "hitRate": 0.320,
+      "maxWinMultiplier": 12500
+    },
+    {
+      "modeId": "eat_me_6x6",
+      "name": "EAT ME 6x6 Expansion",
+      "rtp": 0.970,
+      "hitRate": 0.480,
+      "maxWinMultiplier": 12500
+    },
+    {
+      "modeId": "mad_tea_free_spins",
+      "name": "Mad Tea Party Free Spins",
+      "rtp": 0.972,
+      "hitRate": 0.520,
+      "maxWinMultiplier": 12500
+    }
+  ],
+  "reels": 5,
+  "rows": 4,
+  "paylines": 25,
+  "symbols": [
+    { "id": "cheshire", "name": "Cheshire Cat Wild", "multiplier": 150, "weight": 2, "isWild": true },
+    { "id": "rabbit", "name": "Time Rabbit Scatter", "multiplier": 75, "weight": 4, "isScatter": true },
+    { "id": "hatter", "name": "Mad Hatter", "multiplier": 60, "weight": 7 },
+    { "id": "queen", "name": "Queen of Hearts", "multiplier": 40, "weight": 10 },
+    { "id": "potion", "name": "Drink Me Potion", "multiplier": 20, "weight": 15 },
+    { "id": "cake", "name": "Eat Me Cake", "multiplier": 15, "weight": 20 },
+    { "id": "shroom", "name": "Magic Shroom", "multiplier": 8, "weight": 28 },
+    { "id": "tea", "name": "Psychedelic Tea", "multiplier": 5, "weight": 35 }
+  ],
+  "provablyFair": {
+    "algorithm": "HMAC-SHA256",
+    "clientSeed": "alice-wonderland-2026",
+    "nonceIncrement": 1
+  }
+}

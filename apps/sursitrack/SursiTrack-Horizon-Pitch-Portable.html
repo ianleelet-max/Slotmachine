@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SursiTrack + Horizon — MSP Québec (Version Portable)</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React & ReactDOM UMD (Compatibilité Totale Double-Clic Local) -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #070a12;
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Outfit', sans-serif; }
+    .glass-panel {
+      background: rgba(13, 18, 30, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow: 0 10px 35px -5px rgba(0, 0, 0, 0.5);
+    }
+  </style>
+</head>
+<body class="bg-[#070a12] text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState } = React;
+
+    const INITIAL_SURSITAIRES = [
+      {
+        id: 'SUR-2026-089',
+        dossierHorizonId: 'HOR-QC-88491',
+        nomComplet: 'Alexandre Tremblay',
+        photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=256&q=80',
+        telephone: '514-555-0192',
+        agentNom: 'Agent Martin Lapointe',
+        dateDebutSursis: '2026-01-15',
+        dateFinSursis: '2026-10-15',
+        contraintes: [
+          'Couvre-feu strict de 21h00 à 06h00',
+          'Interdiction d’approcher à moins de 500m du 450 Rue Saint-Denis (Montréal)',
+          'Suivi obligatoire en gestion de la colère (2x / semaine)'
+        ],
+        programmes: [
+          { titre: 'Programme de réinsertion socio-professionnelle', organisme: 'YMCA Centre-Ville Montréal', heuresEffectuees: 42, heuresRequises: 60, statut: 'conforme' }
+        ],
+        niveauRisque: 'modere',
+        scoreRisqueRTM: 42,
+        statutConformite: 'conforme',
+        dernierePosition: { adresse: 'Chantier Nordet, Boul. René-Lévesque O, Montréal', derniereMiseAJour: 'À l’instant' },
+        dernierCheckIn: { horodatage: '2026-08-14 07:02:14', scoreMatching: 99.2, hachagePreuve: 'sha256:8f4b1e90a2c99a0188b02199' }
+      },
+      {
+        id: 'SUR-2026-104',
+        dossierHorizonId: 'HOR-QC-91024',
+        nomComplet: 'Marc-André Gagnon',
+        photoUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=256&q=80',
+        telephone: '418-555-0823',
+        agentNom: 'Agent Martin Lapointe',
+        dateDebutSursis: '2026-03-01',
+        dateFinSursis: '2026-12-01',
+        contraintes: [
+          'Interdiction absolue de présence dans les établissements licenciés (bars/clubs)',
+          'Assignation à résidence le week-end'
+        ],
+        programmes: [
+          { titre: 'Thérapie de prévention des dépendances', organisme: 'Centre Normand-Laramée', heuresEffectuees: 10, heuresRequises: 40, statut: 'absence_signalee' }
+        ],
+        niveauRisque: 'eleve',
+        scoreRisqueRTM: 78,
+        statutConformite: 'violation_critique',
+        dernierePosition: { adresse: 'Proximité Grande Allée Est, Québec', derniereMiseAJour: 'À l’instant' },
+        dernierCheckIn: { horodatage: '2026-08-14 10:45:00', scoreMatching: 61.2, hachagePreuve: 'sha256:77a0bc11f09e88aa09b1129f' }
+      }
+    ];
+
+    const SLIDES_PITCH = [
+      {
+        id: 1,
+        titre: "L'Obsolescence Critique des Contrôles par Ligne Fixe",
+        sousTitre: "La fin des lignes filaires traditionnelles et l'illusion de la téléphonie IP (VoIP)",
+        chiffreCle: "0 %",
+        chiffreLabel: "Garantie de localisation réelle via un appel téléphonique fixe moderne",
+        points: [
+          "Disparition des lignes cuivres terrestres : La téléphonie IP (VoIP/SIP) est désormais la norme universelle chez tous les grands fournisseurs (Bell, Vidéotron, Telus)",
+          "Absence d'exactitude géographique : Une ligne fixe IP peut être transférée à distance, relayée sur mobile ou gérée par adaptateur VoIP depuis n'importe quel endroit",
+          "Surcharge de travail stérile : Les vérifications téléphoniques traditionnelles créent une lourde charge administrative pour les agents basés sur une fausse impression de certitude"
+        ],
+        quote: "Continuer à valider la présence par téléphone fixe relève d'une méthode dépassée qui n'offre plus aucune valeur légale ou preuve de présence physique."
+      },
+      {
+        id: 2,
+        titre: "Le Défi Financier & Matériel des Bracelets Physiques",
+        sousTitre: "Des coûts exorbitants pour des balises encombrantes et stigmatisantes",
+        chiffreCle: "11,800 $",
+        chiffreLabel: "Coût moyen annuel par bracelet physique traditionnel",
+        points: [
+          "Stigmatisation sociale freinant la réinsertion professionnelle des sursitaires",
+          "Surcharge de visites terrain et appels manuels inutiles pour les agents de probation",
+          "Angles morts géographiques et faux positifs fréquents des balises matérielles anciennes génération"
+        ],
+        quote: "Le MSP a besoin d'une solution moderne, économique et alignée sur la numérisation des services publics."
+      },
+      {
+        id: 3,
+        titre: "La Solution SursiTrack : Surveillance Biométrique BYOD",
+        sousTitre: "La preuve irréfutable de présence physique sur téléphone personnel",
+        chiffreCle: "88 %",
+        chiffreLabel: "Réduction directe des coûts de suivi d'encadrement",
+        points: [
+          "Vérification d'identité faciale 3D avec preuve hachée SHA-256 infalsifiable",
+          "Géofencing dynamique ultra-précis : validation GPS en temps réel sans intermédiaire filaire",
+          "Zéro équipement matériel à fournir, remplacer ou entretenir pour le Ministère"
+        ],
+        quote: "Aucune stigmatisation visuelle, une adhésion accrue et un taux de conformité supérieur à 94%."
+      }
+    ];
+
+    function App() {
+      const [vue, setVue] = useState('pitch');
+      const [slideIndex, setSlideIndex] = useState(0);
+      const [sursitaires, setSursitaires] = useState(INITIAL_SURSITAIRES);
+      const [sursitaireSel, setSursitaireSel] = useState(INITIAL_SURSITAIRES[0]);
+      const [nombreSursitaires, setNombreSursitaires] = useState(500);
+
+      const slide = SLIDES_PITCH[slideIndex];
+
+      const coutTotalActuel = nombreSursitaires * 11800;
+      const coutTotalSursiTrack = nombreSursitaires * 1400;
+      const economieAnnuelle = coutTotalActuel - coutTotalSursiTrack;
+
+      const faireCheckIn = (succes) => {
+        const misAJour = {
+          ...sursitaireSel,
+          statutConformite: succes ? 'conforme' : 'violation_critique',
+          scoreRisqueRTM: succes ? 35 : 85,
+          dernierCheckIn: {
+            horodatage: new Date().toISOString().replace('T', ' ').substring(0, 19),
+            scoreMatching: succes ? 99.4 : 61.2,
+            hachagePreuve: "sha256:8f4b1e90a2c99a0188b02199"
+          }
+        };
+        setSursitaireSel(misAJour);
+        setSursitaires(prev => prev.map(s => s.id === misAJour.id ? misAJour : s));
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col">
+          {/* Header Navigation */}
+          <header className="sticky top-0 z-50 glass-panel border-b border-slate-800 bg-[#090d16]/90 p-4">
+            <div className="max-w-7xl mx-auto flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
+                  🛡️
+                </div>
+                <div>
+                  <h1 className="font-extrabold text-xl tracking-tight text-white">SursiTrack <span className="text-cyan-400 text-xs px-2 py-0.5 rounded bg-cyan-950 border border-cyan-800">Horizon 360°</span></h1>
+                  <p className="text-[10px] text-slate-400">Ministère de la Sécurité publique du Québec (MSP)</p>
+                </div>
+              </div>
+
+              <div className="flex space-x-2 bg-slate-900 p-1 rounded-xl border border-slate-800">
+                <button onClick={() => setVue('pitch')} className={vue === 'pitch' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-600 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400'}>Pitch Exécutif MSP</button>
+                <button onClick={() => setVue('horizon')} className={vue === 'horizon' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-cyan-600 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400'}>Horizon 360° (Agent)</button>
+                <button onClick={() => setVue('mobile')} className={vue === 'mobile' ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white' : 'px-3 py-1.5 rounded-lg text-xs font-bold text-slate-400'}>App Mobile Sursitaire</button>
+              </div>
+            </div>
+          </header>
+
+          {/* Core Content */}
+          <main className="max-w-7xl mx-auto w-full p-6 flex-1 space-y-6">
+            
+            {vue === 'pitch' && (
+              <div className="space-y-6">
+                <div className="glass-panel p-8 rounded-3xl border border-slate-800 space-y-6">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs font-mono font-bold text-cyan-400 bg-cyan-950 px-3 py-1 rounded-full border border-cyan-800">
+                      SLIDE #{slide.id} — PRÉSENTATION STRATÉGIQUE MSP
+                    </span>
+                    <div className="flex space-x-2">
+                      <button onClick={() => setSlideIndex(Math.max(0, slideIndex-1))} disabled={slideIndex===0} className="px-3 py-1 bg-slate-800 rounded text-xs">Précédent</button>
+                      <button onClick={() => setSlideIndex(Math.min(SLIDES_PITCH.length-1, slideIndex+1))} disabled={slideIndex===SLIDES_PITCH.length-1} className="px-3 py-1 bg-slate-800 rounded text-xs">Suivant</button>
+                    </div>
+                  </div>
+
+                  <h2 className="text-3xl font-black text-white">{slide.titre}</h2>
+                  <p className="text-cyan-300 font-medium">{slide.sousTitre}</p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-6 pt-2">
+                    <div className="md:col-span-7 space-y-3">
+                      {slide.points.map((p, i) => (
+                        <div key={i} className="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-xs text-slate-200">
+                          ✓ {p}
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="md:col-span-5 bg-gradient-to-b from-slate-900 to-indigo-950 p-6 rounded-2xl border border-slate-800 text-center flex flex-col justify-center">
+                      <span className="text-xs text-slate-400 font-bold uppercase">Métrique Choc</span>
+                      <p className="text-5xl font-black text-cyan-400 font-mono my-2">{slide.chiffreCle}</p>
+                      <p className="text-xs text-slate-300">{slide.chiffreLabel}</p>
+                    </div>
+                  </div>
+
+                  {slide.id === 1 && (
+                    <div className="p-4 rounded-2xl bg-rose-950/40 border border-rose-800 text-xs text-rose-200">
+                      <strong>⚠️ Constat Téléphonie IP :</strong> La téléphonie fixe cuivre n'existe plus au Québec. Les appels transitant désormais par VoIP/IP, les sursitaires peuvent facilement faire dévier leur ligne fixe sans aucune certitude de présence.
+                    </div>
+                  )}
+                </div>
+
+                {/* Calculateur ROI */}
+                <div className="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
+                  <h3 className="text-lg font-bold text-white">💰 Simulateur d'Économies Budgétaires MSP</h3>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-xs text-slate-300">
+                      <span>Volume de sursitaires sous suivi :</span>
+                      <span className="font-mono text-cyan-400 font-bold">{nombreSursitaires} sursitaires</span>
+                    </div>
+                    <input type="range" min="100" max="2500" step="50" value={nombreSursitaires} onChange={e=>setNombreSursitaires(Number(e.target.value))} className="w-full h-2 bg-slate-800 rounded accent-cyan-500 cursor-pointer" />
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4 text-center">
+                    <div className="p-4 bg-rose-950/20 border border-rose-800/40 rounded-xl">
+                      <p className="text-[10px] text-rose-300 font-bold">BRACELET TRADITIONNEL</p>
+                      <p className="text-xl font-bold font-mono text-rose-400">{(coutTotalActuel/1000000).toFixed(2)} M$ / an</p>
+                    </div>
+                    <div className="p-4 bg-cyan-950/30 border border-cyan-800/50 rounded-xl">
+                      <p className="text-[10px] text-cyan-300 font-bold">SURSITRACK BYOD</p>
+                      <p className="text-xl font-bold font-mono text-cyan-400">{(coutTotalSursiTrack/1000000).toFixed(2)} M$ / an</p>
+                    </div>
+                    <div className="p-4 bg-emerald-950/40 border border-emerald-800/60 rounded-xl">
+                      <p className="text-[10px] text-emerald-300 font-bold">ÉCONOMIE NETTE MSP</p>
+                      <p className="text-2xl font-black font-mono text-emerald-400">+{(economieAnnuelle/1000000).toFixed(2)} M$ / an</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {vue === 'horizon' && (
+              <div className="grid grid-cols-12 gap-6">
+                <div className="col-span-4 glass-panel p-4 rounded-2xl border border-slate-800 space-y-3">
+                  <h3 className="text-xs font-bold text-slate-300 uppercase">Dossiers Sursitaires ({sursitaires.length})</h3>
+                  {sursitaires.map(s => (
+                    <div key={s.id} onClick={()=>setSursitaireSel(s)} className={sursitaireSel.id===s.id ? 'p-3 rounded-xl border cursor-pointer bg-cyan-950 border-cyan-500' : 'p-3 rounded-xl border cursor-pointer bg-slate-900 border-slate-800'}>
+                      <p className="font-bold text-sm text-white">{s.nomComplet}</p>
+                      <p className="text-xs text-slate-400 font-mono">{s.dossierHorizonId}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="col-span-8 glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+                  <div className="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <div>
+                      <h2 className="text-xl font-bold text-white">{sursitaireSel.nomComplet}</h2>
+                      <p className="text-xs text-slate-400 font-mono">Dossier : {sursitaireSel.dossierHorizonId}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs text-slate-400 uppercase block">Score de Risque RTM</span>
+                      <span className="text-2xl font-black text-cyan-400 font-mono">{sursitaireSel.scoreRisqueRTM}%</span>
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-2 text-xs">
+                    <p className="font-bold text-cyan-400">Dernier Check-in Biométrique :</p>
+                    <p className="text-slate-300">Horodatage : {sursitaireSel.dernierCheckIn ? sursitaireSel.dernierCheckIn.horodatage : 'N/A'}</p>
+                    <p className="text-slate-300">Matching faciale : <strong className="text-emerald-400">{sursitaireSel.dernierCheckIn ? sursitaireSel.dernierCheckIn.scoreMatching : 99.2}%</strong></p>
+                    <p className="text-slate-500 font-mono truncate">Empreinte SHA-256 : {sursitaireSel.dernierCheckIn ? sursitaireSel.dernierCheckIn.hachagePreuve : 'sha256:8f4b1e90a2c99a0188b02199'}</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {vue === 'mobile' && (
+              <div className="max-w-md mx-auto glass-panel p-6 rounded-3xl border border-slate-800 space-y-4 text-center">
+                <h3 className="text-lg font-bold text-white">App Mobile Sursitaire (Simulateur)</h3>
+                <p className="text-xs text-slate-400">Effectuez un pointage biométrique direct sur le téléphone personnel.</p>
+                <img src={sursitaireSel.photoUrl} className="w-24 h-24 rounded-full mx-auto border-2 border-cyan-500 object-cover" />
+                <p className="font-bold text-white text-sm">{sursitaireSel.nomComplet}</p>
+                
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <button onClick={()=>faireCheckIn(true)} className="py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold">Valider Pointage (99.4%)</button>
+                  <button onClick={()=>faireCheckIn(false)} className="py-2.5 bg-rose-600 hover:bg-rose-500 text-white rounded-xl text-xs font-bold">Simuler Échec (61.2%)</button>
+                </div>
+              </div>
+            )}
+
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>
