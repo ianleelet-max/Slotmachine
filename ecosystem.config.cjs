@@ -1,22 +1,31 @@
 module.exports = {
   apps: [
     {
-      name: 'auditreq-api',
-      cwd: '/home/ian/AudiTREQ/packages/api',
-      script: 'dist/index.js',
+      name: "auditreq-api",
+      cwd: "/home/ian/AudiTREQ/packages/api",
+      script: "dist/server.js",
       env: {
-        DATABASE_URL: 'postgres://postgres:auditreq_pass@localhost/auditreq',
-        HOTE: '0.0.0.0',
-        PORT: 3001
+        PORT: 3001,
+        NODE_ENV: "production"
       }
     },
     {
-      name: 'sursitrack-backend',
-      cwd: '/home/ian/AudiTREQ/packages/sursitrack-backend',
-      script: 'dist/server.js',
+      name: "sursitrack-backend",
+      cwd: "/home/ian/AudiTREQ/packages/sursitrack-backend",
+      script: "dist/server.js",
       env: {
-        NODE_ENV: 'production',
-        PORT: 3002
+        PORT: 3002,
+        NODE_ENV: "production"
+      }
+    },
+    {
+      name: "powai-ai-bridge",
+      cwd: "/home/ian/AudiTREQ/packages/ai-engine",
+      script: "dist/server.js",
+      env: {
+        PORT: 5055,
+        NODE_ENV: "production",
+        RUNPOD_ENDPOINT_ID: "minimax-h3-50k"
       }
     }
   ]
