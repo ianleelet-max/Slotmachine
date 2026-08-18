@@ -11,11 +11,12 @@ import {
   ChevronDown,
   ChevronUp,
   Flame,
-  FileText
+  FileText,
+  AlertTriangle
 } from 'lucide-react';
 
 interface NetworkTopBannerProps {
-  currentApp?: 'borne' | 'strategie' | 'sursitrack' | 'auditreq' | 'notaria' | 'home';
+  currentApp?: 'borne' | 'strategie' | 'sursitrack' | 'auditreq' | 'notaria' | 'home' | 'saadeklic';
   onNavigateTab?: (tab: string) => void;
 }
 
@@ -23,8 +24,6 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
   currentApp = 'borne',
   onNavigateTab
 }) => {
-  const [isOpen, setIsOpen] = useState(true);
-
   const sites = [
     {
       id: 'borne',
@@ -35,7 +34,7 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
       tabId: 'registre',
       icon: '⚜️',
       color: '#38bdf8',
-      desc: 'Plateforme du certificat de localisation',
+      desc: 'Plateforme québécoise du certificat de localisation',
     },
     {
       id: 'strategie',
@@ -69,16 +68,6 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
       desc: 'Analyse d’intégrité corporative',
     },
     {
-      id: 'notaria',
-      name: 'NotaR-iA',
-      badge: 'IA Juridique',
-      url: 'https://powai.ca/notaria',
-      isLocalTab: false,
-      icon: '⚖️',
-      color: '#ec4899',
-      desc: 'Extraction et examen de titres',
-    },
-    {
       id: 'home',
       name: 'Portail PowAI.ca',
       badge: 'Hub',
@@ -87,6 +76,16 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
       icon: '🌐',
       color: '#94a3b8',
       desc: 'Accueil & Écosystème IA',
+    },
+    {
+      id: 'saadeklic',
+      name: 'SAAQ$$$clic (Anti-Modèle)',
+      badge: 'Contre-Exemple Fiasco 1.2 Md$',
+      url: 'https://powai.ca/saadeklic',
+      isLocalTab: false,
+      icon: '🎰',
+      color: '#f43f5e',
+      desc: 'Démonstration satirique des dérives traditionnelles à ne jamais reproduire',
     }
   ];
 
@@ -113,21 +112,23 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
         }}
       >
         {/* Network Brand Label */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 800, color: '#38bdf8', letterSpacing: '0.04em' }}>
             <Sparkles size={13} className="text-cyan-400" />
             <span style={{ textTransform: 'uppercase' }}>PowAI.ca</span>
-            <span style={{ color: '#64748b', fontWeight: 500 }}>Suite & Plateformes :</span>
+            <span style={{ color: '#64748b', fontWeight: 500 }}>Écosystème :</span>
           </div>
 
           {/* Quick inline app switcher */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', flexWrap: 'wrap' }}>
             {sites.map((site) => {
               const isCurrent = (currentApp === site.id);
+              const isWarning = (site.id === 'saadeklic');
               return (
                 <a
                   key={site.id}
                   href={site.url}
+                  title={site.desc}
                   onClick={(e) => {
                     if (site.isLocalTab && onNavigateTab && site.tabId) {
                       e.preventDefault();
@@ -140,9 +141,9 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
                     gap: '0.3rem',
                     padding: '0.2rem 0.55rem',
                     borderRadius: '5px',
-                    backgroundColor: isCurrent ? 'rgba(56, 189, 248, 0.18)' : '#0f172a',
-                    border: isCurrent ? '1px solid rgba(56, 189, 248, 0.45)' : '1px solid #1e293b',
-                    color: isCurrent ? '#ffffff' : '#94a3b8',
+                    backgroundColor: isCurrent ? 'rgba(56, 189, 248, 0.18)' : (isWarning ? 'rgba(244, 63, 94, 0.12)' : '#0f172a'),
+                    border: isCurrent ? '1px solid rgba(56, 189, 248, 0.45)' : (isWarning ? '1px solid rgba(244, 63, 94, 0.35)' : '1px solid #1e293b'),
+                    color: isCurrent ? '#ffffff' : (isWarning ? '#fca5a5' : '#94a3b8'),
                     textDecoration: 'none',
                     fontWeight: isCurrent ? 700 : 500,
                     transition: 'all 0.15s ease',
@@ -150,14 +151,14 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
                   }}
                   onMouseEnter={(e) => {
                     if (!isCurrent) {
-                      e.currentTarget.style.backgroundColor = '#1e293b';
+                      e.currentTarget.style.backgroundColor = isWarning ? 'rgba(244, 63, 94, 0.25)' : '#1e293b';
                       e.currentTarget.style.color = '#ffffff';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isCurrent) {
-                      e.currentTarget.style.backgroundColor = '#0f172a';
-                      e.currentTarget.style.color = '#94a3b8';
+                      e.currentTarget.style.backgroundColor = isWarning ? 'rgba(244, 63, 94, 0.12)' : '#0f172a';
+                      e.currentTarget.style.color = isWarning ? '#fca5a5' : '#94a3b8';
                     }
                   }}
                 >
@@ -169,7 +170,7 @@ export const NetworkTopBanner: React.FC<NetworkTopBannerProps> = ({
                         fontSize: '0.65rem', 
                         padding: '0.05rem 0.35rem', 
                         borderRadius: '3px', 
-                        backgroundColor: isCurrent ? site.color : '#1e293b',
+                        backgroundColor: isCurrent ? site.color : (isWarning ? '#450a0a' : '#1e293b'),
                         color: isCurrent ? '#000000' : site.color,
                         fontWeight: 700 
                       }}

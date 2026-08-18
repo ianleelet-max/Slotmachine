@@ -6,7 +6,10 @@ import {
   Sliders, 
   Lock, 
   CheckCircle2,
-  FileText
+  FileText,
+  AlertTriangle,
+  ExternalLink,
+  Flame
 } from 'lucide-react';
 import { CE_QUE_BORNE_NE_FERA_JAMAIS, REFERENCE_PARAMETERS } from '../../data/referenceParameters';
 import { formatCurrency, formatNumber } from '../../utils/crypto';
@@ -28,8 +31,67 @@ export const WhatBorneNeverDoes: React.FC<WhatBorneNeverDoesProps> = ({ lang }) 
         </h1>
         <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', maxWidth: '800px', marginTop: '0.25rem' }}>
           {lang === 'fr'
-            ? 'Une charte publique d\'engagements aussi importante que nos fonctionnalités. Câblée directement dans le code et les règles de conception.'
-            : 'A public charter of commitments as critical as our features. Hardwired into the code and architecture.'}
+            ? 'Une charte publique d\'engagements aussi importante que nos fonctionnalités. Câblée directement dans le code et les règles de conception afin d\'éliminer définitivement l\'opportunité des fiascos informatiques passés.'
+            : 'A public charter of commitments as critical as our features. Hardwired into the code and architecture to structurally prevent IT fiascos.'}
+        </p>
+      </div>
+
+      {/* CONTRE-EXEMPLE / ANTI-MODÈLE SATIRIQUE */}
+      <div 
+        style={{
+          padding: '1.25rem 1.5rem',
+          borderRadius: '12px',
+          backgroundColor: 'rgba(244, 63, 94, 0.08)',
+          border: '1px solid rgba(244, 63, 94, 0.35)',
+          marginBottom: '2rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '0.75rem'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <span style={{ fontSize: '1.3rem' }}>🎰</span>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, color: '#f43f5e' }}>
+              {lang === 'fr' 
+                ? 'Contre-Modèle & Démonstration par l\'Absurde : SAAQ$$$clic (Édition 1.2 Milliard $)' 
+                : 'Anti-Pattern Showcase: SAAQ$$$clic ($1.2B Edition)'}
+            </h3>
+          </div>
+          <a
+            href="https://powai.ca/saadeklic"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.35rem 0.85rem',
+              borderRadius: '6px',
+              backgroundColor: '#9f1239',
+              color: '#ffffff',
+              fontSize: '0.8rem',
+              fontWeight: 700,
+              textDecoration: 'none',
+              transition: 'background-color 0.2s'
+            }}
+          >
+            <span>Voir la démonstration satirique</span>
+            <ExternalLink size={14} />
+          </a>
+        </div>
+        <p style={{ fontSize: '0.86rem', color: 'var(--text-secondary)', lineHeight: 1.55 }}>
+          {lang === 'fr' ? (
+            <>
+              Pour illustrer concrètement les dérives de l'ingénierie traditionnelle (budgets sans fond, délais étirés à l'infini, verrouillage propriétaire et opacité contractuelle), nous avons conçu ce simulateur satirique. 
+              <strong> Chez PowAI et dans BORNE, nous supprimons structurellement l'opportunité même de reproduire ces fiascos</strong> grâce à une architecture déterministe, des audits de conformité automatisés et une transparence mathématique absolue.
+            </>
+          ) : (
+            <>
+              To demonstrate what happens when legacy IT projects run on billing-by-the-hour rather than rigorous engineering, we built this satirical simulator. 
+              <strong> BORNE structurally eliminates the very opportunity to reproduce these multimillion-dollar fiascos.</strong>
+            </>
+          )}
         </p>
       </div>
 

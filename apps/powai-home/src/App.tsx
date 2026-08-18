@@ -1,10 +1,10 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { 
   Cpu, ShieldCheck, Zap, Bot, Network, Sparkles, ArrowRight, Lock, 
   Database, Scale, FileText, Activity, CheckCircle2, ChevronRight,
   BarChart3, Globe, ExternalLink, Layers, Terminal, Rocket, DollarSign,
   Clock, HeartHandshake, Send, Check, Mail, User, Building, MessageSquare,
-  Dices, Trophy, Wand2, Gauge, BookOpen
+  Dices, Trophy, Wand2, Gauge, BookOpen, AlertTriangle
 } from 'lucide-react';
 
 export function App() {
@@ -62,20 +62,20 @@ export function App() {
       desc: 'Analyse d’intégrité corporative',
     },
     {
-      name: 'NotaR-iA',
-      badge: 'IA Juridique',
-      url: 'https://powai.ca/notaria',
-      icon: '⚖️',
-      color: '#ec4899',
-      desc: 'Extraction et examen de titres',
+      name: 'Nextcloud Cloud',
+      badge: 'Espace Collaboratif',
+      url: 'https://powai.ca/nextcloud',
+      icon: '☁️',
+      color: '#0284c7',
+      desc: 'Stockage souverain sécurisé',
     },
     {
-      name: 'Laboratoire Slots',
-      badge: 'Provably Fair',
-      url: 'https://powai.ca/speed',
+      name: 'SAAQ$$$clic (Anti-Modèle)',
+      badge: 'Contre-Exemple Fiasco 1.2 Md$',
+      url: 'https://powai.ca/saadeklic',
       icon: '🎰',
-      color: '#eab308',
-      desc: 'Moteur de jeux mathématiques',
+      color: '#f43f5e',
+      desc: 'Démonstration satirique des dérives traditionnelles à ne jamais reproduire',
     }
   ];
 
@@ -113,10 +113,10 @@ export function App() {
         </div>
       </div>
 
-      {/* Halo Lumineux de Fond (Effets Néon Glow) */}
-      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none animate-pulse-slow" />
-      <div className="absolute top-[30%] right-[-10%] w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[160px] pointer-events-none animate-pulse-slow" />
-      <div className="absolute bottom-[-10%] left-[20%] w-[550px] h-[550px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none animate-pulse-slow" />
+      {/* Halo Lumineux de Fond */}
+      <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-[30%] right-[-10%] w-[600px] h-[600px] bg-purple-500/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute bottom-[-10%] left-[20%] w-[550px] h-[550px] bg-emerald-500/10 rounded-full blur-[150px] pointer-events-none" />
 
       {/* HEADER DE NAVIGATION */}
       <header className="sticky top-0 z-40 glass-panel border-b border-slate-800/80 bg-[#050811]/90 backdrop-blur-xl">
@@ -144,7 +144,7 @@ export function App() {
             <nav className="hidden md:flex items-center space-x-8 text-xs font-semibold uppercase tracking-wider text-slate-300">
               <a href="#solutions" className="hover:text-cyan-400 transition-colors">Plateformes</a>
               <a href="#manifeste" className="hover:text-cyan-400 transition-colors">Notre Révolution</a>
-              <a href="#expertise" className="hover:text-cyan-400 transition-colors">Expertise & IA</a>
+              <a href="#antimodèle" className="hover:text-rose-400 transition-colors">Anti-Modèle</a>
               <a href="#contact" className="hover:text-cyan-400 transition-colors">Contact</a>
             </nav>
 
@@ -172,10 +172,9 @@ export function App() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 space-y-24 py-12 z-10">
         
-        {/* SECTION HERO (VISUEL PERCUTANT & ÉLÉGANT) */}
+        {/* SECTION HERO */}
         <section id="solutions" className="text-center space-y-8 pt-6 pb-12">
           
-          {/* Badge Haute Technologie */}
           <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-slate-900/90 border border-cyan-800/60 shadow-lg shadow-cyan-500/10">
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
             <span className="text-xs font-mono font-bold text-cyan-300 uppercase tracking-wider">
@@ -183,7 +182,6 @@ export function App() {
             </span>
           </div>
 
-          {/* Titre Principal */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-5xl mx-auto leading-tight">
             Propulsez vos Décisions avec l'
             <span className="bg-gradient-to-r from-cyan-400 via-emerald-400 to-purple-400 bg-clip-text text-transparent">
@@ -192,18 +190,17 @@ export function App() {
             & l'Automatisation de Workflows.
           </h1>
 
-          {/* Sous-titre explicatif */}
           <p className="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
             Conception de plateformes souveraines, d'agents d'IA autonomes, d'analyse de données en temps réel et d'orchestration de processus d'affaires complexes à la fine pointe de la technologie.
           </p>
 
-          {/* Grille des Plateformes Phares en Ligne */}
+          {/* Grille des Plateformes Phares */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto pt-4 text-left">
             
             {/* 1. BORNE Québec */}
             <a
               href="https://powai.ca/borne"
-              className="glass-panel p-5 rounded-2xl border-2 border-sky-500/50 hover:border-sky-400 bg-sky-950/20 flex flex-col justify-between group transition-all glass-panel-hover"
+              className="glass-panel p-5 rounded-2xl border-2 border-sky-500/50 hover:border-sky-400 bg-sky-950/20 flex flex-col justify-between group transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -220,140 +217,140 @@ export function App() {
                     <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
                   <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Plateforme québécoise du certificat de localisation : réutilisation, 19 vérifications déterministes et coffre-fort à vie.
+                    Plateforme québécoise du certificat de localisation : registre d'empreintes SHA-256, cadastre vectoriel et vérification automatique des 23 points de la norme.
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-sky-900/40 text-xs font-bold text-sky-400 flex items-center justify-between">
+              <div className="mt-4 pt-3 border-t border-sky-900/50 text-xs font-bold text-sky-400 flex items-center justify-between">
                 <span>Accéder à la plateforme</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </a>
 
-            {/* 2. Dossier Stratégique */}
+            {/* 2. Dossier Stratégique 2026 */}
             <a
               href="https://powai.ca/borne/strategie"
-              className="glass-panel p-5 rounded-2xl border-2 border-amber-500/50 hover:border-amber-400 bg-amber-950/20 flex flex-col justify-between group transition-all glass-panel-hover"
+              className="glass-panel p-5 rounded-2xl border-2 border-amber-500/50 hover:border-amber-400 bg-amber-950/20 flex flex-col justify-between group transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-amber-950 text-amber-400 border border-amber-800/60">
-                    <BookOpen className="w-5 h-5" />
+                  <div className="p-2.5 rounded-xl bg-amber-950 text-amber-400 border border-amber-800/60 text-xl">
+                    📑
                   </div>
                   <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 border border-amber-700/50">
-                    Livre Blanc
+                    Livre Blanc 2026
                   </span>
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-white group-hover:text-amber-300 transition-colors flex items-center gap-1.5">
-                    Dossier Stratégique 2026
+                    Dossier Stratégique & Économies
                     <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
                   <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Anatomie d'un péage de 71.9 M$ et plan pour le démonter. Modèle chiffré, 324 ETP libérés et matrice d'erreurs.
+                    Étude complète en 13 sections démontrant le modèle d'économie de 71,9 M$/an pour les citoyens et le gouvernement québécois.
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-amber-900/40 text-xs font-bold text-amber-400 flex items-center justify-between">
-                <span>Consulter le dossier</span>
+              <div className="mt-4 pt-3 border-t border-amber-900/50 text-xs font-bold text-amber-400 flex items-center justify-between">
+                <span>Lire le Livre Blanc interactif</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </a>
 
-            {/* 3. SursiTrack + Horizon */}
+            {/* 3. SursiTrack & Horizon */}
             <a
-              href="https://powai.ca/sursitrack/"
-              className="glass-panel p-5 rounded-2xl border border-emerald-500/40 hover:border-emerald-400 bg-emerald-950/10 flex flex-col justify-between group transition-all glass-panel-hover"
+              href="https://powai.ca/sursitrack"
+              className="glass-panel p-5 rounded-2xl border border-emerald-500/30 hover:border-emerald-400/80 bg-slate-900/40 flex flex-col justify-between group transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-emerald-950 text-emerald-400 border border-emerald-800/60">
+                  <div className="p-2.5 rounded-xl bg-slate-900 text-emerald-400 border border-slate-800">
                     <ShieldCheck className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-900/60 text-emerald-300 border border-emerald-700/50">
-                    MSP QC
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">
+                    Sécurité & Justice
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors flex items-center gap-1.5">
+                  <h3 className="text-base font-bold text-slate-200 group-hover:text-white transition-colors flex items-center gap-1.5">
                     SursiTrack + Horizon
                     <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Biométrie faciale horodatée, geofencing GPS dynamique et coordination judiciaire pour le Ministère de la Sécurité publique.
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Système souverain de surveillance probabiliste, biopuce/bracelet et réinsertion judiciaire conforme aux exigences du MSP.
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-emerald-900/40 text-xs font-bold text-emerald-400 flex items-center justify-between">
-                <span>Accéder à SursiTrack</span>
+              <div className="mt-4 pt-3 border-t border-slate-800 text-xs font-bold text-slate-400 flex items-center justify-between">
+                <span>Explorer la solution</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </a>
 
             {/* 4. AudiTREQ */}
             <a
-              href="https://powai.ca/auditreq/"
-              className="glass-panel p-5 rounded-2xl border border-purple-500/40 hover:border-purple-400 bg-purple-950/10 flex flex-col justify-between group transition-all glass-panel-hover"
+              href="https://powai.ca/auditreq"
+              className="glass-panel p-5 rounded-2xl border border-purple-500/30 hover:border-purple-400/80 bg-slate-900/40 flex flex-col justify-between group transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-purple-950 text-purple-400 border border-purple-800/60">
-                    <BarChart3 className="w-5 h-5" />
+                  <div className="p-2.5 rounded-xl bg-slate-900 text-purple-400 border border-slate-800">
+                    <Activity className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-900/60 text-purple-300 border border-purple-700/50">
-                    Audit REQ
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">
+                    Audit & Conflits
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors flex items-center gap-1.5">
+                  <h3 className="text-base font-bold text-slate-200 group-hover:text-white transition-colors flex items-center gap-1.5">
                     AudiTREQ
                     <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Cartographie relationnelle des administrateurs, bénéficiaires ultimes et détection de conflits d'intérêts sur données ouvertes.
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Moteur de graphes relationnels détectant les prête-noms, conflits d'intérêts et participations croisées dans le REQ.
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-purple-900/40 text-xs font-bold text-purple-400 flex items-center justify-between">
-                <span>Consulter AudiTREQ</span>
+              <div className="mt-4 pt-3 border-t border-slate-800 text-xs font-bold text-slate-400 flex items-center justify-between">
+                <span>Voir le démonstrateur</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </a>
 
-            {/* 5. NotaR-iA */}
+            {/* 5. Nextcloud */}
             <a
-              href="https://powai.ca/notaria"
-              className="glass-panel p-5 rounded-2xl border border-pink-500/40 hover:border-pink-400 bg-pink-950/10 flex flex-col justify-between group transition-all glass-panel-hover"
+              href="https://powai.ca/nextcloud"
+              className="glass-panel p-5 rounded-2xl border border-blue-500/30 hover:border-blue-400/80 bg-slate-900/40 flex flex-col justify-between group transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <div className="p-2.5 rounded-xl bg-pink-950 text-pink-400 border border-pink-800/60">
-                    <Scale className="w-5 h-5" />
+                  <div className="p-2.5 rounded-xl bg-slate-900 text-blue-400 border border-slate-800">
+                    <Database className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-pink-900/60 text-pink-300 border border-pink-700/50">
-                    IA Juridique
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-blue-950 text-blue-300 border border-blue-800">
+                    Cloud Souverain
                   </span>
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white group-hover:text-pink-300 transition-colors flex items-center gap-1.5">
-                    NotaR-iA
+                  <h3 className="text-base font-bold text-slate-200 group-hover:text-white transition-colors flex items-center gap-1.5">
+                    Nextcloud PowAI
                     <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </h3>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                    Extraction documentaire intelligente d'actes notariés, servitudes et chaînes de titres immobiliers.
+                  <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                    Espace collaboratif souverain, synchronisation de fichiers chiffrés et gestion documentaire haute sécurité.
                   </p>
                 </div>
               </div>
-              <div className="mt-4 pt-3 border-t border-pink-900/40 text-xs font-bold text-pink-400 flex items-center justify-between">
-                <span>Découvrir NotaR-iA</span>
+              <div className="mt-4 pt-3 border-t border-slate-800 text-xs font-bold text-slate-400 flex items-center justify-between">
+                <span>Accéder au cloud</span>
                 <ArrowRight className="w-4 h-4" />
               </div>
             </a>
 
-            {/* 6. Laboratoire Mathématique / Slots */}
+            {/* 6. Laboratoire & Simulations */}
             <a
-              href="https://powai.ca/speed/"
-              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-slate-700 bg-slate-900/30 flex flex-col justify-between group transition-all glass-panel-hover opacity-75 hover:opacity-100"
+              href="https://powai.ca/speed"
+              className="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/50 bg-slate-900/40 flex flex-col justify-between group transition-all"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
@@ -382,6 +379,33 @@ export function App() {
 
           </div>
 
+        </section>
+
+        {/* SECTION ANTI-MODÈLE / CE QUE NOUS NE FERONS JAMAIS */}
+        <section id="antimodèle" className="glass-panel p-8 sm:p-12 rounded-3xl border border-rose-900/60 space-y-6 relative overflow-hidden bg-gradient-to-r from-rose-950/30 via-slate-950/80 to-slate-900/80">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="space-y-3 max-w-3xl">
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-rose-950 text-rose-300 border border-rose-800/60 text-xs font-mono font-bold">
+                <AlertTriangle className="w-4 h-4 text-rose-400" />
+                <span>ANTI-MODÈLE & DÉMONSTRATION PAR L'ABSURDE</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
+                Ce Que Nous Ne Ferons Jamais : L'Anti-Modèle SAAQ$$$clic (1.2 Milliard $)
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Pour démontrer de façon percutante les dérives des projets informatiques traditionnels facturés au prorata des heures sans responsabilisation de résultat, nous avons mis en ligne ce simulateur satirique. Chez PowAI, <strong>nous supprimons structurellement l'opportunité même de reproduire ces fiascos</strong> grâce à des architectures déterministes, du code auditable et des livraisons en jours plutôt qu'en années.
+              </p>
+            </div>
+            <a
+              href="https://powai.ca/saadeklic"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3.5 rounded-xl bg-rose-900/80 hover:bg-rose-800 border border-rose-600/50 text-rose-100 text-xs font-bold shadow-lg shadow-rose-900/30 flex items-center space-x-2 transition-all flex-shrink-0"
+            >
+              <span>🎰 Voir le simulateur satirique</span>
+              <ExternalLink className="w-4 h-4" />
+            </a>
+          </div>
         </section>
 
         {/* SECTION MANIFESTE */}
@@ -470,11 +494,12 @@ export function App() {
             <p className="font-bold text-white">PowAI.ca — Solutions Innovantes en IA & Workflows Automatisés</p>
             <p className="text-[11px] mt-0.5">© 2026 Tous droits réservés. Hébergé au Québec (Canada).</p>
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
+          <div className="flex items-center gap-4 text-[11px] flex-wrap">
             <a href="https://powai.ca/borne" className="hover:text-cyan-400">BORNE Québec</a>
             <a href="https://powai.ca/borne/strategie" className="hover:text-cyan-400">Dossier Stratégique</a>
             <a href="https://powai.ca/sursitrack" className="hover:text-cyan-400">SursiTrack</a>
             <a href="https://powai.ca/auditreq" className="hover:text-cyan-400">AudiTREQ</a>
+            <a href="https://powai.ca/saadeklic" className="text-rose-400 hover:text-rose-300">Anti-Modèle SAAQ$$$clic</a>
           </div>
         </footer>
 
